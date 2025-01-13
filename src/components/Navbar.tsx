@@ -9,33 +9,19 @@ const Navbar = () => {
           <button className="flex items-center text-text-primary font-bold">
             <FontAwesomeIcon
               icon={faDumbbell}
-              className="sm:text-sm
-              md:text-xl
-              lg:text-xl
-              xl:text-xl
-              2xl:text-xl"
+              className="sm:text-sm md:text-xl lg:text-xl xl:text-xl 2xl:text-xl"
             />
 
             <span
-              className="ml-3 uppercase
-              sm:text-md
-              md:text-xl
-              lg:text-xl
-              xl:text-2xl
-              2xl:text-3xl
-              text-shadow text-shadow-x-0 text-shadow-y-4 text-shadow-blur-10 text-shadow-text-primary"
+              className="ml-3 uppercase sm:text-md md:text-xl lg:text-xl xl:text-2xl
+              2xl:text-3xl text-shadow text-shadow-x-0 text-shadow-y-4 text-shadow-blur-10 
+              text-shadow-text-primary"
             >
               LimitlessFit
             </span>
           </button>
 
-          <div
-            className="sm:text-md
-                       md:text-lg
-                       lg:text-lg
-                       xl:text-lg
-                       2xl:text-lg"
-          >
+          <div className="sm:text-md md:text-lg lg:text-lg xl:text-lg 2xl:text-lg">
             <button>
               <FontAwesomeIcon icon={faGlobe} className="text-text-primary" />
             </button>

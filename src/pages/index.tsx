@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 
 import Input from '@/components/Input'
+import SubmitButton from '@/components/SubmitBotton'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -20,7 +21,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <Input
           label="Email"
           type="email"
@@ -33,14 +34,24 @@ const LoginPage = () => {
           type="password"
           value={password}
           onChange={handlePasswordChange}
+          className="mt-5"
         />
 
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <p className="text-xs uppercase text-text-secondary mt-4">
+          Nuovo utente?{' '}
+          <a className="text-link font-medium" href="/register">
+            Registrati
+          </a>
+        </p>
+
+        <SubmitButton label="Login" className="mt-8" />
+
+        <a
+          href="/forgotten-password"
+          className="mt-5 uppercase text-link text-sm underline font-medium decoration-0"
         >
-          Login
-        </button>
+          Password dimenticata?
+        </a>
       </form>
     </div>
   )
