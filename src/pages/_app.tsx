@@ -1,15 +1,18 @@
-import '../styles/globals.css'
+import '@/styles/globals.css'
 
 import type { AppProps } from 'next/app'
+import { ThemeProvider } from 'next-themes'
 
 import Navbar from '@/components/Navbar'
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <div className="bg-background">
-      <Navbar />
-      <Component {...pageProps} />
-    </div>
+    <ThemeProvider attribute="class">
+      <div className="bg-background dark:bg-background-dark">
+        <Navbar />
+        <Component {...pageProps} />
+      </div>
+    </ThemeProvider>
   )
 }
 

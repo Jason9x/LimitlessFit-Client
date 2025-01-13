@@ -16,8 +16,8 @@ const SubmitButton = ({
   return (
     <button
       type="submit"
-      className={`bg-primary shadow-lg shadow-primary text-sm text-text-primary 
-                    uppercase font-bold py-3 px-[4rem] rounded-full ${className}`}
+      className={`bg-primary dark:bg-primary-dark shadow-lg shadow-primary dark:shadow-primary-dark text-sm text-foreground
+                    dark:text-foreground-dark uppercase font-bold py-3 px-[4rem] rounded-full ${className}`}
       onClick={onClick}
       disabled={disabled}
     >

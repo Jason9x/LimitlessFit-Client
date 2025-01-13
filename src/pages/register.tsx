@@ -4,12 +4,13 @@ import Input from '@/components/Input'
 import SubmitButton from '@/components/SubmitBotton'
 import ActionLink from '@/components/ActionLink'
 
-const Login = () => {
+const Register = () => {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault()
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value)
   }
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -20,14 +21,26 @@ const Login = () => {
     setPassword(event.target.value)
   }
 
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault()
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
+        <Input
+          label="Nome"
+          type="text"
+          value={name}
+          onChange={handleNameChange}
+        />
+
         <Input
           label="Email"
           type="email"
           value={email}
           onChange={handleEmailChange}
+          className="mt-5"
         />
 
         <Input
@@ -38,23 +51,12 @@ const Login = () => {
           className="mt-5"
         />
 
-        <ActionLink
-          introText="Nuovo utente?"
-          linkText="Registrati"
-          href="/register"
-        />
+        <ActionLink introText="Già un membro?" linkText="Entra" href="/" />
 
-        <SubmitButton label="Entra" className="mt-6" />
-
-        <a
-          href="/forgotten-password"
-          className="mt-5 uppercase text-link dark:text-link-dark text-sm underline font-medium decoration-0"
-        >
-          Password dimenticata?
-        </a>
+        <SubmitButton label="Registrati" className="mt-6" />
       </form>
     </div>
   )
 }
 
-export default Login
+export default Register

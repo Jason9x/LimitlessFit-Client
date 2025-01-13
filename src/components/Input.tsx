@@ -33,8 +33,8 @@ const Input = ({
     <div className={`relative ${className}`}>
       <label
         htmlFor={label}
-        className={`absolute top-3.5 left-2 font-medium text-text-secondary pl-5 uppercase cursor-auto 
-                    transition-all duration-200 ${isActive ? 'text-[0.6rem] top-[0.5rem]' : 'text-[0.8rem]'}`}
+        className={`absolute top-3.5 left-2 font-medium text-foreground-secondary dark:text-foreground-secondary-dark 
+                    pl-5 uppercase cursor-auto transition-all duration-200 ${isActive ? 'text-[0.6rem] top-[0.5rem]' : 'text-[0.8rem]'}`}
       >
         {label}
       </label>
@@ -50,7 +50,7 @@ const Input = ({
         }}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(!!value)}
-        className={`bg-secondary font-semibold rounded-full p-3 pl-7 w-80 shadow-md outline-none ${
+        className={`bg-secondary dark:bg-secondary-dark font-semibold rounded-full p-3 pl-7 w-80 shadow-md outline-none ${
           isActive && 'pt-5 transition-all duration-300 ease-in-out'
         } `}
         required
