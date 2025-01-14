@@ -2,12 +2,16 @@
   "Login": {
     "newUser": "Nuovo utente?",
     "registerNow": "Registrati ora",
-    "login": "Entra",
+    "login": "Login",
     "forgottenPassword": "Password dimenticata?"
   },
   "Register": {
     "name": "Nome",
-    "existingUser": "Già un membro?",
-    "register": "Registrati"
+    "existingUser": "Già un membro? Effettua il",
+    "register": "Registrati",
+    "nameIsRequired": "Il nome è richiesto.",
+    "nameIsTooLong": "Name is too long.",
+    "invalidEmailFormat": "Formato dell'email non valido.",
+    "passwordMinLength": "La password deve essere di almeno 6 caratteri."
   }
 }

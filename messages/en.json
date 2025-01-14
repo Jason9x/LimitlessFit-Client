@@ -8,6 +8,10 @@
   "Register": {
     "name": "Name",
     "existingUser": "Already a member?",
-    "register": "Register"
+    "register": "Register",
+    "nameIsRequired": "Name is required.",
+    "nameIsTooLong": "Name is too long.",
+    "invalidEmailFormat": "Invalid email format.",
+    "passwordMinLength": "Password must be at least 6 characters long."
   }
 }

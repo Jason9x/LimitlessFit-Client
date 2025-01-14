@@ -9,14 +9,6 @@ import SubmitButton from '@/components/SubmitBotton'
 import ActionLink from '@/components/ActionLink'
 import Snackbar from '@/components/Snackbar'
 
-const registrationSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters long'),
-})
-
-type FormData = z.infer<typeof registrationSchema>
-
 const Register = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -29,6 +21,14 @@ const Register = () => {
 
   const registerTranslations = useTranslations('Register')
   const loginTranslations = useTranslations('Login')
+
+  const registrationSchema = z.object({
+    name: z.string().min(1, registerTranslations('nameIsRequired')).max(100, registerTranslations('nameIsTooLong')),
+    email: z.string().email(registerTranslations('invalidEmailFormat')),
+    password: z.string().min(6, registerTranslations('passwordMinLength'))
+  })
+
+  type FormData = z.infer<typeof registrationSchema>
 
   const handleChange = (field: keyof FormData) => (event: ChangeEvent<HTMLInputElement>) =>
     setFormData(previousData => ({

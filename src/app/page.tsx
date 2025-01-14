@@ -10,13 +10,6 @@ import SubmitButton from '@/components/SubmitBotton'
 import ActionLink from '@/components/ActionLink'
 import Snackbar from '@/components/Snackbar'  // Import Snackbar
 
-const loginSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters long')
-})
-
-type FormData = z.infer<typeof loginSchema>
-
 const Login = () => {
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -27,6 +20,14 @@ const Login = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
 
   const loginTranslations = useTranslations('Login')
+  const registerTranslations = useTranslations('Register')
+
+  const loginSchema = z.object({
+    email: z.string().email(registerTranslations('invalidEmailFormat')),
+    password: z.string().min(6, registerTranslations('passwordMinLength'))
+  })
+
+  type FormData = z.infer<typeof loginSchema>
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) =>
       setFormData((prevData) => ({ ...prevData, email: event.target.value }))
