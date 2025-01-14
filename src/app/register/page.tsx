@@ -47,7 +47,12 @@ const Register = () => {
     } catch (error) {
       if (!(error instanceof z.ZodError)) return
 
-      const errorMessages = error.errors.map(error => error.message).join(', ')
+      const errorMessages = error.errors
+          .map((error, index) => index === 0
+              ? error.message.charAt(0).toUpperCase() + error.message.slice(1)
+              : error.message.toLowerCase())
+          .join(', ') + '.';
+
       setSnackbarMessage(errorMessages)
       setSnackbarOpen(true)
     }

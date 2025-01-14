@@ -9,9 +9,9 @@
     "name": "Nome",
     "existingUser": "Già un membro?",
     "register": "Registrati",
-    "nameIsRequired": "Il nome è richiesto.",
-    "nameIsTooLong": "Name is too long.",
-    "invalidEmailFormat": "Formato dell'email non valido.",
-    "passwordMinLength": "La password deve essere di almeno 6 caratteri."
+    "nameIsRequired": "Il nome è richiesto",
+    "nameIsTooLong": "Name is too long",
+    "invalidEmailFormat": "Formato dell'email non valido",
+    "passwordMinLength": "La password deve essere di almeno 6 caratteri"
   }
 }

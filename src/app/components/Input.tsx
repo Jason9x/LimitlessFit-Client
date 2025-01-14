@@ -53,7 +53,6 @@ const Input = ({
         className={`bg-secondary dark:bg-secondary-dark font-semibold rounded-full p-3 pl-7 w-80 shadow-md outline-none ${
           isActive && 'pt-5 transition-all duration-300 ease-in-out'
         } `}
-        required
       />
     </div>
   )
