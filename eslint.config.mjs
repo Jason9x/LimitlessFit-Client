@@ -33,12 +33,13 @@ const eslintConfig = [
         }
       ],
       'arrow-body-style': ['error', 'as-needed'],
-      curly: ['error', 'as-needed'],
+      curly: ['error', 'multi'],
       'no-restricted-syntax': [
         'error',
         'FunctionExpression',
         'FunctionDeclaration'
-      ]
+      ],
+      '@typescript-eslint/no-explicit-any': 'off'
     }
   }
 ]

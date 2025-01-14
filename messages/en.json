@@ -7,7 +7,7 @@
   },
   "Register": {
     "name": "Name",
-    "existingUser": "Already a member?",
+    "existingUser": "Already a member? Perform a",
     "register": "Register",
     "nameIsRequired": "Name is required",
     "nameIsTooLong": "Name is too long",

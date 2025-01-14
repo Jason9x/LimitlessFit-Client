@@ -9,11 +9,13 @@ import SubmitButton from '@/components/SubmitBotton'
 import ActionLink from '@/components/ActionLink'
 import Snackbar from '@/components/Snackbar'
 
+import handleFormSubmit from '@/utils/formUtils'
+
 const Register = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
-    password: '',
+    password: ''
   })
 
   const [snackbarMessage, setSnackbarMessage] = useState('')
@@ -22,86 +24,79 @@ const Register = () => {
   const registerTranslations = useTranslations('Register')
   const loginTranslations = useTranslations('Login')
 
-  const registrationSchema = z.object({
-    name: z.string().min(1, registerTranslations('nameIsRequired')).max(100, registerTranslations('nameIsTooLong')),
+  const schema = z.object({
+    name: z
+      .string()
+      .min(1, registerTranslations('nameIsRequired'))
+      .max(100, registerTranslations('nameIsTooLong')),
     email: z.string().email(registerTranslations('invalidEmailFormat')),
     password: z.string().min(6, registerTranslations('passwordMinLength'))
   })
 
-  type FormData = z.infer<typeof registrationSchema>
+  type FormData = z.infer<typeof schema>
 
-  const handleChange = (field: keyof FormData) => (event: ChangeEvent<HTMLInputElement>) =>
-    setFormData(previousData => ({
-      ...previousData,
-      [field]: event.target.value,
-    }))
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault()
-
-    try {
-      registrationSchema.parse(formData)
-
-      setSnackbarMessage('')
-      setSnackbarOpen(false)
-    } catch (error) {
-      if (!(error instanceof z.ZodError)) return
-
-      const errorMessages = error.errors
-          .map((error, index) => index === 0
-              ? error.message.charAt(0).toUpperCase() + error.message.slice(1)
-              : error.message.toLowerCase())
-          .join(', ') + '.';
-
-      setSnackbarMessage(errorMessages)
-      setSnackbarOpen(true)
-    }
-  }
+  const handleChange =
+    (field: keyof FormData) => (event: ChangeEvent<HTMLInputElement>) =>
+      setFormData(previousData => ({
+        ...previousData,
+        [field]: event.target.value
+      }))
 
   return (
-      <div className="flex items-center justify-center min-h-screen">
-        <form onSubmit={handleSubmit} className="flex flex-col items-center">
-          <Input
-              label={registerTranslations('name')}
-              type="text"
-              value={formData.name}
-              onChange={handleChange('name')}
-          />
-
-          <Input
-              label="Email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange('email')}
-              className="mt-5"
-          />
-
-          <Input
-              label="Password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange('password')}
-              className="mt-5"
-          />
-
-          <ActionLink
-              introText={registerTranslations('existingUser')}
-              linkText={loginTranslations('login')}
-              href="/"
-          />
-
-          <SubmitButton
-              label={registerTranslations('register')}
-              className="mt-6"
-          />
-        </form>
-
-        <Snackbar
-            message={snackbarMessage}
-            open={snackbarOpen}
-            onClose={() => setSnackbarOpen(false)}
+    <div className="flex items-center justify-center min-h-screen">
+      <form
+        onSubmit={(event: FormEvent) =>
+          handleFormSubmit({
+            event,
+            schema,
+            formData,
+            setSnackbarMessage,
+            setSnackbarOpen
+          })
+        }
+        className="flex flex-col items-center"
+      >
+        <Input
+          label={registerTranslations('name')}
+          type="text"
+          value={formData.name}
+          onChange={handleChange('name')}
         />
-      </div>
+
+        <Input
+          label="Email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange('email')}
+          className="mt-5"
+        />
+
+        <Input
+          label="Password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange('password')}
+          className="mt-5"
+        />
+
+        <ActionLink
+          introText={registerTranslations('existingUser')}
+          linkText={loginTranslations('login').toLowerCase()}
+          href="/"
+        />
+
+        <SubmitButton
+          label={registerTranslations('register')}
+          className="mt-6"
+        />
+      </form>
+
+      <Snackbar
+        message={snackbarMessage}
+        open={snackbarOpen}
+        onClose={() => setSnackbarOpen(false)}
+      />
+    </div>
   )
 }
 
