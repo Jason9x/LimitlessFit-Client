@@ -1,33 +1,38 @@
 'use client'
 
 import { useTheme } from 'next-themes'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 import Link from 'next/link'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDumbbell, faSun } from '@fortawesome/free-solid-svg-icons'
-
-import LanguageSelector from '@/components/LanguageSelector'
+import LanguageDropdown from '@/components/LanguageDropdown'
 
 const Navbar = () => {
+  const router = useRouter()
   const { theme, setTheme } = useTheme()
 
-  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light')
+
+    router.refresh()
+  }
 
   return (
     <nav className="bg-secondary dark:bg-secondary-dark">
       <div className="container mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between">
           <Link href="/">
             <div className="flex items-center text-foreground dark:text-foreground-dark">
-              <FontAwesomeIcon
-                icon={faDumbbell}
-                className="sm:text-sm md:text-xl lg:text-xl xl:text-xl 2xl:text-xl"
+              <Image
+                src="/icons/fitness.svg"
+                width={40}
+                height={40}
+                alt="Fitness"
               />
 
               <span
-                className="ml-3 font-bold uppercase sm:text-md md:text-xl lg:text-xl xl:text-2xl
-                2xl:text-2xl text-shadow text-shadow-blur-10
+                className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10
               text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider"
               >
                 LimitlessFit
@@ -35,13 +40,16 @@ const Navbar = () => {
             </div>
           </Link>
 
-          <div className="sm:text-md md:text-lg lg:text-lg xl:text-lg 2xl:text-lg">
-            <LanguageSelector />
+          <div className="flex items-center">
+            <LanguageDropdown />
 
-            <button className="ml-5" onClick={toggleTheme}>
-              <FontAwesomeIcon
-                icon={faSun}
-                className="text-foreground dark:text-foreground-dark"
+            <button className="ml-2" onClick={toggleTheme}>
+              <Image
+                src="/icons/sun.svg"
+                width={20}
+                height={20}
+                alt="Sun"
+                className="dark:invert"
               />
             </button>
           </div>

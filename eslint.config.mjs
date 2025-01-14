@@ -33,7 +33,7 @@ const eslintConfig = [
         }
       ],
       'arrow-body-style': ['error', 'as-needed'],
-      curly: ['error', 'all'],
+      curly: ['error', 'as-needed'],
       'no-restricted-syntax': [
         'error',
         'FunctionExpression',
