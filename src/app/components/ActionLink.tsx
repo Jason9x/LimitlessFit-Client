@@ -19,7 +19,7 @@ const ActionLink = ({
     {introText}{' '}
     <Link className="text-link dark:text-link-dark font-medium" href={href}>
       {linkText}
-    </Link>.
+    </Link>
   </p>
 )
 

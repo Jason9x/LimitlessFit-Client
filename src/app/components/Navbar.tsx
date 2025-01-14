@@ -29,11 +29,12 @@ const Navbar = () => {
                 width={40}
                 height={40}
                 alt="Fitness"
+                className="dark:invert"
               />
 
               <span
                 className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10
-              text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider"
+                        text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider"
               >
                 LimitlessFit
               </span>
