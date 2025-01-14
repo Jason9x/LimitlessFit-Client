@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 
-interface InputProps {
+type InputProps = {
   label: string
   type:
     | 'text'
@@ -44,7 +44,7 @@ const Input = ({
         type={type}
         placeholder={placeholder}
         value={value}
-        onChange={(event) => {
+        onChange={event => {
           onChange(event)
           setIsActive(!!event.target.value.trim())
         }}

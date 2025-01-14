@@ -28,9 +28,16 @@ const eslintConfig = [
           useTabs: false,
           bracketSpacing: true,
           jsxBracketSameLine: false,
-          arrowParens: 'always',
+          arrowParens: 'avoid',
           endOfLine: 'auto'
         }
+      ],
+      'arrow-body-style': ['error', 'as-needed'],
+      curly: ['error', 'all'],
+      'no-restricted-syntax': [
+        'error',
+        'FunctionExpression',
+        'FunctionDeclaration'
       ]
     }
   }

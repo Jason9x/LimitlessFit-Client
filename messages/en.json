@@ -1,0 +1,13 @@
+{
+  "Login": {
+    "newUser": "New user?",
+    "registerNow": "Register now",
+    "login": "Login",
+    "forgottenPassword": "Forgotten password?"
+  },
+  "Register": {
+    "name": "Name",
+    "existingUser": "Already a member?",
+    "register": "Register"
+  }
+}

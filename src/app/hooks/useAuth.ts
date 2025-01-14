@@ -1,3 +1,4 @@
+/*
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
@@ -10,10 +11,13 @@ const useAuth = () => {
     const jwt = Cookies.get('jwt')
     setIsAuthenticated(!!jwt)
 
-    if (!jwt) router.push('/login').then(() => {})
+    if (!jwt) {
+      router.push('/login').then(() => {})
+    }
   }, [router])
 
   return isAuthenticated
 }
 
 export default useAuth
+*/
