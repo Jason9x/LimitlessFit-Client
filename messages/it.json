@@ -3,15 +3,21 @@
     "newUser": "Nuovo utente?",
     "registerNow": "Registrati ora",
     "login": "Login",
-    "forgottenPassword": "Password dimenticata?"
+    "forgottenPassword": "Password dimenticata?",
+    "invalidCredentials": "Credenziali valide non fornite. Controlla la tua email e la tua password",
+    "successfulLogin": "Hai effettuato l'accesso con successo",
+    "error": "Si è verificato un errore durante l'accesso dell'utente"
   },
   "Register": {
     "name": "Nome",
     "existingUser": "Già un membro? Effettua il",
     "register": "Registrati",
-    "nameIsRequired": "Il nome è richiesto",
-    "nameIsTooLong": "Name is too long",
-    "invalidEmailFormat": "Formato dell'email non valido",
-    "passwordMinLength": "La password deve essere di almeno 6 caratteri"
+    "nameInvalid": "Il nome può contenere solo lettere, spazi, trattini o apostrofi",
+    "passwordUppercase": "La password deve contenere almeno una lettera maiuscola",
+    "passwordNumber": "La password deve includere almeno un numero",
+    "fieldsRequired": "Nome, email e password sono obbligatori",
+    "userAlreadyExists": "Utente già esistente",
+    "successfulAccountCreation": "Il tuo account è stato creato con successo! Benvenuto!",
+    "error": "Si è verificato un errore durante la registrazione dell'utente"
   }
 }

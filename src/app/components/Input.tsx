@@ -17,15 +17,23 @@ type InputProps = {
   value: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   className?: string
+  required?: boolean
+  minLength?: number
+  maxLength?: number
+  error?: string
 }
 
 const Input = ({
   label,
-  type = 'text',
+  type,
   placeholder,
   value,
   onChange,
-  className
+  className,
+  required = false,
+  minLength,
+  maxLength,
+  error
 }: InputProps) => {
   const [isActive, setIsActive] = useState(!!value)
 
@@ -50,10 +58,21 @@ const Input = ({
         }}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(!!value)}
-        className={`bg-secondary dark:bg-secondary-dark font-semibold rounded-full p-3 pl-7 w-80 shadow-md outline-none ${
-          isActive && 'pt-5 transition-all duration-300 ease-in-out'
-        } `}
+        required={required}
+        minLength={minLength}
+        maxLength={maxLength}
+        className={`bg-secondary dark:bg-secondary-dark font-semibold rounded-full p-3 pl-7 w-80 shadow-md outline-none 
+                    ${isActive && 'pt-5 transition-all duration-300 ease-in-out'}`}
       />
+
+      {error && (
+        <p
+          className={`text-red-500 text-xs mt-4 text-center transition-all duration-300 ease-in-out
+                      ${error ? 'opacity-100 visibility-visible' : 'opacity-0 visibility-hidden'}`}
+        >
+          {error}.
+        </p>
+      )}
     </div>
   )
 }

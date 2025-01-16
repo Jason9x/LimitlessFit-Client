@@ -10,7 +10,7 @@ import SubmitButton from '@/components/SubmitBotton'
 import ActionLink from '@/components/ActionLink'
 import Snackbar from '@/components/Snackbar'
 
-import handleFormSubmit from '@/utils/formUtils' // Import Snackbar
+import { loginUser } from '@/services/api/auth'
 
 const Login = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -18,58 +18,90 @@ const Login = () => {
     password: ''
   })
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarVariant, setSnackbarVariant] = useState<'success' | 'error'>(
+    'error'
+  )
 
   const loginTranslations = useTranslations('Login')
-  const registerTranslations = useTranslations('Register')
 
   const schema = z.object({
-    email: z.string().email(registerTranslations('invalidEmailFormat')),
-    password: z.string().min(6, registerTranslations('passwordMinLength'))
+    email: z.string(),
+    password: z.string()
   })
 
   type FormData = z.infer<typeof schema>
 
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setFormData(previousData => ({
-      ...previousData,
-      email: event.target.value
-    }))
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault()
 
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setFormData(previousData => ({
-      ...previousData,
-      password: event.target.value
-    }))
+    const result = schema.safeParse(formData)
+
+    if (!result.success) {
+      const newErrors: { [key: string]: string } = {}
+
+      result.error.errors.forEach(
+        error => (newErrors[error.path[0]] = error.message)
+      )
+
+      setErrors(newErrors)
+      setSnackbarOpen(false)
+      return
+    }
+
+    const { email, password } = formData
+    const { success, messageKey, token } = await loginUser({
+      email,
+      password
+    })
+
+    setSnackbarMessage(loginTranslations(messageKey))
+    setSnackbarVariant(success ? 'success' : 'error')
+
+    if (success && token) localStorage.setItem('authToken', token)
+
+    setSnackbarOpen(true)
+  }
+
+  const handleChange =
+    (field: keyof FormData) => (event: ChangeEvent<HTMLInputElement>) => {
+      setFormData(previousData => ({
+        ...previousData,
+        [field]: event.target.value
+      }))
+
+      setErrors(previousErrors => ({
+        ...previousErrors,
+        [field]: ''
+      }))
+    }
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <form
-        onSubmit={(event: FormEvent) =>
-          handleFormSubmit({
-            event,
-            schema,
-            formData,
-            setSnackbarMessage,
-            setSnackbarOpen
-          })
-        }
-        className="flex flex-col items-center"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <Input
           label="Email"
           type="email"
           value={formData.email}
-          onChange={handleEmailChange}
+          onChange={handleChange('email')}
+          required
+          minLength={5}
+          maxLength={50}
+          error={errors.email}
         />
 
         <Input
           label="Password"
           type="password"
           value={formData.password}
-          onChange={handlePasswordChange}
+          onChange={handleChange('password')}
           className="mt-5"
+          required
+          minLength={8}
+          maxLength={20}
+          error={errors.password}
         />
 
         <ActionLink
@@ -92,6 +124,7 @@ const Login = () => {
         message={snackbarMessage}
         open={snackbarOpen}
         onClose={() => setSnackbarOpen(false)}
+        variant={snackbarVariant}
       />
     </div>
   )

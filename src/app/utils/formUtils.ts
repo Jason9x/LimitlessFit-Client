@@ -1,39 +1,51 @@
-import { z, Schema, ZodError } from 'zod'
+import { z, Schema } from 'zod'
 import { FormEvent } from 'react'
-import toSentenceCase from '@/utils/stringUtils'
+
+import { loginUser } from '@/services/api/auth'
 
 type HandleFormSubmitProps = {
   event: FormEvent
   schema: Schema
   formData: z.infer<Schema>
-  setSnackbarMessage: (message: string) => void
   setSnackbarOpen: (isOpen: boolean) => void
+  setSnackbarMessage: (message: string) => void
 }
 
 const handleFormSubmit = async ({
   event,
   schema,
   formData,
-  setSnackbarMessage,
-  setSnackbarOpen
+  setSnackbarOpen,
+  setSnackbarMessage
 }: HandleFormSubmitProps) => {
   event.preventDefault()
 
-  try {
-    schema.parse(formData)
+  const result = schema.safeParse(formData)
 
-    setSnackbarMessage('')
-    setSnackbarOpen(false)
-  } catch (error) {
-    if (!(error instanceof ZodError)) return
+  if (!result.success) {
+    const newErrors: { [key: string]: string } = {}
 
-    const errorMessages = toSentenceCase(
-      error.errors.map(error => error.message).join(', ')
+    result.error.errors.forEach(
+      error => (newErrors[error.path[0]] = error.message)
     )
 
-    setSnackbarMessage(errorMessages)
-    setSnackbarOpen(true)
+    setErrors(newErrors)
+    setSnackbarOpen(false)
+    return
   }
+
+  const { email, password } = formData
+  const { success, messageKey, token } = await loginUser({
+    email,
+    password
+  })
+
+  setSnackbarMessage(loginTranslations(messageKey))
+  setSnackbarVariant(success ? 'success' : 'error')
+
+  if (success && token) localStorage.setItem('authToken', token)
+
+  setSnackbarOpen(true)
 }
 
 export default handleFormSubmit
