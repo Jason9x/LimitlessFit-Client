@@ -118,7 +118,11 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
 
         <ActionLink
           introText={translations(isRegister ? 'existingUser' : 'newUser')}
-          linkText={loginTranslations('login').toLowerCase()}
+          linkText={
+            isRegister
+              ? loginTranslations('login').toLowerCase()
+              : translations('registerNow')
+          }
           href={isRegister ? '/' : '/register'}
           className="mt-4"
         />
