@@ -4,20 +4,20 @@
     "registerNow": "Registrati ora",
     "login": "Login",
     "forgottenPassword": "Password dimenticata?",
-    "invalidCredentials": "Credenziali valide non fornite. Controlla la tua email e la tua password",
-    "successfulLogin": "Hai effettuato l'accesso con successo",
-    "error": "Si è verificato un errore durante l'accesso dell'utente"
+    "invalidCredentials": "Credenziali valide non fornite. Controlla la tua email e la tua password.",
+    "successfulLogin": "Hai effettuato l'accesso con successo.",
+    "error": "Si è verificato un errore durante l'accesso dell'utente."
   },
   "Register": {
     "name": "Nome",
     "existingUser": "Già un membro? Effettua il",
     "register": "Registrati",
-    "nameInvalid": "Il nome può contenere solo lettere, spazi, trattini o apostrofi",
-    "passwordUppercase": "La password deve contenere almeno una lettera maiuscola",
-    "passwordNumber": "La password deve includere almeno un numero",
-    "fieldsRequired": "Nome, email e password sono obbligatori",
-    "userAlreadyExists": "Utente già esistente",
+    "nameInvalid": "Il nome può contenere solo lettere, spazi, trattini o apostrofi.",
+    "passwordUppercase": "La password deve contenere almeno una lettera maiuscola.",
+    "passwordNumber": "La password deve includere almeno un numero.",
+    "fieldsRequired": "Nome, email e password sono obbligatori.",
+    "userAlreadyExists": "Utente già esistente.",
     "successfulAccountCreation": "Il tuo account è stato creato con successo! Benvenuto!",
-    "error": "Si è verificato un errore durante la registrazione dell'utente"
+    "error": "Si è verificato un errore durante la registrazione dell'utente."
   }
 }

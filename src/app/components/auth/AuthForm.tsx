@@ -1,17 +1,20 @@
-'use client'
-
 import { FormEvent, useState } from 'react'
 import { z, ZodSchema } from 'zod'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import Cookies from 'js-cookie'
+import { useDispatch } from 'react-redux'
 
-import Input from '@/components/Input'
-import SubmitButton from '@/components/SubmitBotton'
-import ActionLink from '@/components/ActionLink'
-import Snackbar from '@/components/Snackbar'
+import Input from '@/components/ui/Input'
+import SubmitButton from '@/components/ui/SubmitBotton'
+import ActionLink from '@/components/ui/ActionLink'
+import Snackbar from '@/components/ui/Snackbar'
 
 import useForm from '@/hooks/useForm'
+
 import { registerUser, loginUser } from '@/services/api/auth'
+
+import { setAuthState } from '@/store/authSlice'
 
 type AuthFormProps = {
   isRegister: boolean
@@ -20,6 +23,7 @@ type AuthFormProps = {
 const AuthForm = ({ isRegister }: AuthFormProps) => {
   const translations = useTranslations(isRegister ? 'Register' : 'Login')
   const loginTranslations = useTranslations('Login')
+  const dispatch = useDispatch()
 
   const baseSchema = z.object({
     email: z.string().email(),
@@ -68,12 +72,19 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
     const apiAction = isRegister ? registerUser : loginUser
     const { success, messageKey, token } = await apiAction(formData)
 
-    setSnackbarMessage(translations(messageKey))
+    setSnackbarMessage(translations(messageKey ?? 'error'))
     setSnackbarVariant(success ? 'success' : 'error')
-
-    if (success && token) localStorage.setItem('authToken', token)
-
     setSnackbarOpen(true)
+
+    if (!success || !token) return
+
+    Cookies.set('authToken', token, {
+      expires: 7,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict'
+    })
+
+    dispatch(setAuthState(true))
   }
 
   return (

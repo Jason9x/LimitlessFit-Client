@@ -1,5 +1,4 @@
 import { AxiosError, AxiosResponse } from 'axios'
-
 import { AuthApiResponse } from '@/types/apiTypes'
 import api from '@/services/api/api'
 
@@ -14,10 +13,10 @@ type RegisterFormData = Credentials & {
 
 type LoginFormData = Credentials
 
-export const registerUser = async (formData: RegisterFormData) => {
+const handleAuthRequest = async (url: string, formData: Credentials) => {
   try {
     const response: AxiosResponse<AuthApiResponse> = await api.post(
-      '/Auth/register',
+      url,
       formData
     )
 
@@ -30,36 +29,15 @@ export const registerUser = async (formData: RegisterFormData) => {
     }
   } catch (error: unknown) {
     const axiosError = error as AxiosError<AuthApiResponse>
+    const errorResponse: AuthApiResponse | undefined =
+      axiosError?.response?.data
 
-    const errorResponse: AuthApiResponse = axiosError?.response?.data || {
-      messageKey: 'error'
-    }
-
-    return { success: false, messageKey: errorResponse.messageKey }
+    return { success: false, messageKey: errorResponse?.messageKey }
   }
 }
 
-export const loginUser = async (formData: LoginFormData) => {
-  try {
-    const response: AxiosResponse<AuthApiResponse> = await api.post(
-      '/Auth/login',
-      formData
-    )
+export const registerUser = async (formData: RegisterFormData) =>
+  handleAuthRequest('/Auth/register', formData)
 
-    const { messageKey, token } = response.data
-
-    return {
-      success: response.status === 200,
-      messageKey,
-      token
-    }
-  } catch (error: unknown) {
-    const axiosError = error as AxiosError<AuthApiResponse>
-
-    const errorResponse: AuthApiResponse = axiosError?.response?.data || {
-      messageKey: 'error'
-    }
-
-    return { success: false, messageKey: errorResponse.messageKey }
-  }
-}
+export const loginUser = async (formData: LoginFormData) =>
+  handleAuthRequest('/Auth/login', formData)

@@ -3,14 +3,19 @@
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-
 import Link from 'next/link'
+import { useSelector } from 'react-redux'
 
-import LanguageDropdown from '@/components/LanguageDropdown'
+import LanguageDropdown from '@/components/navigation/LanguageDropdown'
+
+import { RootState } from '@/store'
 
 const Navbar = () => {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  )
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light')
@@ -30,6 +35,7 @@ const Navbar = () => {
                 height={40}
                 alt="Fitness"
                 className="dark:invert"
+                priority
               />
 
               <span
@@ -53,6 +59,12 @@ const Navbar = () => {
                 className="dark:invert"
               />
             </button>
+
+            {isAuthenticated && (
+              <div className="ml-6 flex items-center justify-center w-8 h-8 rounded-full bg-primary dark:bg-primary-dark text-white">
+                J
+              </div>
+            )}
           </div>
         </div>
       </div>

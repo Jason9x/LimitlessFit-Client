@@ -70,7 +70,7 @@ const Input = ({
           className={`text-red-500 text-xs mt-4 text-center transition-all duration-300 ease-in-out
                       ${error ? 'opacity-100 visibility-visible' : 'opacity-0 visibility-hidden'}`}
         >
-          {error}.
+          {error}
         </p>
       )}
     </div>
