@@ -3,18 +3,17 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { AuthApiResponse } from '@/types/apiTypes'
 import api from '@/services/api/api'
 
-type RegisterFormData = {
+type Credentials = {
+  email: string
+  password: string
+}
+
+type RegisterFormData = Credentials & {
   name: string
-  email: string
-  password: string
 }
 
-type LoginFormData = {
-  email: string
-  password: string
-}
+type LoginFormData = Credentials
 
-// Register function
 export const registerUser = async (formData: RegisterFormData) => {
   try {
     const response: AxiosResponse<AuthApiResponse> = await api.post(
@@ -40,7 +39,6 @@ export const registerUser = async (formData: RegisterFormData) => {
   }
 }
 
-// Login function
 export const loginUser = async (formData: LoginFormData) => {
   try {
     const response: AxiosResponse<AuthApiResponse> = await api.post(
