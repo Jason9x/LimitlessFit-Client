@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios'
-import { AuthApiResponse } from '@/types/apiTypes'
+import AuthApiResponse from '@/types/AuthTokenPayload'
 import api from '@/services/api/api'
 
 type Credentials = {

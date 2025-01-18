@@ -1,9 +1,10 @@
 'use client'
 
+import { ReactNode } from 'react'
 import { useSelector } from 'react-redux'
-import { RootState } from '@/store'
-import { ReactNode, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+
+import { RootState } from '@/store'
 
 import { LoginForm } from '@/components/auth/AuthForm'
 
@@ -11,16 +12,11 @@ const AuthCheck = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   )
-
   const pathname = usePathname()
 
-  const [isHydrated, setIsHydrated] = useState(false)
+  if (!isAuthenticated && pathname !== '/register') return <LoginForm />
 
-  useEffect(() => setIsHydrated(true), [])
-  if (!isHydrated || pathname === '/register' || pathname === '/login')
-    return <>{children}</>
-
-  return <>{isAuthenticated ? children : <LoginForm />}</>
+  return <>{children}</>
 }
 
 export default AuthCheck

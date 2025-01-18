@@ -78,7 +78,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
 
     if (!success || !token) return
 
-    Cookies.set('authToken', token, {
+    Cookies.set('authToken', String(token), {
       expires: 7,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict'

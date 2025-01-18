@@ -20,7 +20,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
   const messages = await getMessages()
 
   return (
-    <html suppressHydrationWarning>
+    <html>
       <body className="bg-background dark:bg-background-dark">
         <Providers messages={messages} locale={locale}>
           <Navbar />

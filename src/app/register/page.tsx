@@ -2,7 +2,7 @@
 
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { RegisterForm } from '@/components/auth/AuthForm'
@@ -12,16 +12,11 @@ const Register = () => {
     (state: RootState) => state.auth.isAuthenticated
   )
 
-  const [isHydrated, setIsHydrated] = useState(false)
   const router = useRouter()
 
-  useEffect(() => setIsHydrated(true), [])
-
   useEffect(() => {
-    if (isHydrated && isAuthenticated) router.push('/')
-  }, [isHydrated, isAuthenticated, router])
-
-  if (!isHydrated) return null
+    if (isAuthenticated) router.push('/')
+  }, [isAuthenticated, router])
 
   return <>{!isAuthenticated && <RegisterForm />}</>
 }

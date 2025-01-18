@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useSelector } from 'react-redux'
 
 import LanguageDropdown from '@/components/navigation/LanguageDropdown'
+import UserDropdown from '@/components/navigation/UserDropdown'
 
 import { RootState } from '@/store'
 
@@ -60,11 +61,7 @@ const Navbar = () => {
               />
             </button>
 
-            {isAuthenticated && (
-              <div className="ml-6 flex items-center justify-center w-8 h-8 rounded-full bg-primary dark:bg-primary-dark text-white">
-                J
-              </div>
-            )}
+            {isAuthenticated && <UserDropdown />}
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
 import { AbstractIntlMessages } from 'use-intl'
 import { ThemeProvider } from 'next-themes'
@@ -16,12 +16,20 @@ const Providers = ({
   children: ReactNode
   messages: AbstractIntlMessages
   locale: string
-}) => (
-  <NextIntlClientProvider messages={messages} locale={locale}>
-    <ThemeProvider attribute="class">
-      <Provider store={store}>{children}</Provider>
-    </ThemeProvider>
-  </NextIntlClientProvider>
-)
+}) => {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
+
+  if (!mounted) return null
+
+  return (
+    <NextIntlClientProvider messages={messages} locale={locale}>
+      <ThemeProvider attribute="class">
+        <Provider store={store}>{children}</Provider>
+      </ThemeProvider>
+    </NextIntlClientProvider>
+  )
+}
 
 export default Providers
