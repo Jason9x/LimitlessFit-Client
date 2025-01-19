@@ -19,5 +19,28 @@
     "userAlreadyExists": "User already exists.",
     "successfulAccountCreation": "Your account has been successfully created! Welcome!",
     "error": "An error occurred while registering the user."
+  },
+  "OrderSelection": {
+    "selectItem": "Select the item to order"
+  },
+  "Items": {
+    "ez_barbell_name": "EZ Barbell",
+    "ez_barbell_desc": "Curved barbell for arm workouts. Perfect for biceps and triceps.",
+    "dumbbells_set_name": "Dumbbells Set",
+    "dumbbells_set_desc": "A collection of free weights that allow you to perform a variety of strength exercises.",
+    "kettlebell_name": "Kettlebell",
+    "kettlebell_desc": "A fitness tool ideal for functional and strength training.",
+    "triceps_row_name": "Triceps Rope",
+    "triceps_row_desc": "A fitness attachment made of a variable-length rope.",
+    "angle_bar_name": "Angle Bar",
+    "angle_bar_desc": "A versatile fitness tool, typically attached to a cable machine.",
+    "lat_machine_bar_name": "Lat Machine Bar",
+    "lat_machine_bar_desc": "The lat machine bar is an essential fitness tool for those looking to train their back.",
+    "pull_up_bar_name": "Pull-Up Bar",
+    "pull_up_bar_desc": "The pull-up bar is a fitness tool consisting of a horizontal bar fixed to a support.",
+    "jumping_rope_name": "Jumping Rope",
+    "jumping_rope_desc": "Consists of a rope with handles that is rotated under the feet.",
+    "weight_disc_name": "Weight Disc",
+    "weight_disc_desc": "Metal or rubber cylinders with a central hole that allows them to be attached to barbells."
   }
 }

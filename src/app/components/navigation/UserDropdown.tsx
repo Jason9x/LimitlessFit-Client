@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
 
-import AuthTokenPayload from '@/types/AuthTokenPayload'
+import AuthTokenPayload from '@/types/auth-token-payload'
 
 import { setAuthState } from '@/store/authSlice'
-import SubmitButton from '@/components/ui/SubmitBotton'
+import SubmitButton from '@/components/SubmitBotton'
 
 const UserDropdown = () => {
   const [user, setUser] = useState<{
@@ -22,7 +22,7 @@ const UserDropdown = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const getUserFromToken = () => {
-    const token = Cookies.get('authToken')
+    const token = Cookies.get('jwtToken')
 
     if (!token) return
 
@@ -62,7 +62,7 @@ const UserDropdown = () => {
   }, [])
 
   const handleLogout = () => {
-    Cookies.remove('authToken')
+    Cookies.remove('jwtToken')
 
     router.refresh()
 

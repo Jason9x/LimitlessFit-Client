@@ -6,7 +6,7 @@ type AuthState = {
 }
 
 const initialState: AuthState = {
-  isAuthenticated: !!Cookies.get('authToken')
+  isAuthenticated: !!Cookies.get('jwtToken')
 }
 
 const authSlice = createSlice({

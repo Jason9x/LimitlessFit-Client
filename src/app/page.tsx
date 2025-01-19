@@ -1,33 +1,62 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+
+import { fetchItems } from '@/services/api/items'
+
+import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import Snackbar from '@/components/ui/Snackbar'
+
+import Pagination from '@/components/Pagination'
+import { useTranslations } from 'next-intl'
+
+const PAGE_SIZE = 2
 
 const OrderSelection = () => {
-  // Internal state for selected order ID
-  const [selectedOrderId, setSelectedOrderId] = useState<string>('')
+  const translations = useTranslations('OrderSelection')
 
-  // Handle selection change
-  const handleSelect = (orderId: string) => {
-    setSelectedOrderId(orderId)
-  }
+  const [currentPage, setCurrentPage] = useState(1)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['items', currentPage, PAGE_SIZE],
+    queryFn: () => fetchItems(currentPage, PAGE_SIZE)
+  })
+
+  const handleError = useCallback(() => {
+    if (!error) return
+
+    setErrorMessage(error.message)
+    setSnackbarOpen(true)
+  }, [error])
+
+  useEffect(() => handleError(), [error, handleError])
+
+  if (isLoading) return <LoadingSpinner />
+
+  if (error)
+    return (
+      <Snackbar
+        open={snackbarOpen}
+        onClose={() => setSnackbarOpen(false)}
+        message={errorMessage}
+      />
+    )
+
+  const totalPages = data?.totalPages || 1
 
   return (
-    <div className="flex flex-col space-y-4 p-4 border rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold">Select an Order</h2>
-      <ul>
-        <li
-          className={`p-2 cursor-pointer ${selectedOrderId === '1' ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}
-          onClick={() => handleSelect('1')}
-        >
-          Order 1
-        </li>
-        <li
-          className={`p-2 cursor-pointer ${selectedOrderId === '2' ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}
-          onClick={() => handleSelect('2')}
-        >
-          Order 2
-        </li>
-      </ul>
+    <div className="py-10 px-20">
+      <h2 className="text-xl font-semibold">{translations('selectItem')}</h2>
+      <ul>{data?.items.map(item => <p key={item.id}>{item.nameKey}</p>)}</ul>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

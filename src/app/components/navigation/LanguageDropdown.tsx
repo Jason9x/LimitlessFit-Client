@@ -51,7 +51,7 @@ const LanguageDropdown = () => {
         )}
 
         <Image
-          src="/icons/arrow-expand.svg"
+          src="/icons/arrows/arrow-expand.svg"
           width={12}
           height={12}
           alt="Arrow expand"

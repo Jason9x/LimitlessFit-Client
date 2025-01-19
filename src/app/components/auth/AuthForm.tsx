@@ -6,8 +6,8 @@ import Cookies from 'js-cookie'
 import { useDispatch } from 'react-redux'
 
 import Input from '@/components/ui/Input'
-import SubmitButton from '@/components/ui/SubmitBotton'
-import ActionLink from '@/components/ui/ActionLink'
+import SubmitButton from '@/components/SubmitBotton'
+import ActionLink from '@/components/ActionLink'
 import Snackbar from '@/components/ui/Snackbar'
 
 import useForm from '@/hooks/useForm'
@@ -78,7 +78,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
 
     if (!success || !token) return
 
-    Cookies.set('authToken', String(token), {
+    Cookies.set('jwtToken', String(token), {
       expires: 7,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict'
