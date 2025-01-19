@@ -51,7 +51,11 @@ const Pagination = ({
     onClick: () => void
     disabled: boolean
   }) => (
-    <button onClick={onClick} disabled={disabled} className="text-foreground">
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="text-foreground flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9"
+    >
       <Image
         src="/icons/arrows/arrow-back.svg"
         width={15}
@@ -63,7 +67,7 @@ const Pagination = ({
   )
 
   return (
-    <div className="mt-4 flex space-x-4">
+    <div className="mt-4 flex space-x-2 sm:space-x-4 overflow-x-auto">
       <ArrowButton
         direction="previous"
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
@@ -74,12 +78,12 @@ const Pagination = ({
         <button
           key={key}
           onClick={() => typeof page === 'number' && onPageChange(page)}
-          className={`font-semibold text-sm px-3.5 py-2 rounded-full 
-                        ${
-                          page === currentPage
-                            ? 'bg-foreground dark:bg-foreground-dark text-secondary dark:text-secondary-dark'
-                            : 'bg-secondary dark:bg-secondary-dark text-foreground dark:text-foreground-dark hover:bg-gray-300 dark:hover:bg-gray-700'
-                        }`}
+          className={`font-semibold text-xs sm:text-sm w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-full
+              ${
+                page === currentPage
+                  ? 'bg-foreground dark:bg-foreground-dark text-secondary dark:text-secondary-dark'
+                  : 'bg-secondary dark:bg-secondary-dark text-foreground dark:text-foreground-dark hover:bg-gray-300 dark:hover:bg-gray-700'
+              } ${typeof page !== 'number' ? 'hidden sm:inline' : ''}`}
           disabled={typeof page !== 'number'}
         >
           {page}

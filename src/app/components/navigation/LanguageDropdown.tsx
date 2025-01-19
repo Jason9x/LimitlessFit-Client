@@ -37,7 +37,7 @@ const LanguageDropdown = () => {
   return (
     <div className="relative inline-block text-left" ref={ref}>
       <button
-        className="flex items-center justify-center w-full px-4 py-2"
+        className="flex items-center justify-center w-full"
         onClick={handleClick}
       >
         {currentLanguage && (
@@ -46,7 +46,7 @@ const LanguageDropdown = () => {
             height={22}
             src={currentLanguage.flag}
             alt={`Flag for ${locale}`}
-            className="mr-2"
+            className="mr-3"
           />
         )}
 
@@ -60,23 +60,20 @@ const LanguageDropdown = () => {
       </button>
 
       {isOpen && (
-        <ul className="absolute z-10 translate-x-2 mt-1 w-fit rounded-md shadow-sm bg-background dark:bg-background-dark overflow-hidden">
+        <ul className="absolute z-10 mt-2 w-fit rounded-xl bg-background dark:bg-background-dark overflow-hidden lg:shadow-md shadow-none">
           {languages.map(({ code, flag }) => (
             <li
               key={code}
-              className="block px-4 py-2 hover:bg-secondary hover:dark:bg-secondary-dark cursor-pointer"
+              className="block px-3 py-2 hover:bg-secondary hover:dark:bg-secondary-dark cursor-pointer"
               onClick={async () => {
                 await setLocaleInCookie(code)
-
                 setIsOpen(false)
               }}
             >
               <div className="flex items-center justify-center">
-                {' '}
-                {/* Center content within the list item */}
                 <Image
-                  width={22}
-                  height={22}
+                  width={28}
+                  height={28}
                   src={flag}
                   alt={`Flag for ${code}`}
                 />

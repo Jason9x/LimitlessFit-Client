@@ -72,7 +72,7 @@ const UserDropdown = () => {
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen)
 
   return (
-    <div className="relative ml-6">
+    <div className="relative">
       <button
         className="flex items-center justify-center w-8 h-8 rounded-full bg-primary dark:bg-primary-dark text-white"
         onClick={toggleDropdown}

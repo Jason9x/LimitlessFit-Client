@@ -11,7 +11,7 @@ import Snackbar from '@/components/ui/Snackbar'
 import Pagination from '@/components/Pagination'
 import { useTranslations } from 'next-intl'
 
-const PAGE_SIZE = 2
+const PAGE_SIZE = 1
 
 const OrderSelection = () => {
   const translations = useTranslations('OrderSelection')
