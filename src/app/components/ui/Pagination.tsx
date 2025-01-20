@@ -1,4 +1,3 @@
-import React from 'react'
 import Image from 'next/image'
 
 type PaginationProps = {
@@ -67,34 +66,38 @@ const Pagination = ({
   )
 
   return (
-    <div className="mt-4 flex space-x-2 sm:space-x-4 overflow-x-auto">
-      <ArrowButton
-        direction="previous"
-        onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
-        disabled={currentPage === 1}
-      />
+    <div className="mt-6 flex flex-col items-center">
+      <div className="flex items-center gap-0">
+        <ArrowButton
+          direction="previous"
+          onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+          disabled={currentPage === 1}
+        />
 
-      {visiblePages.map(({ key, page }) => (
-        <button
-          key={key}
-          onClick={() => typeof page === 'number' && onPageChange(page)}
-          className={`font-semibold text-xs sm:text-sm w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-full
+        <div className="flex items-center gap-3">
+          {visiblePages.map(({ key, page }) => (
+            <button
+              key={key}
+              onClick={() => typeof page === 'number' && onPageChange(page)}
+              className={`font-semibold text-xs sm:text-sm w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-full
               ${
                 page === currentPage
                   ? 'bg-foreground dark:bg-foreground-dark text-secondary dark:text-secondary-dark'
                   : 'bg-secondary dark:bg-secondary-dark text-foreground dark:text-foreground-dark hover:bg-gray-300 dark:hover:bg-gray-700'
               } ${typeof page !== 'number' ? 'hidden sm:inline' : ''}`}
-          disabled={typeof page !== 'number'}
-        >
-          {page}
-        </button>
-      ))}
+              disabled={typeof page !== 'number'}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
 
-      <ArrowButton
-        direction="next"
-        onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
-        disabled={currentPage === totalPages}
-      />
+        <ArrowButton
+          direction="next"
+          onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        />
+      </div>
     </div>
   )
 }

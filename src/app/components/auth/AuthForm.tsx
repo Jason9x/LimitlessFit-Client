@@ -14,7 +14,7 @@ import useForm from '@/hooks/useForm'
 
 import { registerUser, loginUser } from '@/services/api/auth'
 
-import { setAuthState } from '@/store/authSlice'
+import { setAuthState } from '@/store/slices/authSlice'
 
 type AuthFormProps = {
   isRegister: boolean

@@ -23,8 +23,10 @@ const LanguageDropdown = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node))
-        setIsOpen(false)
+      const clickedOutside =
+        ref.current && !ref.current.contains(event.target as Node)
+
+      if (clickedOutside) setIsOpen(false)
     }
 
     document.addEventListener('mousedown', handleClickOutside)
@@ -67,6 +69,7 @@ const LanguageDropdown = () => {
               className="block px-3 py-2 hover:bg-secondary hover:dark:bg-secondary-dark cursor-pointer"
               onClick={async () => {
                 await setLocaleInCookie(code)
+
                 setIsOpen(false)
               }}
             >

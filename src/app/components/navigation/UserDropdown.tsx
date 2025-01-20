@@ -8,7 +8,8 @@ import { jwtDecode } from 'jwt-decode'
 
 import AuthTokenPayload from '@/types/auth-token-payload'
 
-import { setAuthState } from '@/store/authSlice'
+import { setAuthState } from '@/store/slices/authSlice'
+
 import SubmitButton from '@/components/SubmitBotton'
 
 const UserDropdown = () => {
@@ -16,10 +17,10 @@ const UserDropdown = () => {
     email: string | undefined
     name: string | undefined
   }>()
-  const [isDropdownOpen, setDropdownOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
   const dispatch = useDispatch()
-  const dropdownRef = useRef<HTMLDivElement | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   const getUserFromToken = () => {
     const token = Cookies.get('jwtToken')
@@ -49,11 +50,10 @@ const UserDropdown = () => {
     getUserFromToken()
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      )
-        setDropdownOpen(false)
+      const clickedOutside =
+        ref.current && !ref.current.contains(event.target as Node)
+
+      if (clickedOutside) setIsOpen(false)
     }
 
     document.addEventListener('mousedown', handleClickOutside)
@@ -69,7 +69,7 @@ const UserDropdown = () => {
     dispatch(setAuthState(false))
   }
 
-  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen)
+  const toggleDropdown = () => setIsOpen(!isOpen)
 
   return (
     <div className="relative">
@@ -80,9 +80,9 @@ const UserDropdown = () => {
         {user?.name?.[0].toUpperCase()}
       </button>
 
-      {isDropdownOpen && user && (
+      {isOpen && user && (
         <div
-          ref={dropdownRef}
+          ref={ref}
           className="absolute right-0 mt-2 w-48 bg-background dark:bg-background-dark shadow-lg font-semibold rounded-2xl p-7 pt-5 break-words"
         >
           <p className="mb-1">{user?.name}</p>

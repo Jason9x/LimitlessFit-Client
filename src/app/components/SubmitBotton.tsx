@@ -1,5 +1,3 @@
-import React from 'react'
-
 type SubmitButtonProps = {
   label: string
   className?: string

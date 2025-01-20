@@ -21,20 +21,20 @@ const Navbar = () => {
   const menuRef = useRef<HTMLDivElement>(null)
 
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
-
-  const toggleMenu = () => setIsMenuOpen(previousState => !previousState)
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node))
-        setIsMenuOpen(false)
+      const clickedOutside =
+        menuRef.current && !menuRef.current.contains(event.target as Node)
+
+      if (clickedOutside) setIsMenuOpen(false)
     }
 
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsMenuOpen(false)
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
     window.addEventListener('resize', handleResize)
 
     return () => {
@@ -60,6 +60,10 @@ const Navbar = () => {
       {isAuthenticated && <UserDropdown />}
     </>
   )
+
+  useEffect(() => {
+    console.log('Current Menu State:', isMenuOpen) // Logs current state whenever it changes
+  }, [isMenuOpen]) // This runs every time isMenuOpen state changes
 
   return (
     <nav className="bg-secondary dark:bg-secondary-dark">

@@ -12,4 +12,4 @@ type ItemsResponse = Pagination & {
   items: Item[]
 }
 
-export default ItemsResponse
+export type { Item, ItemsResponse }

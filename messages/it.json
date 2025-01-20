@@ -23,24 +23,26 @@
   "OrderSelection": {
     "selectItem": "Seleziona l'articolo da ordinare"
   },
-  "Items": {
+  "OrderItem": {
     "ez_barbell_name": "Bilanciere Ez",
-    "ez_barbell_desc": "Barra curva per allenare braccia. Perfetto per bicipiti e tricipiti.",
+    "ez_barbell_description": "Barra curva per allenare braccia. Perfetto per bicipiti e tricipiti.",
     "dumbbells_set_name": "Set di manubri",
-    "dumbbells_set_desc": "Collezione di pesi liberi che consentono di eseguire una varietà di esercizi di forza. ",
+    "dumbbells_set_description": "Collezione di pesi liberi che consentono di eseguire una varietà di esercizi di forza. ",
     "kettlebell_name": "Kettlebell",
-    "kettlebell_desc": "Un attrezzo ginnico ideale per allenamenti funzionali e di forza.",
+    "kettlebell_description": "Un attrezzo ginnico ideale per allenamenti funzionali e di forza.",
     "triceps_row_name": "Corda tricipiti",
-    "triceps_row_desc": "Un attrezzo fitness composto da una corda di lunghezza variable.",
+    "triceps_row_description": "Un attrezzo fitness composto da una corda di lunghezza variable.",
     "angle_bar_name": "Barra angolare",
-    "angle_bar_desc": "Attrezzo fitness versatile, solitamente attaccato a una macchina a cavo.",
+    "angle_bar_description": "Attrezzo fitness versatile, solitamente attaccato a una macchina a cavo.",
     "lat_machine_bar_name": "Barra lat machine",
-    "lat_machine_bar_desc": "La barra lat machine è un attrezzo fitness essenziale per chi desidera allenare la schiena",
+    "lat_machine_bar_description": "La barra lat machine è un attrezzo fitness essenziale per chi desidera allenare la schiena",
     "pull_up_bar_name": "Sbarra per trazioni",
-    "pull_up_bar_desc": "La sbarra per trazioni è un attrezzo ginnico costituito da una barra orizzontale fissata a un supporto.",
+    "pull_up_bar_description": "La sbarra per trazioni è un attrezzo ginnico costituito da una barra orizzontale fissata a un supporto.",
     "jumping_rope_name": "Corda per saltare",
-    "jumping_rope_desc": "Costituita da una corda con manici che viene fatta ruotare sotto i piedi.",
+    "jumping_rope_description": "Costituita da una corda con manici che viene fatta ruotare sotto i piedi.",
     "weight_disc_name": "Disco pesi",
-    "weight_disc_desc": "Cilindri di metallo o gomma, con un foro centrale che permette di fissarli a bilancieri."
+    "weight_disc_description": "Cilindri di metallo o gomma, con un foro centrale che permette di fissarli a bilancieri.",
+    "creatine_name": "Creatina",
+    "creatine_description": "La creatina è un composto naturale che aiuta ad aumentare l'energia durante le attività ad alta intensità, migliorando la forza, la potenza e la crescita muscolare."
   }
 }

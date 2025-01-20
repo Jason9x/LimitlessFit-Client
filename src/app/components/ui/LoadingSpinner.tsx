@@ -1,5 +1,3 @@
-import React from 'react'
-
 const LoadingSpinner = () => (
   <div className="fixed w-screen h-screen flex justify-center items-center">
     <div
