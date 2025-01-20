@@ -40,7 +40,7 @@ const OrderItem = ({ item }: OrderItemProps) => {
             € {price}
           </p>
 
-          <p className="text-foreground-secondary dark:foreground-secondary-dark text-sm">
+          <p className="text-foreground-secondary dark:text-foreground-secondary-dark text-sm">
             {translations(descriptionKey)}
           </p>
         </div>

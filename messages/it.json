@@ -29,9 +29,9 @@
     "dumbbells_set_name": "Set di manubri",
     "dumbbells_set_description": "Collezione di pesi liberi che consentono di eseguire una varietà di esercizi di forza. ",
     "kettlebell_name": "Kettlebell",
-    "kettlebell_description": "Un attrezzo ginnico ideale per allenamenti funzionali e di forza.",
+    "kettlebell_description": "Uno strumento di fitness ideale per sviluppare forza, migliorare il movimento funzionale e migliorare le prestazioni.",
     "triceps_row_name": "Corda tricipiti",
-    "triceps_row_description": "Un attrezzo fitness composto da una corda di lunghezza variable.",
+    "triceps_row_description": "Un accessorio per il fitness realizzato con una corda resistente di lunghezza variabile, progettato per un allenamento versatile e prestazioni migliorate.",
     "angle_bar_name": "Barra angolare",
     "angle_bar_description": "Attrezzo fitness versatile, solitamente attaccato a una macchina a cavo.",
     "lat_machine_bar_name": "Barra lat machine",
@@ -44,5 +44,15 @@
     "weight_disc_description": "Cilindri di metallo o gomma, con un foro centrale che permette di fissarli a bilancieri.",
     "creatine_name": "Creatina",
     "creatine_description": "La creatina è un composto naturale che aiuta ad aumentare l'energia durante le attività ad alta intensità, migliorando la forza, la potenza e la crescita muscolare."
+  },
+  "Cart": {
+    "myOrder": "Il mio ordine",
+    "confirmOrder": "Conferma l'ordine"
+  },
+  "ConfirmOrderAlert": {
+    "title": "Vuoi confermare l'ordine?",
+    "description": "L'ordine andrà ad ammontare a ",
+    "cancel": "Cancella",
+    "confirm": "Conferma"
   }
 }

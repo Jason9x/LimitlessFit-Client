@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
@@ -11,6 +11,7 @@ import AuthTokenPayload from '@/types/auth-token-payload'
 import { setAuthState } from '@/store/slices/authSlice'
 
 import SubmitButton from '@/components/SubmitBotton'
+import useClickOutside from '@/hooks/useClickOutside'
 
 const UserDropdown = () => {
   const [user, setUser] = useState<{
@@ -20,7 +21,8 @@ const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
   const dispatch = useDispatch()
-  const ref = useRef<HTMLDivElement>(null)
+
+  const ref = useClickOutside(() => setIsOpen(false))
 
   const getUserFromToken = () => {
     const token = Cookies.get('jwtToken')
@@ -46,20 +48,7 @@ const UserDropdown = () => {
     }
   }
 
-  useEffect(() => {
-    getUserFromToken()
-
-    const handleClickOutside = (event: MouseEvent) => {
-      const clickedOutside =
-        ref.current && !ref.current.contains(event.target as Node)
-
-      if (clickedOutside) setIsOpen(false)
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  useEffect(() => getUserFromToken(), [])
 
   const handleLogout = () => {
     Cookies.remove('jwtToken')
@@ -72,19 +61,16 @@ const UserDropdown = () => {
   const toggleDropdown = () => setIsOpen(!isOpen)
 
   return (
-    <div className="relative">
+    <div className="relative" ref={ref}>
       <button
         className="flex items-center justify-center w-8 h-8 rounded-full bg-primary dark:bg-primary-dark text-white"
         onClick={toggleDropdown}
       >
-        {user?.name?.[0].toUpperCase()}
+        {user?.name?.[0]?.toUpperCase() || 'U'}
       </button>
 
-      {isOpen && user && (
-        <div
-          ref={ref}
-          className="absolute right-0 mt-2 w-48 bg-background dark:bg-background-dark shadow-lg font-semibold rounded-2xl p-7 pt-5 break-words"
-        >
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-background dark:bg-background-dark shadow-lg font-semibold rounded-2xl p-7 pt-5 break-words">
           <p className="mb-1">{user?.name}</p>
 
           <p className="text-foreground-secondary dark:text-foreground-secondary-dark text-sm mb-4">

@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react'
 import { z, ZodSchema } from 'zod'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import { useDispatch } from 'react-redux'
 
@@ -24,6 +25,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
   const translations = useTranslations(isRegister ? 'Register' : 'Login')
   const loginTranslations = useTranslations('Login')
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const baseSchema = z.object({
     email: z.string().email(),
@@ -85,6 +87,8 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
     })
 
     dispatch(setAuthState(true))
+
+    router.push('/')
   }
 
   return (

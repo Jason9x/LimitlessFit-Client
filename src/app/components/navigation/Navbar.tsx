@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useSelector } from 'react-redux'
 
 import LanguageDropdown from '@/components/navigation/LanguageDropdown'
 import UserDropdown from '@/components/navigation/UserDropdown'
 
 import { RootState } from '@/store'
+import useClickOutside from '@/hooks/useClickOutside'
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme()
@@ -18,19 +19,13 @@ const Navbar = () => {
   )
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
+
+  const menuRef = useClickOutside(() => setIsMenuOpen(false))
 
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const clickedOutside =
-        menuRef.current && !menuRef.current.contains(event.target as Node)
-
-      if (clickedOutside) setIsMenuOpen(false)
-    }
-
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsMenuOpen(false)
     }
@@ -38,7 +33,6 @@ const Navbar = () => {
     window.addEventListener('resize', handleResize)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
       window.removeEventListener('resize', handleResize)
     }
   }, [])
@@ -60,10 +54,6 @@ const Navbar = () => {
       {isAuthenticated && <UserDropdown />}
     </>
   )
-
-  useEffect(() => {
-    console.log('Current Menu State:', isMenuOpen) // Logs current state whenever it changes
-  }, [isMenuOpen]) // This runs every time isMenuOpen state changes
 
   return (
     <nav className="bg-secondary dark:bg-secondary-dark">

@@ -29,9 +29,9 @@
     "dumbbells_set_name": "Dumbbells Set",
     "dumbbells_set_description": "A collection of free weights that allow you to perform a variety of strength exercises.",
     "kettlebell_name": "Kettlebell",
-    "kettlebell_description": "A fitness tool ideal for functional and strength training.",
+    "kettlebell_description": "An ideal fitness tool for building strength, improving functional movement, and enhancing performance.",
     "triceps_row_name": "Triceps Rope",
-    "triceps_row_description": "A fitness attachment made of a variable-length rope.",
+    "triceps_row_description": "A fitness attachment crafted from a durable, variable-length rope, designed for versatile training and enhanced performance.",
     "angle_bar_name": "Angle Bar",
     "angle_bar_description": "A versatile fitness tool, typically attached to a cable machine.",
     "lat_machine_bar_name": "Lat Machine Bar",
@@ -44,5 +44,15 @@
     "weight_disc_description": "Metal or rubber cylinders with a central hole that allows them to be attached to barbells.",
     "creatine_name": "Creatine",
     "creatine_description": "Creatine is a natural compound that helps increase energy during high-intensity activities, improving strength, power, and muscle growth."
+  },
+  "Cart": {
+    "myOrder": "My order",
+    "confirmOrder": "Confirm order"
+  },
+  "ConfirmOrderAlert": {
+    "title": "Do you want to confirm the order?",
+    "description": "The total amount of the order will be ",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   }
 }
