@@ -1,4 +1,3 @@
-// components/order/Cart.tsx
 import { useSelector, useDispatch } from 'react-redux'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
@@ -32,7 +31,6 @@ const Cart = () => {
 
   const handleConfirmOrder = () => {
     alert('Order confirmed!')
-
     setShowConfirmAlert(false)
   }
 
@@ -43,8 +41,10 @@ const Cart = () => {
     .toFixed(2)
 
   return (
-    <div className="flex flex-col justify-center bg-secondary dark:bg-secondary-dark px-10 h-full">
-      <h2 className="text-xl font-semibold">{cartTranslations('myOrder')}</h2>
+    <div className="flex flex-col justify-center bg-secondary dark:bg-secondary-dark px-4 sm:px-10 h-full">
+      <h2 className="text-xl font-semibold text-center sm:text-left">
+        {cartTranslations('myOrder')}
+      </h2>
 
       <hr className="border-gray-300 dark:border-gray-700 mt-4" />
 
@@ -52,9 +52,9 @@ const Cart = () => {
         {cartItems.map(item => (
           <li
             key={item.id}
-            className="flex justify-between items-center p-4 rounded-md"
+            className="flex flex-col sm:flex-row justify-between items-center p-4 rounded-md mb-4 transition-all duration-300"
           >
-            <div className="flex items-center">
+            <div className="flex items-center mb-4 sm:mb-0">
               <Image
                 src={item.imageUrl}
                 alt={item.nameKey}
@@ -64,30 +64,30 @@ const Cart = () => {
               />
 
               <div>
-                <p className="text-foreground dark:text-foreground-dark font-semibold">
+                <p className="text-foreground dark:text-foreground-dark font-semibold text-sm sm:text-base">
                   {itemsTranslations(item.nameKey)}
                 </p>
 
-                <p className="text-foreground-secondary dark:text-foreground-secondary-dark">
+                <p className="text-foreground-secondary dark:text-foreground-secondary-dark text-xs sm:text-sm">
                   € {item.price}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-2 text-foreground dark:text-foreground-dark">
                 <button
                   onClick={() => handleDecreaseQuantity(item.id)}
-                  className="transition-all duration-300 transform hover:scale-110 hover:opacity-80 p-3 text-xl"
+                  className="transition-all duration-300 transform hover:scale-110 hover:opacity-80 p-3 text-lg sm:text-xl"
                 >
                   -
                 </button>
 
-                <span>{item.quantity}</span>
+                <span className="text-sm sm:text-base">{item.quantity}</span>
 
                 <button
                   onClick={() => handleIncreaseQuantity(item.id)}
-                  className="transition-all duration-300 transform hover:scale-110 hover:opacity-80 p-3 text-xl"
+                  className="transition-all duration-300 transform hover:scale-110 hover:opacity-80 p-3 text-lg sm:text-xl"
                 >
                   +
                 </button>
@@ -110,13 +110,10 @@ const Cart = () => {
         ))}
       </ul>
 
-      <div className="mt-4">
-        <SubmitButton
-          label={cartTranslations('confirmOrder')}
-          className="w-full"
-          onClick={handleSubmitOrder}
-        />
-      </div>
+      <SubmitButton
+        label={cartTranslations('confirmOrder')}
+        onClick={handleSubmitOrder}
+      />
 
       {showConfirmAlert && (
         <ConfirmOrderAlert
