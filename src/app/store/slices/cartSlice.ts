@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
 import { Item } from '@/types/items'
 
 type CartItem = Omit<Item, 'descriptionKey'> & {
@@ -8,10 +7,12 @@ type CartItem = Omit<Item, 'descriptionKey'> & {
 
 type CartState = {
   items: CartItem[]
+  lastAddedItemIndex: number | null
 }
 
 const initialState: CartState = {
-  items: []
+  items: [],
+  lastAddedItemIndex: null
 }
 
 const cartSlice = createSlice({
@@ -31,6 +32,10 @@ const cartSlice = createSlice({
             cartItem.id === item.id ? updatedItem : cartItem
           )
         : [...state.items, updatedItem]
+
+      state.lastAddedItemIndex = state.items.findIndex(
+        cartItem => cartItem.id === updatedItem.id
+      )
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter(item => item.id !== action.payload)

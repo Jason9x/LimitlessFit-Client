@@ -21,7 +21,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
 
   return (
     <html>
-      <body className="bg-background dark:bg-background-dark">
+      <body className="bg-background dark:bg-background-dark w-fit">
         <Providers messages={messages} locale={locale}>
           <Navbar />
           <AuthCheck>{children}</AuthCheck>

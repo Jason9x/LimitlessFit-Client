@@ -32,9 +32,7 @@ const Navbar = () => {
 
     window.addEventListener('resize', handleResize)
 
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   const NavigationItems = () => (
@@ -56,56 +54,53 @@ const Navbar = () => {
   )
 
   return (
-    <nav className="bg-secondary dark:bg-secondary-dark">
-      <div className="container mx-auto px-6 py-4 relative">
-        <div className="flex justify-between items-center">
-          <Link href="/">
-            <div className="flex items-center text-foreground dark:text-foreground-dark">
-              <Image
-                src="/icons/fitness.svg"
-                width={40}
-                height={40}
-                alt="Fitness"
-                className="dark:invert"
-                priority
-              />
+    <nav className="flex justify-between p-4 bg-secondary dark:bg-secondary-dark">
+      <Link href="/">
+        <div className="flex items-center text-foreground dark:text-foreground-dark">
+          <Image
+            src="/icons/fitness.svg"
+            width={40}
+            height={40}
+            alt="Fitness"
+            className="dark:invert"
+            priority
+          />
 
-              <span
-                className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10
+          <span
+            className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10
                         text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider"
-              >
-                LimitlessFit
-              </span>
-            </div>
-          </Link>
-
-          <button
-            className="lg:hidden flex items-center text-foreground dark:text-foreground-dark"
-            onClick={toggleMenu}
           >
-            <Image
-              src="/icons/menu.svg"
-              width={22}
-              height={22}
-              alt="Menu"
-              className="dark:invert"
-            />
-          </button>
-
-          <div className="hidden lg:flex items-center space-x-4">
-            <NavigationItems />
-          </div>
+            LimitlessFit
+          </span>
         </div>
+      </Link>
 
-        {isMenuOpen && (
-          <div
-            ref={menuRef}
-            className="absolute top-15 right-2 bg-background dark:bg-background-dark shadow-md rounded-xl p-3 w-20 z-10 flex flex-col space-y-1 items-center justify-center"
-          >
-            <NavigationItems />
-          </div>
-        )}
+      <button
+        className="lg:hidden text-foreground dark:text-foreground-dark"
+        onClick={toggleMenu}
+      >
+        <Image
+          src="/icons/menu.svg"
+          width={22}
+          height={22}
+          alt="Menu"
+          className="dark:invert"
+        />
+      </button>
+
+      <div className="hidden lg:flex items-center space-x-4">
+        <NavigationItems />
       </div>
+
+      {isMenuOpen && (
+        <div
+          ref={menuRef}
+          className="absolute top-14 right-2 bg-background dark:bg-background-dark shadow-md
+                     rounded-xl p-3 w-20 flex flex-col space-y-1 items-center justify-center"
+        >
+          <NavigationItems />
+        </div>
+      )}
     </nav>
   )
 }
