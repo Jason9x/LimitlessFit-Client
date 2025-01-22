@@ -20,11 +20,10 @@ const handleAuthRequest = async (url: string, formData: Credentials) => {
       formData
     )
 
-    const { messageKey, token } = response.data
+    const { token } = response.data
 
     return {
       success: response.status === 200,
-      messageKey,
       token
     }
   } catch (error: unknown) {

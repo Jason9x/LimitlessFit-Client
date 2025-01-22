@@ -95,7 +95,7 @@ const Navbar = () => {
       {isMenuOpen && (
         <div
           ref={menuRef}
-          className="absolute top-14 right-2 bg-background dark:bg-background-dark shadow-md
+          className="fixed top-14 right-2 bg-background dark:bg-background-dark shadow-md
                      rounded-xl p-3 w-20 flex flex-col space-y-1 items-center justify-center"
         >
           <NavigationItems />

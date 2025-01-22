@@ -1,24 +1,30 @@
 {
+  "Status": {
+    "connectionError": "Impossibile connettersi al server. Controlla la tua connessione internet o riprova più tardi."
+  },
   "Login": {
     "newUser": "Nuovo utente?",
     "registerNow": "Registrati ora",
-    "login": "Login",
     "forgottenPassword": "Password dimenticata?",
-    "invalidCredentials": "Credenziali valide non fornite. Controlla la tua email e la tua password.",
-    "successfulLogin": "Hai effettuato l'accesso con successo.",
-    "error": "Si è verificato un errore durante l'accesso dell'utente."
+    "login": "Login",
+    "userNotFound": "Non siamo riusciti a trovare un account con i dati forniti. Verifica il tuo indirizzo email o nome utente e riprova.",
+    "invalidPassword": "La password inserita non è corretta. Riprova.",
+    "accountLocked": "Il tuo account è stato bloccato a causa di ripetuti tentativi di accesso non riusciti. Reimposta la password o contatta il supporto per assistenza.",
+    "loginFailed": "Si è verificato un errore durante il login. Riprova più tardi."
   },
   "Register": {
     "name": "Nome",
     "existingUser": "Già un membro? Effettua il",
     "register": "Registrati",
-    "nameInvalid": "Il nome può contenere solo lettere, spazi, trattini o apostrofi.",
+    "passwordLength": "La password deve essere lunga almeno 8 caratteri.",
     "passwordUppercase": "La password deve contenere almeno una lettera maiuscola.",
-    "passwordNumber": "La password deve includere almeno un numero.",
-    "fieldsRequired": "Nome, email e password sono obbligatori.",
-    "userAlreadyExists": "Utente già esistente.",
-    "successfulAccountCreation": "Il tuo account è stato creato con successo! Benvenuto!",
-    "error": "Si è verificato un errore durante la registrazione dell'utente."
+    "passwordNumber": "La password deve contenere almeno un numero.",
+    "passwordSpecial": "La password deve contenere almeno un carattere speciale (ad esempio !, @, #, ecc.).",
+    "userAlreadyExists": "Esiste già un account con questa email. Accedi o utilizza un'email diversa.",
+    "passwordRequirementsNotMet": "La password non soddisfa i requisiti richiesti. Assicurati che contenga almeno una lettera maiuscola, un numero e un minimo di 8 caratteri.",
+    "invalidEmail": "L'indirizzo email inserito non è valido. Assicurati che sia nel formato corretto (es. esempio@dominio.com).",
+    "invalidName": "Il nome può contenere solo lettere, spazi, trattini o apostrofi.",
+    "registrationFailed": "There was an error logging in. Please try again later."
   },
   "OrderSelection": {
     "selectItem": "Seleziona l'articolo da ordinare"

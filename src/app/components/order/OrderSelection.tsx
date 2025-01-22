@@ -47,7 +47,7 @@ const OrderSelection = () => {
   const totalPages = data?.totalPages || 1
 
   return (
-    <div className="py-32 px-20">
+    <div className="p-20">
       <h2 className="text-xl font-semibold">{translations('selectItem')}</h2>
 
       <ul className="mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">

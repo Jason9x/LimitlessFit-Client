@@ -24,6 +24,8 @@ type AuthFormProps = {
 const AuthForm = ({ isRegister }: AuthFormProps) => {
   const translations = useTranslations(isRegister ? 'Register' : 'Login')
   const loginTranslations = useTranslations('Login')
+  const statusTranslations = useTranslations('Status')
+
   const dispatch = useDispatch()
   const router = useRouter()
 
@@ -34,13 +36,15 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
 
   const registerSchema = baseSchema.extend({
     name: isRegister
-      ? z.string().regex(/^[a-zA-Z\s'-]+$/, translations('nameInvalid'))
+      ? z.string().regex(/^[a-zA-Z0-9 ]{3,50}$/, translations('invalidName'))
       : z.string(),
     password: isRegister
       ? z
           .string()
+          .min(8, translations('passwordLength'))
           .regex(/[A-Z]/, translations('passwordUppercase'))
           .regex(/\d/, translations('passwordNumber'))
+          .regex(/[^a-zA-Z0-9]/, translations('passwordSpecial'))
       : z.string()
   })
 
@@ -72,9 +76,13 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
     }
 
     const apiAction = isRegister ? registerUser : loginUser
-    const { success, messageKey, token } = await apiAction(formData)
+    const { success, token, messageKey } = await apiAction(formData)
 
-    setSnackbarMessage(translations(messageKey ?? 'error'))
+    setSnackbarMessage(
+      messageKey
+        ? translations(messageKey)
+        : statusTranslations('connectionError')
+    )
     setSnackbarVariant(success ? 'success' : 'error')
     setSnackbarOpen(true)
 
@@ -92,7 +100,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen w-screen">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         {isRegister && (
           <Input

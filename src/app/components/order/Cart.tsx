@@ -66,15 +66,15 @@ const Cart = () => {
     <div className="flex flex-col justify-center bg-secondary dark:bg-secondary-dark px-10 h-full">
       <h2 className="text-xl font-semibold">{cartTranslations('myOrder')}</h2>
 
-      <hr className="border-gray-300 dark:border-gray-700 mt-4" />
+      <hr className="border-gray-300 dark:border-gray-700 my-4" />
 
       <ul>
         {currentItems.map(item => (
           <li
             key={item.id}
-            className="flex flex-col lg:flex-row justify-between items-center p-4 rounded-md mb-2 transition-all duration-300"
+            className="flex flex-col lg:flex-row justify-between items-center p-2 rounded-md transition-all duration-300"
           >
-            <div className="flex items-center mb-2">
+            <div className="flex items-center mb-2 lg:mr-10">
               <Image
                 src={item.imageUrl}
                 alt={item.nameKey}
@@ -142,6 +142,7 @@ const Cart = () => {
       <SubmitButton
         label={cartTranslations('confirmOrder')}
         onClick={handleSubmitOrder}
+        className="mt-4"
       />
 
       <Pagination
