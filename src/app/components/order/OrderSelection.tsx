@@ -47,11 +47,13 @@ const OrderSelection = () => {
   const totalPages = data?.totalPages || 1
 
   return (
-    <div className="p-20">
+    <div className="p-10">
       <h2 className="text-xl font-semibold">{translations('selectItem')}</h2>
 
       <ul className="mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
-        {data?.items.map(item => <OrderItem key={item.id} item={item} />)}
+        {data?.items.$values.map(item => (
+          <OrderItem key={item.id} item={item} />
+        ))}
       </ul>
 
       <Pagination

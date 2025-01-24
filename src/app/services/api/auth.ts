@@ -1,6 +1,9 @@
 import { AxiosError, AxiosResponse } from 'axios'
-import AuthApiResponse from '@/types/auth-token-payload'
+
 import api from '@/services/api/api'
+
+import AuthTokenPayload from '@/types/auth-token-payload'
+import AxiosErrorWithMessageKey from '@/types/axios-error'
 
 type Credentials = {
   email: string
@@ -15,23 +18,18 @@ type LoginFormData = Credentials
 
 const handleAuthRequest = async (url: string, formData: Credentials) => {
   try {
-    const response: AxiosResponse<AuthApiResponse> = await api.post(
+    const { data }: AxiosResponse<AuthTokenPayload> = await api.post(
       url,
       formData
     )
+    const { token } = data
 
-    const { token } = response.data
+    return { token }
+  } catch (error) {
+    const { messageKey } = (error as AxiosError).response
+      ?.data as AxiosErrorWithMessageKey
 
-    return {
-      success: response.status === 200,
-      token
-    }
-  } catch (error: unknown) {
-    const axiosError = error as AxiosError<AuthApiResponse>
-    const errorResponse: AuthApiResponse | undefined =
-      axiosError?.response?.data
-
-    return { success: false, messageKey: errorResponse?.messageKey }
+    throw new Error(messageKey)
   }
 }
 

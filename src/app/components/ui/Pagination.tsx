@@ -4,6 +4,7 @@ type PaginationProps = {
   currentPage: number
   totalPages: number
   onPageChange: (pageNumber: number) => void
+  bgClasses?: string
 }
 
 const MAX_VISIBLE_PAGES = 5
@@ -11,8 +12,11 @@ const MAX_VISIBLE_PAGES = 5
 const Pagination = ({
   currentPage,
   totalPages,
-  onPageChange
+  onPageChange,
+  bgClasses = 'bg-secondary dark:bg-secondary-dark'
 }: PaginationProps) => {
+  if (totalPages <= 1) return null
+
   const calculateVisiblePages = () => {
     const startPage = Math.max(
       Math.min(
@@ -83,7 +87,7 @@ const Pagination = ({
               ${
                 page === currentPage
                   ? 'bg-foreground dark:bg-foreground-dark text-secondary dark:text-secondary-dark'
-                  : 'bg-secondary dark:bg-secondary-dark text-foreground dark:text-foreground-dark hover:bg-gray-300 dark:hover:bg-gray-700'
+                  : `${bgClasses} text-foreground dark:text-foreground-dark hover:bg-gray-300 dark:hover:bg-gray-700`
               } ${typeof page !== 'number' ? 'hidden sm:inline' : ''}`}
               disabled={typeof page !== 'number'}
             >

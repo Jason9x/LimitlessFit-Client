@@ -7,8 +7,8 @@ import Cookies from 'js-cookie'
 import { useDispatch } from 'react-redux'
 
 import Input from '@/components/ui/Input'
-import SubmitButton from '@/components/SubmitBotton'
-import ActionLink from '@/components/ActionLink'
+import SubmitButton from '@/components/buttons/SubmitBotton'
+import ActionLink from '@/components/buttons/ActionLink'
 import Snackbar from '@/components/ui/Snackbar'
 
 import useForm from '@/hooks/useForm'
@@ -16,6 +16,7 @@ import useForm from '@/hooks/useForm'
 import { registerUser, loginUser } from '@/services/api/auth'
 
 import { setAuthState } from '@/store/slices/authSlice'
+import { AxiosError } from 'axios'
 
 type AuthFormProps = {
   isRegister: boolean
@@ -63,9 +64,6 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
 
   const [snackbarMessage, setSnackbarMessage] = useState<string>('')
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
-  const [snackbarVariant, setSnackbarVariant] = useState<'success' | 'error'>(
-    'error'
-  )
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -76,27 +74,27 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
     }
 
     const apiAction = isRegister ? registerUser : loginUser
-    const { success, token, messageKey } = await apiAction(formData)
 
-    setSnackbarMessage(
-      messageKey
-        ? translations(messageKey)
-        : statusTranslations('connectionError')
-    )
-    setSnackbarVariant(success ? 'success' : 'error')
-    setSnackbarOpen(true)
+    try {
+      const { token } = await apiAction(formData)
 
-    if (!success || !token) return
+      Cookies.set('jwtToken', String(token), {
+        expires: 7,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict'
+      })
 
-    Cookies.set('jwtToken', String(token), {
-      expires: 7,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict'
-    })
+      dispatch(setAuthState(true))
 
-    dispatch(setAuthState(true))
+      router.push('/')
+    } catch (error) {
+      const messageKey = (error as AxiosError).message || 'connectionError'
 
-    router.push('/')
+      setSnackbarMessage(
+        translations(messageKey) || statusTranslations('connectionError')
+      )
+      setSnackbarOpen(true)
+    }
   }
 
   return (
@@ -169,7 +167,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
         message={snackbarMessage}
         open={snackbarOpen}
         onClose={() => setSnackbarOpen(false)}
-        variant={snackbarVariant}
+        variant="error"
       />
     </div>
   )

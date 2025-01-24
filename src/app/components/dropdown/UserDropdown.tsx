@@ -1,54 +1,26 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
-import { jwtDecode } from 'jwt-decode'
-
-import AuthTokenPayload from '@/types/auth-token-payload'
 
 import { setAuthState } from '@/store/slices/authSlice'
+import useUser from '@/hooks/useUser'
 
-import SubmitButton from '@/components/SubmitBotton'
+import SubmitButton from '@/components/buttons/SubmitBotton'
 import useClickOutside from '@/hooks/useClickOutside'
 
 const UserDropdown = () => {
-  const [user, setUser] = useState<{
-    email: string | undefined
-    name: string | undefined
-  }>()
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const ref = useClickOutside(() => setIsOpen(false))
+  const user = useUser()
 
-  const getUserFromToken = () => {
-    const token = Cookies.get('jwtToken')
+  const ref = useRef<HTMLDivElement | null>(null)
 
-    if (!token) return
-
-    try {
-      const data = jwtDecode<AuthTokenPayload>(token)
-
-      const name =
-        data['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
-      const email =
-        data[
-          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
-        ]
-
-      setUser({
-        name,
-        email
-      })
-    } catch (error) {
-      console.error('Failed to decode JWT:', error)
-    }
-  }
-
-  useEffect(() => getUserFromToken(), [])
+  useClickOutside([ref], () => setIsOpen(false))
 
   const handleLogout = () => {
     Cookies.remove('jwtToken')
@@ -70,7 +42,7 @@ const UserDropdown = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-background dark:bg-background-dark shadow-lg font-semibold rounded-2xl p-7 pt-5 break-words">
+        <div className="absolute bg-background dark:bg-background-dark z-[9999] right-0 mt-2 w-48  shadow-lg font-semibold rounded-2xl p-7 pt-5 break-words">
           <p className="mb-1">{user?.name}</p>
 
           <p className="text-foreground-secondary dark:text-foreground-secondary-dark text-sm mb-4">

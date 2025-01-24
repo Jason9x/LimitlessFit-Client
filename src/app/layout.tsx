@@ -4,15 +4,16 @@ import { ReactNode } from 'react'
 import { Metadata } from 'next'
 import { getMessages, getLocale } from 'next-intl/server'
 
-import Navbar from '@/components/navigation/Navbar'
+import Navbar from '@/components/Navbar'
 import Providers from '@/providers'
 import AuthCheck from '@/components/auth/AuthCheck'
 
 export const metadata: Metadata = {
   title: 'LimitlessFit',
-  description: `LimitlessFit is a fitness and wellness platform designed to help you 
-                achieve your health goals through personalized workout plans, nutrition guidance, and progress tracking. 
-                Stay motivated and reach your full potential with our comprehensive fitness tools.`
+  description: `LimitlessFit is an online shop offering a wide range of fitness and wellness products to 
+                support your health journey. From high-quality workout gear to supplements and recovery tools, 
+                our carefully curated collection helps you achieve your fitness goals. 
+                Explore our products and elevate your wellness routine.`
 }
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {

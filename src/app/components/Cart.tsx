@@ -1,14 +1,18 @@
 import { useSelector, useDispatch } from 'react-redux'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 import { RootState } from '@/store'
 import { removeFromCart, updateQuantity } from '@/store/slices/cartSlice'
 
-import SubmitButton from '@/components/SubmitBotton'
-import ConfirmOrderAlert from './ConfirmOrderAlert'
+import SubmitButton from '@/components/buttons/SubmitBotton'
+import ConfirmOrderAlert from './order/ConfirmOrderAlert'
 import Pagination from '@/components/ui/Pagination'
+import { createOrder } from '@/services/api/orders'
+import { OrderRequest } from '@/types/order'
+import useUser from '@/hooks/useUser'
 
 const ITEMS_PER_PAGE = 3
 
@@ -26,6 +30,9 @@ const Cart = () => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
 
+  const user = useUser()
+  const router = useRouter()
+
   const totalPages = Math.ceil(cartItems.length / ITEMS_PER_PAGE)
 
   const handleRemoveFromCart = (itemId: number) =>
@@ -37,13 +44,20 @@ const Cart = () => {
   const handleDecreaseQuantity = (itemId: number) =>
     dispatch(updateQuantity({ itemId, quantity: -1 }))
 
-  const handleSubmitOrder = () => {
-    setShowConfirmAlert(true)
-  }
+  const handleSubmitOrder = () => setShowConfirmAlert(true)
 
-  const handleConfirmOrder = () => {
-    alert('Order confirmed!')
-    setShowConfirmAlert(false)
+  const handleConfirmOrder = async () => {
+    const request: OrderRequest = {
+      customerName: user?.name || '',
+      items: cartItems.map(({ id, quantity }) => ({
+        itemId: id,
+        quantity
+      }))
+    }
+
+    const { id } = await createOrder(request)
+
+    router.push(`/orders/${id}`)
   }
 
   const handleCancelOrder = () => setShowConfirmAlert(false)
@@ -95,10 +109,10 @@ const Cart = () => {
             </div>
 
             <div className="flex items-center space-x-4 sm:space-x-2">
-              <div className="flex items-center space-x-2 text-foreground dark:text-foreground-dark">
+              <div className="flex items-center space-x-3 mr-1 text-foreground dark:text-foreground-dark">
                 <button
                   onClick={() => handleDecreaseQuantity(item.id)}
-                  className="transition-all duration-300 hover:shadow-md rounded-xl py-0 px-2 text-md"
+                  className="text-md"
                 >
                   -
                 </button>
@@ -107,7 +121,7 @@ const Cart = () => {
 
                 <button
                   onClick={() => handleIncreaseQuantity(item.id)}
-                  className="transition-all duration-300 hover:shadow-md rounded-xl py-0 px-2 text-md"
+                  className="text-md"
                 >
                   +
                 </button>
@@ -149,6 +163,7 @@ const Cart = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        bgClasses="bg-background dark:bg-background-dark"
       />
     </div>
   )

@@ -1,4 +1,12 @@
 {
+  "NotFound": {
+    "title": "404",
+    "message": "Oops! The page you're looking for doesn't exist.",
+    "button": "Go Back to Home"
+  },
+  "BackButton": {
+    "back": "Back"
+  },
   "Status": {
     "connectionError": "Unable to connect to the server. Please check your internet connection or try again later."
   },
@@ -60,5 +68,20 @@
     "description": "The total amount of the order will be ",
     "cancel": "Cancel",
     "confirm": "Confirm"
+  },
+  "Order": {
+    "order": "Order",
+    "total": "Total",
+    "date": "Date",
+    "status": "Status",
+    "orderNotFound": "The order was not found.",
+    "items": "Items",
+    "preview": "Preview"
+  },
+  "OrderStatus": {
+    "pending": "Pending",
+    "processing": "Processing",
+    "shipping": "Shipping",
+    "delivered": "Delivered"
   }
 }

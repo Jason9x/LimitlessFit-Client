@@ -1,4 +1,12 @@
 {
+  "NotFound": {
+    "title": "404",
+    "message": "Oops! La pagina che stai cercando non esiste.",
+    "button": "Torna alla Home"
+  },
+  "BackButton": {
+    "back": "Indietro"
+  },
   "Status": {
     "connectionError": "Impossibile connettersi al server. Controlla la tua connessione internet o riprova più tardi."
   },
@@ -60,5 +68,20 @@
     "description": "L'ordine andrà ad ammontare a ",
     "cancel": "Cancella",
     "confirm": "Conferma"
+  },
+  "Order": {
+    "order": "Ordine",
+    "total": "Totale",
+    "date": "Data",
+    "status": "Stato",
+    "orderNotFound": "L'ordine non è stato trovato.",
+    "items": "Articoli",
+    "preview": "Anteprima"
+  },
+  "OrderStatus": {
+    "pending": "In attesa",
+    "processing": "In elaborazione",
+    "shipping": "In spedizione",
+    "delivered": "Consegnato"
   }
 }

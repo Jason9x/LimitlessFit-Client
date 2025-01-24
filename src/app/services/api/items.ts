@@ -1,6 +1,6 @@
 import api from '@/services/api/api'
 
-import { ItemsResponse } from '@/types/items'
+import { ItemsResponse } from '@/types/item'
 
 export const fetchItems = async (pageNumber: number, pageSize: number) => {
   try {

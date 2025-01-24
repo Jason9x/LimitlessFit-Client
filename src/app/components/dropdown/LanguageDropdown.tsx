@@ -1,5 +1,5 @@
 import { useLocale } from 'use-intl'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Image from 'next/image'
 
 import useClickOutside from '@/hooks/useClickOutside'
@@ -15,7 +15,9 @@ const LanguageDropdown = () => {
   const locale = useLocale()
   const [isOpen, setIsOpen] = useState(false)
 
-  const ref = useClickOutside(() => setIsOpen(false))
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useClickOutside([ref], () => setIsOpen(false))
 
   const languages: Language[] = [
     { code: 'it', flag: '/icons/flags/it.png' },
@@ -23,13 +25,13 @@ const LanguageDropdown = () => {
   ]
 
   const currentLanguage = languages.find(({ code }) => code === locale)
-  const handleClick = () => setIsOpen(!isOpen)
+  const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
     <div className="relative inline-block text-left" ref={ref}>
       <button
         className="flex items-center justify-center w-full"
-        onClick={handleClick}
+        onClick={toggleMenu}
       >
         {currentLanguage && (
           <Image

@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { RootState } from '@/store'
 
 import { LoginForm } from '@/components/auth/AuthForm'
+import BackButton from '@/components/buttons/BackButton'
 
 const AuthCheck = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useSelector(
@@ -16,7 +17,12 @@ const AuthCheck = ({ children }: { children: ReactNode }) => {
 
   if (!isAuthenticated && pathname !== '/register') return <LoginForm />
 
-  return <>{children}</>
+  return (
+    <>
+      {isAuthenticated && pathname !== '/' && <BackButton />}
+      {children}
+    </>
+  )
 }
 
 export default AuthCheck

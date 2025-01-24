@@ -1,6 +1,6 @@
 import Pagination from '@/types/pagination'
 
-type Item = {
+export type Item = {
   id: number
   imageUrl: string
   nameKey: string
@@ -8,8 +8,8 @@ type Item = {
   price: number
 }
 
-type ItemsResponse = Pagination & {
-  items: Item[]
+export type ItemsResponse = Pagination & {
+  items: {
+    $values: Item[]
+  }
 }
-
-export type { Item, ItemsResponse }

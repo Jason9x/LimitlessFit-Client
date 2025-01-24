@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import LanguageDropdown from '@/components/navigation/LanguageDropdown'
-import UserDropdown from '@/components/navigation/UserDropdown'
+import LanguageDropdown from '@/components/dropdown/LanguageDropdown'
+import UserDropdown from '@/components/dropdown/UserDropdown'
 
 import { RootState } from '@/store'
 import useClickOutside from '@/hooks/useClickOutside'
@@ -20,7 +20,10 @@ const Navbar = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const menuRef = useClickOutside(() => setIsMenuOpen(false))
+  const menuRef = useRef<HTMLDivElement | null>(null)
+  const menuIconRef = useRef<HTMLButtonElement | null>(null)
+
+  useClickOutside([menuRef, menuIconRef], () => setIsMenuOpen(false))
 
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
@@ -54,7 +57,7 @@ const Navbar = () => {
   )
 
   return (
-    <nav className="flex justify-between p-4 bg-secondary dark:bg-secondary-dark">
+    <nav className="relative flex justify-between p-4 bg-secondary dark:bg-secondary-dark">
       <Link href="/">
         <div className="flex items-center text-foreground dark:text-foreground-dark">
           <Image
@@ -76,6 +79,7 @@ const Navbar = () => {
       </Link>
 
       <button
+        ref={menuIconRef}
         className="lg:hidden text-foreground dark:text-foreground-dark"
         onClick={toggleMenu}
       >
@@ -95,8 +99,8 @@ const Navbar = () => {
       {isMenuOpen && (
         <div
           ref={menuRef}
-          className="fixed top-14 right-2 bg-background dark:bg-background-dark shadow-md
-                     rounded-xl p-3 w-20 flex flex-col space-y-1 items-center justify-center"
+          className="fixed top-14 right-2 shadow-mdrounded-xl p-3 w-20 flex
+                     flex-col space-y-1 items-center justify-center z-[9999]"
         >
           <NavigationItems />
         </div>
