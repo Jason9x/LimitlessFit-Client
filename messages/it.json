@@ -1,4 +1,8 @@
 {
+  "Navbar": {
+    "myOrders": "I miei ordini",
+    "ordersManagement": "Gestione degli ordini"
+  },
   "NotFound": {
     "title": "404",
     "message": "Oops! La pagina che stai cercando non esiste.",
@@ -80,8 +84,11 @@
   },
   "OrderStatus": {
     "pending": "In attesa",
-    "processing": "In elaborazione",
-    "shipping": "In spedizione",
+    "processing": "In corso",
+    "shipping": "In arrivo",
     "delivered": "Consegnato"
+  },
+  "MyOrders": {
+    "orderHistory": "Cronologia ordini"
   }
 }

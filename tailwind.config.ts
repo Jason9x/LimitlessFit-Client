@@ -45,8 +45,8 @@ export default {
           },
           processing: {
             background: {
-              DEFAULT: '#FFEA00',
-              dark: '#FFD700'
+              DEFAULT: '#FFFFBF',
+              dark: '#FFFF80'
             },
             text: {
               DEFAULT: '#DAA520',
@@ -65,11 +65,11 @@ export default {
           },
           delivered: {
             background: {
-              DEFAULT: '#25B87B',
+              DEFAULT: '#9AEDC5',
               dark: '#314C4E'
             },
             text: {
-              DEFAULT: '#9AEDC5',
+              DEFAULT: '#25B87B',
               dark: '#49B496'
             }
           }

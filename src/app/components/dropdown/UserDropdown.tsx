@@ -42,7 +42,10 @@ const UserDropdown = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute bg-background dark:bg-background-dark z-[9999] right-0 mt-2 w-48  shadow-lg font-semibold rounded-2xl p-7 pt-5 break-words">
+        <div
+          className="absolute bg-background dark:bg-background-dark z-[9999] right-0 mt-2 w-48
+                     shadow-lg font-semibold rounded-2xl p-7 pt-5 break-words"
+        >
           <p className="mb-1">{user?.name}</p>
 
           <p className="text-foreground-secondary dark:text-foreground-secondary-dark text-sm mb-4">

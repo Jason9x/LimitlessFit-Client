@@ -22,7 +22,12 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
 
   return (
     <html>
-      <body className="bg-background dark:bg-background-dark min-w-full w-fit overflow-x-hidden">
+      <body
+        className="bg-background dark:bg-background-dark min-w-full w-fit overflow-x-hidden [&::-webkit-scrollbar]:w-2
+                   [&::-webkit-scrollbar-track]:bg-secondary [&::-webkit-scrollbar-thumb]:bg-foreground
+                   dark:[&::-webkit-scrollbar-track]:bg-secondary-dark dark:[&::-webkit-scrollbar-thumb]:bg-foreground-dark
+                     [&::-webkit-scrollbar-thumb]:rounded-full"
+      >
         <Providers messages={messages} locale={locale}>
           <Navbar />
           <AuthCheck>{children}</AuthCheck>

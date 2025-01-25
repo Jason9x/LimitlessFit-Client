@@ -1,4 +1,5 @@
 import { Item } from '@/types/item'
+import { PaginationType } from '@/types/pagination'
 
 export type OrderItemRequest = {
   itemId: number
@@ -6,7 +7,6 @@ export type OrderItemRequest = {
 }
 
 export type OrderRequest = {
-  customerName: string
   items: OrderItemRequest[]
 }
 
@@ -34,5 +34,11 @@ export type Order = {
   status: OrderStatusEnum
   items: {
     $values: OrderItem[]
+  }
+}
+
+export type OrdersResponse = PaginationType & {
+  orders: {
+    $values: Order[]
   }
 }

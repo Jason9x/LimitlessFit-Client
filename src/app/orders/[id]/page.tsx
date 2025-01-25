@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useLocale } from 'use-intl'
+
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
@@ -15,6 +16,9 @@ import Snackbar from '@/components/ui/Snackbar'
 import OrderStatus from '@/components/order/OrderStatus'
 
 import { OrderStatusEnum } from '@/types/order'
+import Pagination from '@/components/ui/Pagination'
+
+const ITEMS_PER_PAGE = 4
 
 const Order = () => {
   const { id } = useParams()
@@ -34,6 +38,7 @@ const Order = () => {
   }, [error])
 
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
   if (isLoading) return <LoadingSpinner />
 
@@ -64,9 +69,13 @@ const Order = () => {
     { label: 'status', value: <OrderStatus status={status} /> }
   ]
 
-  const items = data?.items
+  const items = data?.items?.$values || []
 
-  console.log(items)
+  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE)
+  const paginatedItems = items.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  )
 
   return (
     <div className="m-10">
@@ -93,48 +102,62 @@ const Order = () => {
         {translations('items')}
       </h2>
 
-      <hr className="mt-5 mb-10" />
+      <hr className="mt-4 mb-10 border-gray-300 dark:border-gray-600" />
 
-      <table className="min-w-full bg-secondary rounded-xl dark:bg-secondary-dark table-auto border-collapse">
+      <table className="min-w-full shadow-md mb-10 bg-secondary rounded-xl dark:bg-secondary-dark table-auto border-collapse">
         <thead>
-          <tr>
-            <th className="border-b px-4 py-2 text-left">
+          <tr className="text-left border-b-[1px] border-gray-300 dark:border-gray-600">
+            <th className="pb-4 p-6 font-semibold">
               {translations('preview')}
             </th>
-
-            <th className="border-b px-4 py-2 text-left">
-              {translations('items')}
-            </th>
-
-            <th className="border-b px-4 py-2 text-left">
-              {translations('total')}
-            </th>
+            <th className="pb-4 p-6 font-semibold">{translations('items')}</th>
+            <th className="pb-4 p-6 font-semibold">{translations('total')}</th>
           </tr>
         </thead>
 
         <tbody>
-          {items?.$values.map((value, index) => (
-            <tr key={index}>
-              <td className="border-b px-4 py-2">
-                <Image
-                  src={value.item.imageUrl}
-                  width={40}
-                  height={40}
-                  alt={`Item #${index}`}
-                />
-              </td>
+          {paginatedItems.map((value, index) => {
+            const isFirst = index === 0
+            const isLast = index === paginatedItems.length - 1
 
-              <td className="border-b px-4 py-2">
-                {value.quantity} x {itemTranslations(value.item.nameKey)}
-              </td>
+            return (
+              <tr
+                key={index}
+                className="text-foreground-secondary dark:text-foreground-secondary-dark"
+              >
+                <td
+                  className={`p-2 px-6 ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
+                >
+                  <Image
+                    src={value.item.imageUrl}
+                    width={40}
+                    height={40}
+                    alt={`Item #${index}`}
+                  />
+                </td>
 
-              <td className="border-b px-4 py-2">
-                € {value.quantity * value.item.price}
-              </td>
-            </tr>
-          ))}
+                <td
+                  className={`p-2 px-6 font-normal ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
+                >
+                  {value.quantity} x {itemTranslations(value.item.nameKey)}
+                </td>
+
+                <td
+                  className={`p-2 px-6 font-normal ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
+                >
+                  € {value.quantity * value.item.price}
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

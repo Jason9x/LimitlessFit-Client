@@ -5,14 +5,19 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 import { RootState } from '@/store'
-import { removeFromCart, updateQuantity } from '@/store/slices/cartSlice'
+import {
+  emptyCart,
+  removeFromCart,
+  updateQuantity
+} from '@/store/slices/cartSlice'
 
 import SubmitButton from '@/components/buttons/SubmitBotton'
-import ConfirmOrderAlert from './order/ConfirmOrderAlert'
+import ConfirmOrderAlert from '@/components/order/ConfirmOrderAlert'
 import Pagination from '@/components/ui/Pagination'
+
 import { createOrder } from '@/services/api/orders'
+
 import { OrderRequest } from '@/types/order'
-import useUser from '@/hooks/useUser'
 
 const ITEMS_PER_PAGE = 3
 
@@ -30,7 +35,6 @@ const Cart = () => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
 
-  const user = useUser()
   const router = useRouter()
 
   const totalPages = Math.ceil(cartItems.length / ITEMS_PER_PAGE)
@@ -48,7 +52,6 @@ const Cart = () => {
 
   const handleConfirmOrder = async () => {
     const request: OrderRequest = {
-      customerName: user?.name || '',
       items: cartItems.map(({ id, quantity }) => ({
         itemId: id,
         quantity
@@ -56,6 +59,8 @@ const Cart = () => {
     }
 
     const { id } = await createOrder(request)
+
+    dispatch(emptyCart())
 
     router.push(`/orders/${id}`)
   }
@@ -135,7 +140,7 @@ const Cart = () => {
                 <Image
                   width={20}
                   height={20}
-                  src={'/icons/trash.svg'}
+                  src={'/icons/cart/trash.svg'}
                   alt={'Trash'}
                   className="transition-all duration-300"
                 />

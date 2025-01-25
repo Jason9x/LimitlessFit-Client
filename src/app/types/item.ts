@@ -1,4 +1,4 @@
-import Pagination from '@/types/pagination'
+import { PaginationType } from '@/types/pagination'
 
 export type Item = {
   id: number
@@ -8,7 +8,7 @@ export type Item = {
   price: number
 }
 
-export type ItemsResponse = Pagination & {
+export type ItemsResponse = PaginationType & {
   items: {
     $values: Item[]
   }

@@ -16,7 +16,7 @@ const BackButton = () => {
       className="m-10 flex items-center space-x-1.5 font-semibold text-sm text-foreground dark:text-foreground-dark"
     >
       <Image
-        src="/icons/back.svg"
+        src="/icons/arrows/arrow-back.svg"
         alt="Back"
         width={12}
         height={12}

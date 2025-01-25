@@ -48,10 +48,15 @@ const cartSlice = createSlice({
       const item = state.items.find(cartItem => cartItem.id === itemId)
 
       if (item) item.quantity = Math.max(item.quantity + quantity, 1)
+    },
+    emptyCart: state => {
+      state.items = []
+      state.lastAddedItemIndex = null
     }
   }
 })
 
-export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions
+export const { addToCart, removeFromCart, updateQuantity, emptyCart } =
+  cartSlice.actions
 
 export default cartSlice.reducer

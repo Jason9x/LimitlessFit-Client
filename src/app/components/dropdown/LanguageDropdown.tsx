@@ -55,7 +55,10 @@ const LanguageDropdown = () => {
       </button>
 
       {isOpen && (
-        <ul className="absolute z-10 mt-2 w-fit rounded-xl bg-background dark:bg-background-dark overflow-hidden lg:shadow-md shadow-none">
+        <ul
+          className="absolute z-10 mt-2 w-fit rounded-xl bg-background dark:bg-background-dark overflow-hidden
+                      lg:shadow-md shadow-none"
+        >
           {languages.map(({ code, flag }) => (
             <li
               key={code}

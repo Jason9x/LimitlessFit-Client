@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useTheme } from 'next-themes'
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -25,6 +26,8 @@ const Navbar = () => {
 
   useClickOutside([menuRef, menuIconRef], () => setIsMenuOpen(false))
 
+  const translations = useTranslations('Navbar')
+
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
@@ -40,11 +43,39 @@ const Navbar = () => {
 
   const NavigationItems = () => (
     <>
+      {isAuthenticated && (
+        <>
+          <Link href="/my-orders" className="flex items-center space-x-2 mr-2">
+            <Image
+              src="/icons/navbar/cart.svg"
+              width={20}
+              height={20}
+              alt="My orders"
+              className="dark:invert"
+            />
+
+            <p>{translations('myOrders')}</p>
+          </Link>
+
+          <Link href="/my-orders" className="flex items-center space-x-2 mr-2">
+            <Image
+              src="/icons/navbar/maximum-order.svg"
+              width={20}
+              height={20}
+              alt="Orders management"
+              className="dark:invert"
+            />
+
+            <p>{translations('ordersManagement')}</p>
+          </Link>
+        </>
+      )}
+
       <LanguageDropdown />
 
       <button onClick={toggleTheme} className="p-2">
         <Image
-          src="/icons/sun.svg"
+          src="/icons/navbar/sun.svg"
           width={20}
           height={20}
           alt="Theme Toggle"
@@ -61,7 +92,7 @@ const Navbar = () => {
       <Link href="/">
         <div className="flex items-center text-foreground dark:text-foreground-dark">
           <Image
-            src="/icons/fitness.svg"
+            src="/icons/navbar/fitness.svg"
             width={40}
             height={40}
             alt="Fitness"
@@ -84,7 +115,7 @@ const Navbar = () => {
         onClick={toggleMenu}
       >
         <Image
-          src="/icons/menu.svg"
+          src="/icons/navbar/menu.svg"
           width={22}
           height={22}
           alt="Menu"
@@ -92,14 +123,14 @@ const Navbar = () => {
         />
       </button>
 
-      <div className="hidden lg:flex items-center space-x-4">
+      <div className="hidden lg:flex items-center justify-center space-x-4">
         <NavigationItems />
       </div>
 
       {isMenuOpen && (
         <div
           ref={menuRef}
-          className="fixed top-14 right-2 shadow-mdrounded-xl p-3 w-20 flex
+          className="fixed top-14 right-2 shadow-md rounded-xl p-3 w-20 flex bg-background dark:bg-secondary-dark
                      flex-col space-y-1 items-center justify-center z-[9999]"
         >
           <NavigationItems />

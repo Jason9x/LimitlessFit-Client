@@ -1,6 +1,9 @@
-type Pagination = {
+export type PaginationType = {
   totalItems: number
   totalPages: number
 }
 
-export default Pagination
+export type PaginationParams = {
+  pageNumber: number
+  pageSize: number
+}

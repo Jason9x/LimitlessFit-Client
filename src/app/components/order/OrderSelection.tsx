@@ -21,7 +21,7 @@ const OrderSelection = () => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['items', currentPage, PAGE_SIZE],
-    queryFn: () => fetchItems(currentPage, PAGE_SIZE)
+    queryFn: () => fetchItems({ pageNumber: currentPage, pageSize: PAGE_SIZE })
   })
 
   const handleError = useCallback(() => {

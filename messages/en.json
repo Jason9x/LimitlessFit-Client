@@ -1,4 +1,8 @@
 {
+  "Navbar": {
+    "myOrders": "My orders",
+    "ordersManagement": "Orders management"
+  },
   "NotFound": {
     "title": "404",
     "message": "Oops! The page you're looking for doesn't exist.",
@@ -83,5 +87,8 @@
     "processing": "Processing",
     "shipping": "Shipping",
     "delivered": "Delivered"
+  },
+  "MyOrders": {
+    "orderHistory": "Order history"
   }
 }

@@ -25,7 +25,7 @@ const ConfirmOrderAlert = ({
         <div className="flex justify-end space-x-4 font-semibold text-sm">
           <button
             onClick={onCancel}
-            className="py-1.5 px-4 rounded-xl shadow-md transition-all duration-500
+            className="py-1.5 px-4 rounded-xl shadow-md transition-all duration-500 bg-background dark:bg-background-dark
                        shadow-background dark:shadow-background-dark ease-in-out hover:translate-y-0.5"
           >
             {translations('cancel')}
