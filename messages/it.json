@@ -21,7 +21,7 @@
     "login": "Login",
     "userNotFound": "Non siamo riusciti a trovare un account con i dati forniti. Verifica il tuo indirizzo email o nome utente e riprova.",
     "invalidPassword": "La password inserita non è corretta. Riprova.",
-    "accountLocked": "Il tuo account è stato bloccato a causa di ripetuti tentativi di accesso non riusciti. Reimposta la password o contatta il supporto per assistenza.",
+    "accountLocked": "Account bloccato per troppi tentativi di accesso. Reimposta la password o contatta il supporto.",
     "loginFailed": "Si è verificato un errore durante il login. Riprova più tardi."
   },
   "Register": {
@@ -89,6 +89,14 @@
     "delivered": "Consegnato"
   },
   "MyOrders": {
-    "orderHistory": "Cronologia ordini"
+    "orderHistory": "Cronologia ordini",
+    "noOrders": "Non hai ordini."
+  },
+  "OrdersFilter": {
+    "orderByDate": "Ordina per data",
+    "startDate": "Data di Inizio",
+    "endDate": "Data di Fine",
+    "orderByStatus": "Ordina per stato",
+    "selectStatus": "Seleziona lo stato"
   }
 }

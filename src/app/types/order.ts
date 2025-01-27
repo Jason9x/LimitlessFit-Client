@@ -42,3 +42,9 @@ export type OrdersResponse = PaginationType & {
     $values: Order[]
   }
 }
+
+export type OrderFilterType = {
+  startDate?: string
+  endDate?: string
+  status?: OrderStatusEnum
+}

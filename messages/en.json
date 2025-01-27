@@ -21,7 +21,7 @@
     "login": "Login",
     "userNotFound": "We couldn't find an account with the provided details. Please check your email or username and try again.",
     "passwordIncorrect": "The password you entered is incorrect. Please try again.",
-    "accountLocked": "Your account has been locked due to multiple failed login attempts. Please reset your password or contact support for assistance.",
+    "accountLocked": "Account locked due to too many failed login attempts. Reset your password or contact support.",
     "loginFailed": "There was an error logging in. Please try again later."
   },
   "Register": {
@@ -89,6 +89,14 @@
     "delivered": "Delivered"
   },
   "MyOrders": {
-    "orderHistory": "Order history"
+    "orderHistory": "Order history",
+    "noOrders": "You have no orders."
+  },
+  "OrdersFilter": {
+    "orderByDate": "Order by date",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "orderByStatus": "Order by status",
+    "selectStatus": "Select Status"
   }
 }

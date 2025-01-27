@@ -25,7 +25,7 @@ const LanguageDropdown = () => {
   ]
 
   const currentLanguage = languages.find(({ code }) => code === locale)
-  const toggleMenu = () => setIsOpen(!isOpen)
+  const toggleMenu = () => setIsOpen(previousState => !previousState)
 
   return (
     <div className="relative inline-block text-left" ref={ref}>
@@ -35,8 +35,8 @@ const LanguageDropdown = () => {
       >
         {currentLanguage && (
           <Image
-            width={22}
-            height={22}
+            width={20}
+            height={20}
             src={currentLanguage.flag}
             alt={`Flag for ${locale}`}
             className="mr-2"
@@ -45,8 +45,8 @@ const LanguageDropdown = () => {
 
         <Image
           src="/icons/arrows/arrow-expand.svg"
-          width={12}
-          height={12}
+          width={10}
+          height={10}
           alt="Arrow expand"
           className={`transition-transform duration-300 ${
             isOpen ? 'rotate-180' : 'rotate-0'
@@ -62,7 +62,7 @@ const LanguageDropdown = () => {
           {languages.map(({ code, flag }) => (
             <li
               key={code}
-              className="block px-2.5 py-2 hover:bg-secondary hover:dark:bg-secondary-dark cursor-pointer"
+              className="block p-2 hover:bg-secondary hover:dark:bg-secondary-dark cursor-pointer"
               onClick={async () => {
                 await setLocaleInCookie(code)
                 setIsOpen(false)

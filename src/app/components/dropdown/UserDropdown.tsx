@@ -30,7 +30,7 @@ const UserDropdown = () => {
     dispatch(setAuthState(false))
   }
 
-  const toggleDropdown = () => setIsOpen(!isOpen)
+  const toggleDropdown = () => setIsOpen(previousState => !previousState)
 
   return (
     <div className="relative" ref={ref}>

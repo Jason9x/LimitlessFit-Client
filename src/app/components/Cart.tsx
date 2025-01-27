@@ -12,7 +12,7 @@ import {
 } from '@/store/slices/cartSlice'
 
 import SubmitButton from '@/components/buttons/SubmitBotton'
-import ConfirmOrderAlert from '@/components/order/ConfirmOrderAlert'
+import ConfirmOrderAlert from '@/components/orders/ConfirmOrderAlert'
 import Pagination from '@/components/ui/Pagination'
 
 import { createOrder } from '@/services/api/orders'

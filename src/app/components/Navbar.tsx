@@ -9,24 +9,24 @@ import Link from 'next/link'
 
 import LanguageDropdown from '@/components/dropdown/LanguageDropdown'
 import UserDropdown from '@/components/dropdown/UserDropdown'
-
 import { RootState } from '@/store'
 import useClickOutside from '@/hooks/useClickOutside'
+import useUser from '@/hooks/useUser'
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme()
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   )
+  const user = useUser()
+
+  const translations = useTranslations('Navbar')
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
   const menuRef = useRef<HTMLDivElement | null>(null)
   const menuIconRef = useRef<HTMLButtonElement | null>(null)
 
   useClickOutside([menuRef, menuIconRef], () => setIsMenuOpen(false))
-
-  const translations = useTranslations('Navbar')
 
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
@@ -41,35 +41,49 @@ const Navbar = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  const renderAuthenticatedLinks = () => (
+    <>
+      <Link href="/my-orders" className="flex items-center space-x-2 mr-2">
+        <Image
+          src="/icons/navbar/cart.svg"
+          width={20}
+          height={20}
+          alt="My orders"
+          className="dark:invert"
+        />
+
+        <p>{translations('myOrders')}</p>
+      </Link>
+
+      {user?.role === 'Admin' && (
+        <Link href="/admin/orders" className="flex items-center space-x-2 mr-2">
+          <Image
+            src="/icons/navbar/management.svg"
+            width={20}
+            height={20}
+            alt="Orders management"
+            className="dark:invert"
+          />
+
+          <p>{translations('ordersManagement')}</p>
+        </Link>
+      )}
+    </>
+  )
+
+  const renderMenu = () => (
+    <div
+      ref={menuRef}
+      className="fixed top-14 right-2 shadow-md rounded-xl p-3 w-20 flex bg-background dark:bg-secondary-dark
+                 flex-col space-y-1 items-center justify-center z-[9999]"
+    >
+      <NavigationItems />
+    </div>
+  )
+
   const NavigationItems = () => (
     <>
-      {isAuthenticated && (
-        <>
-          <Link href="/my-orders" className="flex items-center space-x-2 mr-2">
-            <Image
-              src="/icons/navbar/cart.svg"
-              width={20}
-              height={20}
-              alt="My orders"
-              className="dark:invert"
-            />
-
-            <p>{translations('myOrders')}</p>
-          </Link>
-
-          <Link href="/my-orders" className="flex items-center space-x-2 mr-2">
-            <Image
-              src="/icons/navbar/maximum-order.svg"
-              width={20}
-              height={20}
-              alt="Orders management"
-              className="dark:invert"
-            />
-
-            <p>{translations('ordersManagement')}</p>
-          </Link>
-        </>
-      )}
+      {isAuthenticated && renderAuthenticatedLinks()}
 
       <LanguageDropdown />
 
@@ -78,7 +92,7 @@ const Navbar = () => {
           src="/icons/navbar/sun.svg"
           width={20}
           height={20}
-          alt="Theme Toggle"
+          alt="Theme toggle"
           className="dark:invert"
         />
       </button>
@@ -99,11 +113,7 @@ const Navbar = () => {
             className="dark:invert"
             priority
           />
-
-          <span
-            className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10
-                        text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider"
-          >
+          <span className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10 text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider">
             LimitlessFit
           </span>
         </div>
@@ -127,15 +137,7 @@ const Navbar = () => {
         <NavigationItems />
       </div>
 
-      {isMenuOpen && (
-        <div
-          ref={menuRef}
-          className="fixed top-14 right-2 shadow-md rounded-xl p-3 w-20 flex bg-background dark:bg-secondary-dark
-                     flex-col space-y-1 items-center justify-center z-[9999]"
-        >
-          <NavigationItems />
-        </div>
-      )}
+      {isMenuOpen && renderMenu()}
     </nav>
   )
 }

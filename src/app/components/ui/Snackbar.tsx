@@ -4,7 +4,7 @@ type SnackbarProps = {
   message: string
   open: boolean
   onClose: () => void
-  variant?: 'success' | 'error'
+  variant?: 'success' | 'error' | 'info'
 }
 
 const Snackbar = ({
@@ -23,13 +23,15 @@ const Snackbar = ({
 
   const variantStyles = {
     success: 'bg-green-500',
-    error: 'bg-red-500'
+    error: 'bg-red-500',
+    info: 'bg-blue-500'
   }
 
   return (
     <div
-      className={`fixed bottom-4 right-4 ${variantStyles[variant]} text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between
-                        transition-all duration-300 ease-out transform ${open ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+      className={`fixed bottom-4 right-4 ${variantStyles[variant]} text-white px-6 py-3 rounded-lg shadow-lg 
+                  flex items-center justify-between transition-all duration-300 ease-out transform 
+                  ${open ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
     >
       <span className="mr-2">{message}</span>
 

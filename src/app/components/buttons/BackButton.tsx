@@ -18,8 +18,8 @@ const BackButton = () => {
       <Image
         src="/icons/arrows/arrow-back.svg"
         alt="Back"
-        width={12}
-        height={12}
+        width={10}
+        height={10}
         className="dark:invert"
       />
       <span>{translations('back')}</span>

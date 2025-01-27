@@ -13,7 +13,7 @@ import { fetchOrderById } from '@/services/api/orders'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Snackbar from '@/components/ui/Snackbar'
 
-import OrderStatus from '@/components/order/OrderStatus'
+import OrderStatus from '@/components/orders/OrderStatus'
 
 import { OrderStatusEnum } from '@/types/order'
 import Pagination from '@/components/ui/Pagination'
