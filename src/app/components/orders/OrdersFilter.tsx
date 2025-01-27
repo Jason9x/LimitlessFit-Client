@@ -32,11 +32,12 @@ const OrdersFilter = ({ onFilterChange }: OrderFilterProps) => {
     if (!filterParam) return
 
     try {
-      const parsedFilter: OrderFilterType = JSON.parse(filterParam)
+      const { startDate, endDate, status }: OrderFilterType =
+        JSON.parse(filterParam)
 
-      setStartDate(parsedFilter.startDate)
-      setEndDate(parsedFilter.endDate)
-      setStatus(parsedFilter.status)
+      setStartDate(startDate)
+      setEndDate(endDate)
+      setStatus(status)
     } catch (error) {
       console.error('Failed to parse filters:', error)
     }
