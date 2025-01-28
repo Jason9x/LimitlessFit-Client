@@ -13,7 +13,12 @@ import OrdersFilter from '../OrdersFilter'
 import OrderRow from './OrderRow'
 import OrdersTableHeader from './OrdersTableHeader'
 
-import { Order, OrderFilterType, OrdersResponse } from '@/types/order'
+import {
+  Order,
+  OrderFilterType,
+  OrdersResponse,
+  OrderStatusEnum
+} from '@/types/order'
 import { PaginationParams } from '@/types/pagination'
 
 const PAGE_SIZE = 4
@@ -56,19 +61,18 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrderTableProps) => {
 
   const totalPages = data?.totalPages || 1
 
-  useSignalR({
-    path: '/orderStatusHub',
-    onMessageReceived: message => {
-      console.log(message)
-      setOrders(previousOrders =>
-        previousOrders.map(order =>
-          order.id === message.orderId
-            ? { ...order, status: message.status }
-            : order
+  useSignalR('/orderStatusHub', [
+    {
+      eventName: 'ReceiveOrderStatusUpdate',
+      callback: (orderId: number, status: OrderStatusEnum) => {
+        setOrders(previousOrders =>
+          previousOrders.map(order =>
+            order.id === orderId ? { ...order, status } : order
+          )
         )
-      )
+      }
     }
-  })
+  ])
 
   useEffect(() => {
     if (error || orders.length === 0) setSnackbarOpen(true)

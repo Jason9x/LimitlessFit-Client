@@ -1,48 +1,52 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr'
+import { useDispatch, useSelector } from 'react-redux'
 
-type UseSignalRProps = {
-  path: string
-  onMessageReceived: (message: any) => void
+import { RootState } from '@/store'
+import { connect, disconnect } from '@/store/slices/signalRSlice'
+
+type SignalRConfig = {
+  eventName: string
+  callback: (...args: any[]) => void
 }
 
-const useSignalR = ({ path, onMessageReceived }: UseSignalRProps) => {
-  const [connection, setConnection] = useState<HubConnection | null>(null)
+const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
+  const dispatch = useDispatch()
+  const isConnected = useSelector(
+    (state: RootState) => state.signalR.connections[hubUrl] ?? false
+  )
 
-  const onMessageReceivedMemo = useCallback(onMessageReceived, [
-    onMessageReceived
-  ])
+  const connectionRef = useRef<HubConnection | null>(null)
+
+  const connectToHub = useCallback(async () => {
+    if (isConnected || connectionRef.current) return
+
+    const connection = new HubConnectionBuilder()
+      .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}${hubUrl}`)
+      .build()
+
+    connectionRef.current = connection
+
+    events.forEach(({ eventName, callback }) =>
+      connection.on(eventName, (...args: any[]) => callback(...args))
+    )
+
+    try {
+      await connection.start()
+
+      dispatch(connect(hubUrl))
+    } catch (error) {
+      console.error('Error starting SignalR connection:', error)
+
+      setTimeout(connectToHub, 5000)
+    }
+
+    return () => connection.stop().then(() => dispatch(disconnect(hubUrl)))
+  }, [dispatch, events, hubUrl, isConnected])
 
   useEffect(() => {
-    const hubUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${path}`
-
-    const connectSignalR = async () => {
-      const connection = new HubConnectionBuilder().withUrl(hubUrl).build()
-
-      connection.on('ReceiveOrderStatusUpdate', (message: any) => {
-        onMessageReceivedMemo(message)
-      })
-
-      try {
-        await connection.start()
-        console.log('Connected to SignalR hub')
-        setConnection(connection)
-      } catch (error) {
-        console.error('Error connecting to SignalR hub', error)
-      }
-    }
-
-    if (!connection) connectSignalR()
-
-    return () => {
-      if (connection) {
-        connection.stop()
-        setConnection(null)
-      }
-    }
-  }, [path, onMessageReceivedMemo, connection])
-
-  return { connection }
+    connectToHub().catch(console.error)
+  }, [connectToHub])
 }
 
 export default useSignalR

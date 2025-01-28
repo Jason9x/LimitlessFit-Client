@@ -21,7 +21,7 @@ const OrderSelectionItem = ({ item }: OrderItemProps) => {
     <li>
       <button
         onClick={() => dispatch(addToCart(item))}
-        className="bg-secondary dark:bg-secondary-dark border rounded-2xl shadow-sm hover:shadow-md transition-shadow border-none"
+        className="min-w-full bg-secondary dark:bg-secondary-dark border rounded-2xl shadow-sm hover:shadow-md transition-shadow border-none"
       >
         <div className="relative flex flex-col items-center px-5 pt-10 pb-6">
           <Image
