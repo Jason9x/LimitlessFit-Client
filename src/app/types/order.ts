@@ -1,5 +1,6 @@
 import { Item } from '@/types/item'
 import { PaginationType } from '@/types/pagination'
+import User from '@/types/user'
 
 export type OrderItemRequest = {
   itemId: number
@@ -17,7 +18,7 @@ export enum OrderStatusEnum {
   Delivered
 }
 
-type OrderItem = {
+export type OrderItem = {
   id: number
   orderId: number
   order: Order
@@ -28,19 +29,15 @@ type OrderItem = {
 
 export type Order = {
   id: number
-  customerName: string
+  user?: User
   date: string
   totalPrice: number
   status: OrderStatusEnum
-  items: {
-    $values: OrderItem[]
-  }
+  items: OrderItem[]
 }
 
 export type OrdersResponse = PaginationType & {
-  orders: {
-    $values: Order[]
-  }
+  orders: Order[]
 }
 
 export type OrderFilterType = {

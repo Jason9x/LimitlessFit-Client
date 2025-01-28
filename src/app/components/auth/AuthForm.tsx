@@ -88,11 +88,9 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
 
       router.push('/')
     } catch (error) {
-      const messageKey = (error as AxiosError).message || 'connectionError'
+      const messageKey = (error as AxiosError).message
 
-      setSnackbarMessage(
-        translations(messageKey) || statusTranslations('connectionError')
-      )
+      setSnackbarMessage(translations(messageKey))
       setSnackbarOpen(true)
     }
   }

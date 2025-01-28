@@ -30,7 +30,7 @@ const Cart = () => {
   const dispatch = useDispatch()
 
   const cartTranslations = useTranslations('Cart')
-  const itemsTranslations = useTranslations('OrderItem')
+  const itemsTranslations = useTranslations('Items')
 
   const [showConfirmAlert, setShowConfirmAlert] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)

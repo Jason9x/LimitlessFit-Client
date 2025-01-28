@@ -11,9 +11,6 @@
   "BackButton": {
     "back": "Back"
   },
-  "Status": {
-    "connectionError": "Unable to connect to the server. Please check your internet connection or try again later."
-  },
   "Login": {
     "newUser": "New user?",
     "registerNow": "Register now",
@@ -41,7 +38,7 @@
   "OrderSelection": {
     "selectItem": "Select the item to order"
   },
-  "OrderItem": {
+  "Items": {
     "ez_barbell_name": "EZ Barbell",
     "ez_barbell_description": "Curved barbell for arm workouts. Perfect for biceps and triceps.",
     "dumbbells_set_name": "Dumbbells Set",
@@ -98,5 +95,19 @@
     "endDate": "End Date",
     "orderByStatus": "Order by status",
     "selectStatus": "Select Status"
+  },
+  "OrdersPanel": {
+    "title": "Orders panel",
+    "noOrderFound": "No order found"
+  },
+  "OrdersTableHeader": {
+    "client": "Client",
+    "created": "Created"
+  },
+  "OrderItems": {
+    "image": "Image",
+    "price": "Price",
+    "description": "Description",
+    "quantity": "Quantity"
   }
 }

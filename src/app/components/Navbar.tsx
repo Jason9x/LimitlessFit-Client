@@ -7,8 +7,8 @@ import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import LanguageDropdown from '@/components/dropdown/LanguageDropdown'
-import UserDropdown from '@/components/dropdown/UserDropdown'
+import LanguageDropdown from '@/components/dropdowns/LanguageDropdown'
+import UserDropdown from '@/components/dropdowns/UserDropdown'
 import { RootState } from '@/store'
 import useClickOutside from '@/hooks/useClickOutside'
 import useUser from '@/hooks/useUser'
@@ -43,7 +43,7 @@ const Navbar = () => {
 
   const renderAuthenticatedLinks = () => (
     <>
-      <Link href="/my-orders" className="flex items-center space-x-2 mr-2">
+      <Link href="/my-orders" className="flex items-center space-x-2">
         <Image
           src="/icons/navbar/cart.svg"
           width={20}
@@ -52,11 +52,11 @@ const Navbar = () => {
           className="dark:invert"
         />
 
-        <p>{translations('myOrders')}</p>
+        <p className="hidden lg:block">{translations('myOrders')}</p>
       </Link>
 
       {user?.role === 'Admin' && (
-        <Link href="/admin/orders" className="flex items-center space-x-2 mr-2">
+        <Link href="/admin/orders" className="flex items-center space-x-2">
           <Image
             src="/icons/navbar/management.svg"
             width={20}
@@ -65,7 +65,7 @@ const Navbar = () => {
             className="dark:invert"
           />
 
-          <p>{translations('ordersManagement')}</p>
+          <p className="hidden lg:block">{translations('ordersManagement')}</p>
         </Link>
       )}
     </>
@@ -75,7 +75,7 @@ const Navbar = () => {
     <div
       ref={menuRef}
       className="fixed top-14 right-2 shadow-md rounded-xl p-3 w-20 flex bg-background dark:bg-secondary-dark
-                 flex-col space-y-1 items-center justify-center z-[9999]"
+                 flex-col space-y-3 items-center justify-center z-[9999]"
     >
       <NavigationItems />
     </div>
@@ -87,7 +87,7 @@ const Navbar = () => {
 
       <LanguageDropdown />
 
-      <button onClick={toggleTheme} className="p-2">
+      <button onClick={toggleTheme}>
         <Image
           src="/icons/navbar/sun.svg"
           width={20}

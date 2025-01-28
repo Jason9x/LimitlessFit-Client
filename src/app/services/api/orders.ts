@@ -1,11 +1,16 @@
 import api from '@/services/api/api'
 
-import { Order, OrderRequest, OrdersResponse } from '@/types/order'
 import { AxiosError } from 'axios'
 
 import AxiosErrorWithMessageKey from '@/types/axios-error'
 import { PaginationParams } from '@/types/pagination'
-import { OrderFilterType } from '@/types/order'
+import {
+  Order,
+  OrderFilterType,
+  OrderRequest,
+  OrdersResponse,
+  OrderStatusEnum
+} from '@/types/order'
 
 export const createOrder = async (request: OrderRequest) => {
   try {
@@ -46,6 +51,38 @@ export const fetchMyOrders = async (
     })
 
     return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export const fetchAllOrders = async (
+  { pageNumber, pageSize }: PaginationParams,
+  { startDate, endDate, status }: OrderFilterType
+) => {
+  try {
+    const { data } = await api.get<OrdersResponse>('/Orders/all', {
+      params: {
+        pageNumber,
+        pageSize,
+        startDate,
+        endDate,
+        status
+      }
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export const updateOrderStatus = async (
+  id: number,
+  status: OrderStatusEnum
+) => {
+  try {
+    await api.patch(`/Orders/${id}/status`, status)
   } catch (error) {
     throw error
   }

@@ -38,7 +38,7 @@ const UserDropdown = () => {
         className="flex items-center justify-center w-8 h-8 rounded-full bg-primary dark:bg-primary-dark text-white"
         onClick={toggleDropdown}
       >
-        {user?.name?.[0]?.toUpperCase() || 'U'}
+        {user?.name?.[0].toUpperCase()}
       </button>
 
       {isOpen && (

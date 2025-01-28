@@ -11,9 +11,6 @@
   "BackButton": {
     "back": "Indietro"
   },
-  "Status": {
-    "connectionError": "Impossibile connettersi al server. Controlla la tua connessione internet o riprova più tardi."
-  },
   "Login": {
     "newUser": "Nuovo utente?",
     "registerNow": "Registrati ora",
@@ -41,7 +38,7 @@
   "OrderSelection": {
     "selectItem": "Seleziona l'articolo da ordinare"
   },
-  "OrderItem": {
+  "Items": {
     "ez_barbell_name": "Bilanciere Ez",
     "ez_barbell_description": "Barra curva per allenare braccia. Perfetto per bicipiti e tricipiti.",
     "dumbbells_set_name": "Set di manubri",
@@ -98,5 +95,19 @@
     "endDate": "Data di Fine",
     "orderByStatus": "Ordina per stato",
     "selectStatus": "Seleziona lo stato"
+  },
+  "OrdersPanel": {
+    "title": "Pannello degli ordini",
+    "noOrderFound": "Nessun ordine trovato."
+  },
+  "OrdersTableHeader": {
+    "client": "Cliente",
+    "created": "Creato"
+  },
+  "OrderItems": {
+    "image": "Immagine",
+    "price": "Prezzo",
+    "description": "Descrizione",
+    "quantity": "Quantità"
   }
 }

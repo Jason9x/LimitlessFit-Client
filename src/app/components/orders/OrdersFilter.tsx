@@ -89,7 +89,7 @@ const OrdersFilter = ({ onFilterChange }: OrderFilterProps) => {
     <div
       ref={filterRef}
       className="flex items-center px-4 py-1.5 space-x-4 bg-secondary dark:bg-secondary-dark rounded-md
-                    text-sm shadow-md shadow-secondary dark:shadow-secondary-dark relative"
+                 text-sm shadow-md shadow-secondary dark:shadow-secondary-dark relative"
     >
       <DateFilter
         isOpen={activeFilter === 'date'}

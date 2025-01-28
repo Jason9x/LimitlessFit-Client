@@ -9,7 +9,5 @@ export type Item = {
 }
 
 export type ItemsResponse = PaginationType & {
-  items: {
-    $values: Item[]
-  }
+  items: Item[]
 }

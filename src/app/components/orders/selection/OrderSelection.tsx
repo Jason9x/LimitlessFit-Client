@@ -8,7 +8,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Snackbar from '@/components/ui/Snackbar'
 import Pagination from '@/components/ui/Pagination'
 
-import OrderItem from './OrderItem'
+import OrderSelectionItem from './OrderSelectionItem'
 
 const PAGE_SIZE = 9
 
@@ -44,6 +44,7 @@ const OrderSelection = () => {
       />
     )
 
+  const items = data?.items || []
   const totalPages = data?.totalPages || 1
 
   return (
@@ -51,8 +52,8 @@ const OrderSelection = () => {
       <h2 className="text-xl font-semibold">{translations('selectItem')}</h2>
 
       <ul className="mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
-        {data?.items.$values.map(item => (
-          <OrderItem key={item.id} item={item} />
+        {items.map(item => (
+          <OrderSelectionItem key={item.id} item={item} />
         ))}
       </ul>
 

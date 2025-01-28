@@ -11,10 +11,10 @@ type OrderItemProps = {
   item: Item
 }
 
-const OrderItem = ({ item }: OrderItemProps) => {
+const OrderSelectionItem = ({ item }: OrderItemProps) => {
   const { imageUrl, nameKey, descriptionKey, price } = item
 
-  const translations = useTranslations('OrderItem')
+  const translations = useTranslations('Items')
   const dispatch = useDispatch()
 
   return (
@@ -49,4 +49,4 @@ const OrderItem = ({ item }: OrderItemProps) => {
   )
 }
 
-export default OrderItem
+export default OrderSelectionItem

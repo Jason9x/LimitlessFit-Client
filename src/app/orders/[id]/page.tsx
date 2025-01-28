@@ -25,7 +25,7 @@ const Order = () => {
   const locale = useLocale()
 
   const translations = useTranslations('Order')
-  const itemTranslations = useTranslations('OrderItem')
+  const itemTranslations = useTranslations('Items')
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['order', id],
@@ -69,7 +69,7 @@ const Order = () => {
     { label: 'status', value: <OrderStatus status={status} /> }
   ]
 
-  const items = data?.items?.$values || []
+  const items = data?.items || []
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE)
   const paginatedItems = items.slice(
