@@ -6,7 +6,7 @@ import { getMessages, getLocale } from 'next-intl/server'
 
 import Navbar from '@/components/Navbar'
 import Providers from '@/providers'
-import AuthCheck from '@/components/auth/AuthCheck'
+import AuthCheck from '@/components/ProtectedContent'
 
 export const metadata: Metadata = {
   title: 'LimitlessFit',

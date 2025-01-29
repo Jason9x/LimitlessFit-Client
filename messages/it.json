@@ -1,4 +1,7 @@
 {
+  "ProtectedContent": {
+    "serverUnreachable": "Impossibile connettersi al server. Riprova più tardi."
+  },
   "Navbar": {
     "myOrders": "I miei ordini",
     "ordersManagement": "Gestione degli ordini"
@@ -99,6 +102,9 @@
   "OrdersPanel": {
     "title": "Pannello degli ordini",
     "noOrderFound": "Nessun ordine trovato."
+  },
+  "OrdersTable": {
+    "statusUpdatedSuccessfully": "Stato dell'ordine aggiornato con successo."
   },
   "OrdersTableHeader": {
     "client": "Cliente",

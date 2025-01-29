@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 
-import { fetchItems } from '@/services/api/items'
+import { fetchItems } from '@/api/items'
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Snackbar from '@/components/ui/Snackbar'

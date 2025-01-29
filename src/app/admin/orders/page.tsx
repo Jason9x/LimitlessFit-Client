@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchAllOrders } from '@/services/api/orders'
+import { fetchAllOrders } from '@/api/orders'
 
 import OrdersTable from '@/components/orders/table/OrdersTable'
 

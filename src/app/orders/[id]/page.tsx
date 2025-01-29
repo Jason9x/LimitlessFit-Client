@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 
 import useSignalR from '@/hooks/useSignalR'
 
-import { fetchOrderById } from '@/services/api/orders'
+import { fetchOrderById } from '@/api/orders'
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Snackbar from '@/components/ui/Snackbar'
@@ -47,7 +47,7 @@ const Order = () => {
     if (data) setOrder(data)
   }, [data])
 
-  useSignalR('/orderStatusHub', [
+  useSignalR('/orderUpdateHub', [
     {
       eventName: 'ReceiveOrderStatusUpdate',
       callback: (orderId: number, status: OrderStatusEnum) => {

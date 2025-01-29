@@ -15,7 +15,7 @@ import SubmitButton from '@/components/buttons/SubmitBotton'
 import ConfirmOrderAlert from '@/components/orders/ConfirmOrderAlert'
 import Pagination from '@/components/ui/Pagination'
 
-import { createOrder } from '@/services/api/orders'
+import { createOrder } from '@/api/orders'
 
 import { OrderRequest } from '@/types/orderType'
 
@@ -34,6 +34,7 @@ const Cart = () => {
 
   const [showConfirmAlert, setShowConfirmAlert] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
 
@@ -48,9 +49,15 @@ const Cart = () => {
   const handleDecreaseQuantity = (itemId: number) =>
     dispatch(updateQuantity({ itemId, quantity: -1 }))
 
-  const handleSubmitOrder = () => setShowConfirmAlert(true)
+  const handleSubmitOrder = () => {
+    if (loading) return
+
+    setShowConfirmAlert(true)
+  }
 
   const handleConfirmOrder = async () => {
+    setLoading(true)
+
     const request: OrderRequest = {
       items: cartItems.map(({ id, quantity }) => ({
         itemId: id,
@@ -58,11 +65,14 @@ const Cart = () => {
       }))
     }
 
-    const { id } = await createOrder(request)
+    try {
+      const { id } = await createOrder(request)
 
-    dispatch(emptyCart())
-
-    router.push(`/orders/${id}`)
+      dispatch(emptyCart())
+      router.push(`/orders/${id}`)
+    } catch (error) {
+      setLoading(false) // Reset loading on error
+    }
   }
 
   const handleCancelOrder = () => setShowConfirmAlert(false)
@@ -162,6 +172,7 @@ const Cart = () => {
         label={cartTranslations('confirmOrder')}
         onClick={handleSubmitOrder}
         className="mt-4"
+        disabled={loading}
       />
 
       <Pagination

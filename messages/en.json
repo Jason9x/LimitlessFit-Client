@@ -1,4 +1,7 @@
 {
+  "ProtectedContent": {
+    "serverUnreachable": "Unable to connect to the server. Please try again later."
+  },
   "Navbar": {
     "myOrders": "My orders",
     "ordersManagement": "Orders management"
@@ -99,6 +102,9 @@
   "OrdersPanel": {
     "title": "Orders panel",
     "noOrderFound": "No order found"
+  },
+  "OrdersTable": {
+    "statusUpdatedSuccessfully": "Order status updated successfully."
   },
   "OrdersTableHeader": {
     "client": "Client",

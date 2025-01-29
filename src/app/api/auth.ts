@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios'
 
-import api from '@/services/api/api'
+import api from '@/api/api'
 
 import AuthTokenPayload from '@/types/auth-token-payload'
 import AxiosErrorWithMessageKey from '@/types/axios-error'

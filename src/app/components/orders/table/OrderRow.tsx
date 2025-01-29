@@ -10,7 +10,7 @@ import OrderStatus from '../OrderStatus'
 import OrderItems from './OrderItems'
 
 import { OrderType, OrderStatusEnum } from '@/types/orderType'
-import { updateOrderStatus } from '@/services/api/orders'
+import { updateOrderStatus } from '@/api/orders'
 
 type OrderRowProps = {
   order: OrderType
@@ -42,21 +42,18 @@ const OrderRow = ({
   const utcDate = new Date(order.date + 'Z')
   const localDate = toZonedTime(utcDate, localeTimeZone)
 
-  console.log({ localDate })
-
   const formattedRelativeDate = formatDistanceToNow(localDate, {
     addSuffix: true,
     locale: selectedLocale
   })
 
-  console.log({ formattedRelativeDate })
-
   const username = order.user?.name
-
   const paddingClasses = `${isFirst && 'pt-8'} ${isLast && 'pb-12'}`
 
-  const handleStatusChange = async (status: OrderStatusEnum) =>
-    await updateOrderStatus(order.id, status)
+  const handleStatusChange = async (status: OrderStatusEnum) => {
+    if (order.status !== Number(status))
+      await updateOrderStatus(order.id, status)
+  }
 
   return (
     <>

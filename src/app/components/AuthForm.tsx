@@ -13,7 +13,7 @@ import Snackbar from '@/components/ui/Snackbar'
 
 import useForm from '@/hooks/useForm'
 
-import { registerUser, loginUser } from '@/services/api/auth'
+import { registerUser, loginUser } from '@/api/auth'
 
 import { setAuthState } from '@/store/slices/authSlice'
 import { AxiosError } from 'axios'
@@ -141,7 +141,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
               ? loginTranslations('login').toLowerCase()
               : translations('registerNow')
           }
-          href={isRegister ? '/' : '/register'}
+          href={isRegister ? '/public' : '/register'}
           className="mt-4"
         />
 
@@ -152,7 +152,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
 
         {!isRegister && (
           <Link
-            href="/"
+            href="/public"
             className="mt-6 uppercase text-link dark:text-link-dark text-sm underline font-medium decoration-0"
           >
             {translations('forgottenPassword')}

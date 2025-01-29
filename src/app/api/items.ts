@@ -1,4 +1,4 @@
-import api from '@/services/api/api'
+import api from '@/api/api'
 
 import { ItemsResponse } from '@/types/item'
 import { PaginationParams } from '@/types/pagination'

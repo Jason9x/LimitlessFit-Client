@@ -23,7 +23,7 @@ import { PaginationParams } from '@/types/pagination'
 
 const PAGE_SIZE = 4
 
-type OrderTableProps = {
+type OrdersTableProps = {
   fetchOrders: (
     params: PaginationParams,
     filter: OrderFilterType
@@ -31,14 +31,20 @@ type OrderTableProps = {
   isMyOrders?: boolean
 }
 
-const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrderTableProps) => {
+const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
   const translations = useTranslations(isMyOrders ? 'MyOrders' : 'OrdersPanel')
+  const tableTranslations = useTranslations('OrdersTable')
+
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false)
+  const [statusUpdateSnackbarOpen, setStatusUpdateSnackbarOpen] =
+    useState<boolean>(false)
+
   const [currentPage, setCurrentPage] = useState<number>(1)
+
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null)
   const [orders, setOrders] = useState<OrderType[]>([])
 
@@ -73,17 +79,20 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrderTableProps) => {
     },
     {
       eventName: 'ReceiveOrderStatusUpdate',
-      callback: (orderId: number, status: OrderStatusEnum) =>
+      callback: (orderId: number, status: OrderStatusEnum) => {
         setOrders(previousOrders =>
           previousOrders.map(order =>
             order.id === orderId ? { ...order, status } : order
           )
         )
+
+        setStatusUpdateSnackbarOpen(true)
+      }
     }
   ])
 
   useEffect(() => {
-    if (error || orders.length === 0) setSnackbarOpen(true)
+    if (error || orders.length === 0) setErrorSnackbarOpen(true)
   }, [error, orders])
 
   useEffect(() => {
@@ -111,8 +120,8 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrderTableProps) => {
     return (
       <Snackbar
         message={translations(error.message)}
-        open={snackbarOpen}
-        onClose={() => setSnackbarOpen(false)}
+        open={errorSnackbarOpen}
+        onClose={() => setErrorSnackbarOpen(false)}
         variant="error"
       />
     )
@@ -132,8 +141,8 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrderTableProps) => {
       {orders.length === 0 ? (
         <Snackbar
           message={translations(isMyOrders ? 'noOrders' : 'noOrderFound')}
-          open={snackbarOpen}
-          onClose={() => setSnackbarOpen(false)}
+          open={errorSnackbarOpen}
+          onClose={() => setErrorSnackbarOpen(false)}
           variant="info"
         />
       ) : (
@@ -166,6 +175,13 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrderTableProps) => {
           />
         </>
       )}
+
+      <Snackbar
+        message={tableTranslations('statusUpdatedSuccessfully')}
+        open={statusUpdateSnackbarOpen}
+        onClose={() => setStatusUpdateSnackbarOpen(false)}
+        variant="success"
+      />
     </div>
   )
 }
