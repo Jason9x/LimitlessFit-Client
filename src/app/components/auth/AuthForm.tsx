@@ -25,7 +25,6 @@ type AuthFormProps = {
 const AuthForm = ({ isRegister }: AuthFormProps) => {
   const translations = useTranslations(isRegister ? 'Register' : 'Login')
   const loginTranslations = useTranslations('Login')
-  const statusTranslations = useTranslations('Status')
 
   const dispatch = useDispatch()
   const router = useRouter()
@@ -78,13 +77,13 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
     try {
       const { token } = await apiAction(formData)
 
+      dispatch(setAuthState(true))
+
       Cookies.set('jwtToken', String(token), {
         expires: 7,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'Strict'
       })
-
-      dispatch(setAuthState(true))
 
       router.push('/')
     } catch (error) {

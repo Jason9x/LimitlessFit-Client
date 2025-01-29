@@ -5,7 +5,7 @@ import { useRef, useState } from 'react'
 
 import useClickOutside from '@/hooks/useClickOutside'
 
-import { OrderStatusEnum } from '@/types/order'
+import { OrderStatusEnum } from '@/types/orderType'
 
 type OrderStatusProps = {
   status: OrderStatusEnum
@@ -81,7 +81,7 @@ const OrderStatus = ({
       {isOpen && (
         <ul
           className="absolute z-10 bg-background dark:bg-background-dark text-foreground text-sm
-                    dark:text-foreground-dark rounded-xl shadow-md mt-2"
+                    dark:text-foreground-dark rounded-xl shadow-md mt-2 w-[130px]"
         >
           {Object.entries(OrderStatusEnum)
             .filter(([, value]) => isNaN(Number(value)))

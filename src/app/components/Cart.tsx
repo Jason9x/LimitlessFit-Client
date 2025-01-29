@@ -17,7 +17,7 @@ import Pagination from '@/components/ui/Pagination'
 
 import { createOrder } from '@/services/api/orders'
 
-import { OrderRequest } from '@/types/order'
+import { OrderRequest } from '@/types/orderType'
 
 const ITEMS_PER_PAGE = 3
 

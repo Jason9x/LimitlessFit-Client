@@ -6,7 +6,7 @@ import useClickOutside from '@/hooks/useClickOutside'
 import DateFilter from './filters/DateFilter'
 import StatusFilter from './filters/StatusFilter'
 
-import { OrderFilterType, OrderStatusEnum } from '@/types/order'
+import { OrderFilterType, OrderStatusEnum } from '@/types/orderType'
 
 type OrderFilterProps = {
   onFilterChange: (filter: OrderFilterType) => void

@@ -14,11 +14,11 @@ import OrderRow from './OrderRow'
 import OrdersTableHeader from './OrdersTableHeader'
 
 import {
-  Order,
+  OrderType,
   OrderFilterType,
   OrdersResponse,
   OrderStatusEnum
-} from '@/types/order'
+} from '@/types/orderType'
 import { PaginationParams } from '@/types/pagination'
 
 const PAGE_SIZE = 4
@@ -40,7 +40,7 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrderTableProps) => {
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null)
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<OrderType[]>([])
 
   const filterFromUrl: OrderFilterType | null = searchParams.get('filter')
     ? JSON.parse(searchParams.get('filter') as string)
@@ -61,16 +61,24 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrderTableProps) => {
 
   const totalPages = data?.totalPages || 1
 
-  useSignalR('/orderStatusHub', [
+  useSignalR('/orderUpdateHub', [
+    {
+      eventName: 'ReceiveOrderUpdate',
+      callback: (updatedOrder: OrderType) =>
+        setOrders(previousOrders =>
+          previousOrders.map(order =>
+            order.id === updatedOrder.id ? { ...updatedOrder } : order
+          )
+        )
+    },
     {
       eventName: 'ReceiveOrderStatusUpdate',
-      callback: (orderId: number, status: OrderStatusEnum) => {
+      callback: (orderId: number, status: OrderStatusEnum) =>
         setOrders(previousOrders =>
           previousOrders.map(order =>
             order.id === orderId ? { ...order, status } : order
           )
         )
-      }
     }
   ])
 

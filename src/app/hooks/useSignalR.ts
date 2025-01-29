@@ -13,7 +13,7 @@ type SignalRConfig = {
 const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
   const dispatch = useDispatch()
   const isConnected = useSelector(
-    (state: RootState) => state.signalR.connections[hubUrl] ?? false
+    (state: RootState) => state.signalR.connections[hubUrl]
   )
 
   const connectionRef = useRef<HubConnection | null>(null)
@@ -23,6 +23,7 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
 
     const connection = new HubConnectionBuilder()
       .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}${hubUrl}`)
+      .withAutomaticReconnect()
       .build()
 
     connectionRef.current = connection

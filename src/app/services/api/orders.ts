@@ -5,16 +5,16 @@ import { AxiosError } from 'axios'
 import AxiosErrorWithMessageKey from '@/types/axios-error'
 import { PaginationParams } from '@/types/pagination'
 import {
-  Order,
+  OrderType,
   OrderFilterType,
   OrderRequest,
   OrdersResponse,
   OrderStatusEnum
-} from '@/types/order'
+} from '@/types/orderType'
 
 export const createOrder = async (request: OrderRequest) => {
   try {
-    const { data } = await api.post<Order>('/Orders', request)
+    const { data } = await api.post<OrderType>('/Orders', request)
 
     return data
   } catch (error) {
@@ -24,7 +24,7 @@ export const createOrder = async (request: OrderRequest) => {
 
 export const fetchOrderById = async (id: number) => {
   try {
-    const { data } = await api.get<Order>(`/Orders/${id}`)
+    const { data } = await api.get<OrderType>(`/Orders/${id}`)
 
     return data
   } catch (error) {

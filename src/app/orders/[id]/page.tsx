@@ -8,15 +8,17 @@ import { useLocale } from 'use-intl'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
+import useSignalR from '@/hooks/useSignalR'
+
 import { fetchOrderById } from '@/services/api/orders'
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Snackbar from '@/components/ui/Snackbar'
+import Pagination from '@/components/ui/Pagination'
 
 import OrderStatus from '@/components/orders/OrderStatus'
 
-import { OrderStatusEnum } from '@/types/order'
-import Pagination from '@/components/ui/Pagination'
+import { OrderStatusEnum, OrderType } from '@/types/orderType'
 
 const ITEMS_PER_PAGE = 4
 
@@ -26,6 +28,10 @@ const Order = () => {
 
   const translations = useTranslations('Order')
   const itemTranslations = useTranslations('Items')
+
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [order, setOrder] = useState<OrderType>()
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['order', id],
@@ -37,8 +43,24 @@ const Order = () => {
     if (error) setSnackbarOpen(true)
   }, [error])
 
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
-  const [currentPage, setCurrentPage] = useState<number>(1)
+  useEffect(() => {
+    if (data) setOrder(data)
+  }, [data])
+
+  useSignalR('/orderStatusHub', [
+    {
+      eventName: 'ReceiveOrderStatusUpdate',
+      callback: (orderId: number, status: OrderStatusEnum) => {
+        if (orderId !== Number(id)) return
+
+        setOrder(previousOrder => {
+          if (!previousOrder) return
+
+          return { ...previousOrder, status }
+        })
+      }
+    }
+  ])
 
   if (isLoading) return <LoadingSpinner />
 
@@ -52,16 +74,18 @@ const Order = () => {
       />
     )
 
-  const totalPrice = data?.totalPrice
+  const totalPrice = order?.totalPrice
+  const date = order?.date
 
-  const date = new Date(data?.date || '')
-  const formattedDate = new Intl.DateTimeFormat(locale, {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  }).format(date)
+  const formattedDate = date
+    ? new Intl.DateTimeFormat(locale, {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      }).format(new Date(date))
+    : ''
 
-  const status = data?.status ?? OrderStatusEnum.Pending
+  const status = order?.status ?? OrderStatusEnum.Pending
 
   const orderDetails = [
     { label: 'total', value: `€ ${totalPrice}` },

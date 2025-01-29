@@ -21,13 +21,13 @@ export enum OrderStatusEnum {
 export type OrderItem = {
   id: number
   orderId: number
-  order: Order
+  order: OrderType
   itemId: number
   item: Item
   quantity: number
 }
 
-export type Order = {
+export type OrderType = {
   id: number
   user?: User
   date: string
@@ -37,7 +37,7 @@ export type Order = {
 }
 
 export type OrdersResponse = PaginationType & {
-  orders: Order[]
+  orders: OrderType[]
 }
 
 export type OrderFilterType = {

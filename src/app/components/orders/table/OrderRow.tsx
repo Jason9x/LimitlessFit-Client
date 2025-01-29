@@ -4,15 +4,16 @@ import Image from 'next/image'
 
 import { formatDistanceToNow } from 'date-fns'
 import { it, enUS } from 'date-fns/locale'
+import { toZonedTime } from 'date-fns-tz'
 
 import OrderStatus from '../OrderStatus'
 import OrderItems from './OrderItems'
 
-import { Order, OrderStatusEnum } from '@/types/order'
+import { OrderType, OrderStatusEnum } from '@/types/orderType'
 import { updateOrderStatus } from '@/services/api/orders'
 
 type OrderRowProps = {
-  order: Order
+  order: OrderType
   isMyOrders: boolean
   expandedOrderId: number | null
   onToggleExpand: (orderId: number) => void
@@ -37,10 +38,18 @@ const OrderRow = ({
     year: 'numeric'
   }).format(new Date(order.date))
 
-  const formattedRelativeDate = formatDistanceToNow(new Date(order.date), {
+  const localeTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const utcDate = new Date(order.date + 'Z')
+  const localDate = toZonedTime(utcDate, localeTimeZone)
+
+  console.log({ localDate })
+
+  const formattedRelativeDate = formatDistanceToNow(localDate, {
     addSuffix: true,
     locale: selectedLocale
   })
+
+  console.log({ formattedRelativeDate })
 
   const username = order.user?.name
 

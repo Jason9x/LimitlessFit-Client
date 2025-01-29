@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import Pagination from '@/components/ui/Pagination'
 
-import { OrderItem } from '@/types/order'
+import { OrderItem } from '@/types/orderType'
 
 type OrderItemsProps = {
   items: OrderItem[]
