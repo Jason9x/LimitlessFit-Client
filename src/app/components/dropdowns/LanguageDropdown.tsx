@@ -25,10 +25,10 @@ const LanguageDropdown = () => {
   ]
 
   const currentLanguage = languages.find(({ code }) => code === locale)
-  const toggleMenu = () => setIsOpen(previousState => !previousState)
+  const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
-    <div className="relative inline-block text-left" ref={ref}>
+    <div className="relative" ref={ref}>
       <button
         className="flex items-center justify-center w-full"
         onClick={toggleMenu}

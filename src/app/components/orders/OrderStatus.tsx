@@ -5,7 +5,7 @@ import { useRef, useState } from 'react'
 
 import useClickOutside from '@/hooks/useClickOutside'
 
-import { OrderStatusEnum } from '@/types/orderType'
+import { OrderStatusEnum } from '@/types/models/order'
 
 type OrderStatusProps = {
   status: OrderStatusEnum
@@ -61,7 +61,7 @@ const OrderStatus = ({
   const Dropdown = () => (
     <div ref={ref} className="relative">
       <div
-        onClick={() => setIsOpen(previousState => !previousState)}
+        onClick={() => setIsOpen(!isOpen)}
         className={`px-4 py-0.5 font-semibold text-sm text-center shadow-md rounded-xl 
                     w-[130px] cursor-pointer ${light} ${dark}`}
       >

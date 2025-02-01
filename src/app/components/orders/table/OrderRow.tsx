@@ -9,8 +9,9 @@ import { toZonedTime } from 'date-fns-tz'
 import OrderStatus from '../OrderStatus'
 import OrderItems from './OrderItems'
 
-import { OrderType, OrderStatusEnum } from '@/types/orderType'
 import { updateOrderStatus } from '@/api/orders'
+
+import { OrderType, OrderStatusEnum } from '@/types/models/order'
 
 type OrderRowProps = {
   order: OrderType
@@ -29,6 +30,8 @@ const OrderRow = ({
   isFirst = false,
   isLast = false
 }: OrderRowProps) => {
+  const { id, date, user, totalPrice, status, items } = order
+
   const locale = useLocale()
   const selectedLocale = locale === 'it' ? it : enUS
 
@@ -36,10 +39,10 @@ const OrderRow = ({
     day: '2-digit',
     month: 'short',
     year: 'numeric'
-  }).format(new Date(order.date))
+  }).format(new Date(date))
 
   const localeTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const utcDate = new Date(order.date + 'Z')
+  const utcDate = new Date(date + 'Z')
   const localDate = toZonedTime(utcDate, localeTimeZone)
 
   const formattedRelativeDate = formatDistanceToNow(localDate, {
@@ -47,12 +50,11 @@ const OrderRow = ({
     locale: selectedLocale
   })
 
-  const username = order.user?.name
+  const username = user?.name
   const paddingClasses = `${isFirst && 'pt-8'} ${isLast && 'pb-12'}`
 
   const handleStatusChange = async (status: OrderStatusEnum) => {
-    if (order.status !== Number(status))
-      await updateOrderStatus(order.id, status)
+    if (status !== Number(status)) await updateOrderStatus(id, status)
   }
 
   return (
@@ -61,7 +63,7 @@ const OrderRow = ({
         <td
           className={`p-3 px-8 text-link dark:text-link-dark font-normal ${paddingClasses}`}
         >
-          <Link href={`/orders/${order.id}`}>#{order.id}</Link>
+          <Link href={`/orders/${id}`}>#{id}</Link>
         </td>
 
         <td className={`p-3 px-8 ${paddingClasses}`}>
@@ -88,12 +90,12 @@ const OrderRow = ({
         )}
 
         <td className={`p-3 px-8 font-normal ${paddingClasses}`}>
-          € {order.totalPrice}
+          € {totalPrice}
         </td>
 
         <td className={`p-3 px-8 ${paddingClasses}`}>
           <OrderStatus
-            status={order.status}
+            status={status}
             isDropdown={!isMyOrders}
             onChange={handleStatusChange}
           />
@@ -102,7 +104,7 @@ const OrderRow = ({
         {!isMyOrders && (
           <td className={`p-3 px-8 ${paddingClasses}`}>
             <button
-              onClick={() => onToggleExpand(order.id)}
+              onClick={() => onToggleExpand(id)}
               className="w-4 h-4 flex items-center justify-center"
             >
               <Image
@@ -111,7 +113,7 @@ const OrderRow = ({
                 height={15}
                 alt="Arrow expand"
                 className={`transition-transform duration-300 ${
-                  expandedOrderId === order.id ? 'rotate-180' : 'rotate-0'
+                  expandedOrderId === id ? 'rotate-180' : 'rotate-0'
                 } ease-out dark:invert`}
               />
             </button>
@@ -119,11 +121,11 @@ const OrderRow = ({
         )}
       </tr>
 
-      {expandedOrderId === order.id && !isMyOrders && (
+      {expandedOrderId === id && !isMyOrders && (
         <tr>
           <td colSpan={5} className="p-6">
             <div className="flex justify-center items-center w-full">
-              <OrderItems items={order.items} />
+              <OrderItems items={items} />
             </div>
           </td>
         </tr>

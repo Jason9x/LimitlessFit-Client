@@ -1,6 +1,6 @@
-import { Item } from '@/types/item'
+import { Item } from '@/types/models/item'
 import { PaginationType } from '@/types/pagination'
-import User from '@/types/user'
+import User from '@/types/models/user'
 
 export type OrderItemRequest = {
   itemId: number

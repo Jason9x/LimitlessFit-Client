@@ -18,16 +18,16 @@ type LoginFormData = Credentials
 
 const handleAuthRequest = async (url: string, formData: Credentials) => {
   try {
-    const { data }: AxiosResponse<AuthTokenPayload> = await api.post(
+    const { data: payload }: AxiosResponse<AuthTokenPayload> = await api.post(
       url,
       formData
     )
-    const { token } = data
+    const { token } = payload
 
     return { token }
   } catch (error) {
-    const { messageKey } = (error as AxiosError).response
-      ?.data as AxiosErrorWithMessageKey
+    const { response } = error as AxiosError
+    const { messageKey } = response?.data as AxiosErrorWithMessageKey
 
     throw new Error(messageKey)
   }

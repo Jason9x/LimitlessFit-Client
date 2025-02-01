@@ -18,7 +18,7 @@ import Pagination from '@/components/ui/Pagination'
 
 import OrderStatus from '@/components/orders/OrderStatus'
 
-import { OrderStatusEnum, OrderType } from '@/types/orderType'
+import { OrderStatusEnum, OrderType } from '@/types/models/order'
 
 const ITEMS_PER_PAGE = 4
 
@@ -33,10 +33,13 @@ const Order = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [order, setOrder] = useState<OrderType>()
 
-  const { data, isLoading, error } = useQuery({
+  const {
+    data: initialOrder,
+    isLoading,
+    error
+  } = useQuery({
     queryKey: ['order', id],
-    queryFn: () => fetchOrderById(Number(id)),
-    retry: false
+    queryFn: () => fetchOrderById(Number(id))
   })
 
   useEffect(() => {
@@ -44,8 +47,8 @@ const Order = () => {
   }, [error])
 
   useEffect(() => {
-    if (data) setOrder(data)
-  }, [data])
+    if (initialOrder) setOrder(initialOrder)
+  }, [initialOrder])
 
   useSignalR('/orderUpdateHub', [
     {
@@ -93,7 +96,7 @@ const Order = () => {
     { label: 'status', value: <OrderStatus status={status} /> }
   ]
 
-  const items = data?.items || []
+  const items = initialOrder?.items || []
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE)
   const paginatedItems = items.slice(

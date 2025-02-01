@@ -1,10 +1,15 @@
 import { FormEvent, useState } from 'react'
-import { z, ZodSchema } from 'zod'
+
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import Cookies from 'js-cookie'
+
+import { z, ZodSchema } from 'zod'
+
 import { useDispatch } from 'react-redux'
+import { useMutation } from '@tanstack/react-query'
+
+import Cookies from 'js-cookie'
 
 import Input from '@/components/ui/Input'
 import SubmitButton from '@/components/buttons/SubmitBotton'
@@ -14,18 +19,18 @@ import Snackbar from '@/components/ui/Snackbar'
 import useForm from '@/hooks/useForm'
 
 import { registerUser, loginUser } from '@/api/auth'
-
 import { setAuthState } from '@/store/slices/authSlice'
 import { AxiosError } from 'axios'
 
 type AuthFormProps = {
-  isRegister: boolean
+  mode: 'register' | 'login'
 }
 
-const AuthForm = ({ isRegister }: AuthFormProps) => {
+const AuthForm = ({ mode }: AuthFormProps) => {
+  const isRegister = mode === 'register'
   const translations = useTranslations(isRegister ? 'Register' : 'Login')
+  const registerTranslations = useTranslations('Register')
   const loginTranslations = useTranslations('Login')
-
   const dispatch = useDispatch()
   const router = useRouter()
 
@@ -35,20 +40,18 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
   })
 
   const registerSchema = baseSchema.extend({
-    name: isRegister
-      ? z.string().regex(/^[a-zA-Z0-9 ]{3,50}$/, translations('invalidName'))
-      : z.string(),
-    password: isRegister
-      ? z
-          .string()
-          .min(8, translations('passwordLength'))
-          .regex(/[A-Z]/, translations('passwordUppercase'))
-          .regex(/\d/, translations('passwordNumber'))
-          .regex(/[^a-zA-Z0-9]/, translations('passwordSpecial'))
-      : z.string()
+    name: z
+      .string()
+      .regex(/^[a-zA-Z0-9 ]{3,50}$/, registerTranslations('invalidName')),
+    password: z
+      .string()
+      .min(8, registerTranslations('passwordLength'))
+      .regex(/[A-Z]/, registerTranslations('passwordUppercase'))
+      .regex(/\d/, registerTranslations('passwordNumber'))
+      .regex(/[^a-zA-Z0-9]/, registerTranslations('passwordSpecial'))
   })
 
-  const schema: ZodSchema<any> = isRegister ? registerSchema : baseSchema
+  const schema: ZodSchema = isRegister ? registerSchema : baseSchema
 
   const initialData = {
     email: '',
@@ -64,19 +67,10 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
   const [snackbarMessage, setSnackbarMessage] = useState<string>('')
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault()
-
-    if (!validate()) {
-      setSnackbarOpen(false)
-      return
-    }
-
-    const apiAction = isRegister ? registerUser : loginUser
-
-    try {
-      const { token } = await apiAction(formData)
-
+  const mutation = useMutation({
+    mutationFn: (data: typeof formData) =>
+      isRegister ? registerUser(data) : loginUser(data),
+    onSuccess: ({ token }) => {
       dispatch(setAuthState(true))
 
       Cookies.set('jwtToken', String(token), {
@@ -86,12 +80,24 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
       })
 
       router.push('/')
-    } catch (error) {
-      const messageKey = (error as AxiosError).message
+    },
+    onError: error => {
+      const { message: messageKey } = error as AxiosError
 
       setSnackbarMessage(translations(messageKey))
       setSnackbarOpen(true)
     }
+  })
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
+
+    if (!validate()) {
+      setSnackbarOpen(false)
+      return
+    }
+
+    mutation.mutate(formData)
   }
 
   return (
@@ -128,7 +134,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
           value={formData.password}
           onChange={handleChange('password')}
           required
-          minLength={8}
+          minLength={isRegister ? 8 : 1}
           maxLength={20}
           error={errors.password}
           className="mt-4"
@@ -141,7 +147,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
               ? loginTranslations('login').toLowerCase()
               : translations('registerNow')
           }
-          href={isRegister ? '/public' : '/register'}
+          href={isRegister ? '/login' : '/register'}
           className="mt-4"
         />
 
@@ -152,7 +158,7 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
 
         {!isRegister && (
           <Link
-            href="/public"
+            href="/"
             className="mt-6 uppercase text-link dark:text-link-dark text-sm underline font-medium decoration-0"
           >
             {translations('forgottenPassword')}
@@ -170,5 +176,5 @@ const AuthForm = ({ isRegister }: AuthFormProps) => {
   )
 }
 
-export const RegisterForm = () => <AuthForm isRegister={true} />
-export const LoginForm = () => <AuthForm isRegister={false} />
+export const RegisterForm = () => <AuthForm mode="register" />
+export const LoginForm = () => <AuthForm mode="login" />

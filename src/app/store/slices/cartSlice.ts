@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Item } from '@/types/item'
+import { Item } from '@/types/models/item'
 
 type CartItem = Omit<Item, 'descriptionKey'> & {
   quantity: number
@@ -19,23 +19,24 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<Item>) => {
-      const item = action.payload
-      const existingItem = state.items.find(cartItem => cartItem.id === item.id)
+    addToCart: (state, { payload: item }: PayloadAction<Item>) => {
+      const existingIndex = state.items.findIndex(({ id }) => id === item.id)
+      const hasItem = existingIndex !== -1
 
-      const updatedItem = existingItem
-        ? { ...existingItem, quantity: existingItem.quantity + 1 }
+      const updatedItem = hasItem
+        ? {
+            ...state.items[existingIndex],
+            quantity: state.items[existingIndex].quantity + 1
+          }
         : { ...item, quantity: 1 }
 
-      state.items = existingItem
-        ? state.items.map(cartItem =>
-            cartItem.id === item.id ? updatedItem : cartItem
+      state.items = hasItem
+        ? state.items.map((cartItem, index) =>
+            index === existingIndex ? updatedItem : cartItem
           )
         : [...state.items, updatedItem]
 
-      state.lastAddedItemIndex = state.items.findIndex(
-        cartItem => cartItem.id === updatedItem.id
-      )
+      state.lastAddedItemIndex = hasItem ? existingIndex : state.items.length // Becomes last index after update
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter(item => item.id !== action.payload)

@@ -12,6 +12,7 @@ import UserDropdown from '@/components/dropdowns/UserDropdown'
 import { RootState } from '@/store'
 import useClickOutside from '@/hooks/useClickOutside'
 import useUser from '@/hooks/useUser'
+import NotificationsDropdown from '@/components/dropdowns/notifications/NotificationsDropdown'
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme()
@@ -97,7 +98,12 @@ const Navbar = () => {
         />
       </button>
 
-      {isAuthenticated && <UserDropdown />}
+      {isAuthenticated && (
+        <>
+          <NotificationsDropdown />
+          <UserDropdown />
+        </>
+      )}
     </>
   )
 
@@ -113,7 +119,10 @@ const Navbar = () => {
             className="dark:invert"
             priority
           />
-          <span className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10 text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider">
+          <span
+            className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10
+                         text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider"
+          >
             LimitlessFit
           </span>
         </div>
@@ -133,7 +142,7 @@ const Navbar = () => {
         />
       </button>
 
-      <div className="hidden lg:flex items-center justify-center space-x-4">
+      <div className="hidden lg:flex items-center justify-center space-x-6">
         <NavigationItems />
       </div>
 

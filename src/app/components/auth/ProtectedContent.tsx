@@ -10,7 +10,7 @@ import { RootState } from '@/store'
 
 import getServerHealth from '@/api/serverHealth'
 
-import { LoginForm } from '@/components/AuthForm'
+import { LoginForm } from '@/components/auth/AuthForm'
 import BackButton from '@/components/buttons/BackButton'
 import Snackbar from '@/components/ui/Snackbar'
 

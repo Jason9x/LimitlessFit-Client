@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl'
 
 import { useDispatch } from 'react-redux'
 
-import { Item } from '@/types/item'
+import { Item } from '@/types/models/item'
 
 import { addToCart } from '@/store/slices/cartSlice'
 

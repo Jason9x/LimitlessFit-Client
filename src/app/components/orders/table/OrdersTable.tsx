@@ -18,7 +18,7 @@ import {
   OrderFilterType,
   OrdersResponse,
   OrderStatusEnum
-} from '@/types/orderType'
+} from '@/types/models/order'
 import { PaginationParams } from '@/types/pagination'
 
 const PAGE_SIZE = 4
@@ -53,7 +53,11 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
     : null
   const [filter, setFilter] = useState<OrderFilterType | null>(filterFromUrl)
 
-  const { data, isLoading, error } = useQuery({
+  const {
+    data: paginatedOrders,
+    isLoading,
+    error
+  } = useQuery({
     queryKey: [isMyOrders ? 'my-orders' : 'all', currentPage, filter],
     queryFn: () =>
       fetchOrders(
@@ -65,7 +69,7 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
       )
   })
 
-  const totalPages = data?.totalPages || 1
+  const totalPages = paginatedOrders?.totalPages || 1
 
   useSignalR('/orderUpdateHub', [
     {
@@ -96,8 +100,8 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
   }, [error, orders])
 
   useEffect(() => {
-    if (data) setOrders(data.orders)
-  }, [data])
+    if (paginatedOrders) setOrders(paginatedOrders.orders)
+  }, [paginatedOrders])
 
   const handleFilterChange = (filter: OrderFilterType) => {
     setFilter(filter)
@@ -138,26 +142,28 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
 
       <hr className="my-10 border-gray-300 dark:border-gray-600" />
 
-      {orders.length === 0 ? (
+      {orders.length === 0 && (
         <Snackbar
           message={translations(isMyOrders ? 'noOrders' : 'noOrderFound')}
           open={errorSnackbarOpen}
           onClose={() => setErrorSnackbarOpen(false)}
           variant="info"
         />
-      ) : (
-        <>
+      )}
+
+      {orders.length > 0 && (
+        <div className="space-y-6">
           <table
-            className="min-w-full shadow-md mb-10 rounded-xl shadow-secondary dark:shadow-secondary-dark
-                     bg-secondary dark:bg-secondary-dark table-auto border-collapse"
+            className="min-w-full shadow-md rounded-xl shadow-secondary dark:shadow-secondary-dark
+                 bg-secondary dark:bg-secondary-dark table-auto border-collapse"
           >
             <OrdersTableHeader isMyOrders={isMyOrders} />
 
             <tbody>
-              {orders.map((value, index) => (
+              {orders.map((order, index) => (
                 <OrderRow
-                  key={value.id}
-                  order={value}
+                  key={order.id}
+                  order={order}
                   isMyOrders={isMyOrders}
                   expandedOrderId={expandedOrderId}
                   onToggleExpand={handleToggleExpand}
@@ -173,7 +179,7 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
             totalPages={totalPages}
             onPageChange={handlePageChange}
           />
-        </>
+        </div>
       )}
 
       <Snackbar

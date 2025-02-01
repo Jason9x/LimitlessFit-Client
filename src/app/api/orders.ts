@@ -10,23 +10,19 @@ import {
   OrderRequest,
   OrdersResponse,
   OrderStatusEnum
-} from '@/types/orderType'
+} from '@/types/models/order'
 
 export const createOrder = async (request: OrderRequest) => {
-  try {
-    const { data } = await api.post<OrderType>('/Orders', request)
+  const { data: order } = await api.post<OrderType>('/Orders', request)
 
-    return data
-  } catch (error) {
-    throw error
-  }
+  return order
 }
 
 export const fetchOrderById = async (id: number) => {
   try {
-    const { data } = await api.get<OrderType>(`/Orders/${id}`)
+    const { data: order } = await api.get<OrderType>(`/Orders/${id}`)
 
-    return data
+    return order
   } catch (error) {
     const { messageKey } = (error as AxiosError).response
       ?.data as AxiosErrorWithMessageKey
@@ -39,51 +35,23 @@ export const fetchMyOrders = async (
   { pageNumber, pageSize }: PaginationParams,
   { startDate, endDate, status }: OrderFilterType
 ) => {
-  try {
-    const { data } = await api.get<OrdersResponse>('/Orders/my-orders', {
-      params: {
-        pageNumber,
-        pageSize,
-        startDate,
-        endDate,
-        status
-      }
-    })
+  const { data: orders } = await api.get<OrdersResponse>('/Orders/my-orders', {
+    params: { pageNumber, pageSize, startDate, endDate, status }
+  })
 
-    return data
-  } catch (error) {
-    throw error
-  }
+  return orders
 }
 
 export const fetchAllOrders = async (
   { pageNumber, pageSize }: PaginationParams,
   { startDate, endDate, status }: OrderFilterType
 ) => {
-  try {
-    const { data } = await api.get<OrdersResponse>('/Orders/all', {
-      params: {
-        pageNumber,
-        pageSize,
-        startDate,
-        endDate,
-        status
-      }
-    })
+  const { data: orders } = await api.get<OrdersResponse>('/Orders/all', {
+    params: { pageNumber, pageSize, startDate, endDate, status }
+  })
 
-    return data
-  } catch (error) {
-    throw error
-  }
+  return orders
 }
 
-export const updateOrderStatus = async (
-  id: number,
-  status: OrderStatusEnum
-) => {
-  try {
-    await api.patch(`/Orders/${id}/status`, status)
-  } catch (error) {
-    throw error
-  }
-}
+export const updateOrderStatus = async (id: number, status: OrderStatusEnum) =>
+  await api.patch(`/Orders/${id}/status`, status)

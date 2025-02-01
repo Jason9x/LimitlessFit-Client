@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { useMutation } from '@tanstack/react-query'
 
 import { RootState } from '@/store'
 import {
@@ -17,7 +18,7 @@ import Pagination from '@/components/ui/Pagination'
 
 import { createOrder } from '@/api/orders'
 
-import { OrderRequest } from '@/types/orderType'
+import { OrderRequest } from '@/types/models/order'
 
 const ITEMS_PER_PAGE = 3
 
@@ -28,36 +29,32 @@ const Cart = () => {
   )
 
   const dispatch = useDispatch()
-
+  const router = useRouter()
   const cartTranslations = useTranslations('Cart')
   const itemsTranslations = useTranslations('Items')
 
   const [showConfirmAlert, setShowConfirmAlert] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [loading, setLoading] = useState(false)
 
-  const router = useRouter()
+  const mutation = useMutation({
+    mutationFn: (request: OrderRequest) => createOrder(request),
+    onSuccess: ({ id }) => {
+      dispatch(emptyCart())
+      router.push(`/orders/${id}`)
+    }
+  })
 
   const totalPages = Math.ceil(cartItems.length / ITEMS_PER_PAGE)
 
   const handleRemoveFromCart = (itemId: number) =>
     dispatch(removeFromCart(itemId))
 
-  const handleIncreaseQuantity = (itemId: number) =>
-    dispatch(updateQuantity({ itemId, quantity: 1 }))
+  const handleQuantityChange = (itemId: number, delta: number) =>
+    dispatch(updateQuantity({ itemId, quantity: delta }))
 
-  const handleDecreaseQuantity = (itemId: number) =>
-    dispatch(updateQuantity({ itemId, quantity: -1 }))
+  const handleSubmitOrder = () => setShowConfirmAlert(true)
 
-  const handleSubmitOrder = () => {
-    if (loading) return
-
-    setShowConfirmAlert(true)
-  }
-
-  const handleConfirmOrder = async () => {
-    setLoading(true)
-
+  const handleConfirmOrder = () => {
     const request: OrderRequest = {
       items: cartItems.map(({ id, quantity }) => ({
         itemId: id,
@@ -65,14 +62,7 @@ const Cart = () => {
       }))
     }
 
-    try {
-      const { id } = await createOrder(request)
-
-      dispatch(emptyCart())
-      router.push(`/orders/${id}`)
-    } catch (error) {
-      setLoading(false) // Reset loading on error
-    }
+    mutation.mutate(request)
   }
 
   const handleCancelOrder = () => setShowConfirmAlert(false)
@@ -126,7 +116,7 @@ const Cart = () => {
             <div className="flex items-center space-x-4 sm:space-x-2">
               <div className="flex items-center space-x-3 mr-1 text-foreground dark:text-foreground-dark">
                 <button
-                  onClick={() => handleDecreaseQuantity(item.id)}
+                  onClick={() => handleQuantityChange(item.id, -1)}
                   className="text-md"
                 >
                   -
@@ -135,7 +125,7 @@ const Cart = () => {
                 <span className="text-sm">{item.quantity}</span>
 
                 <button
-                  onClick={() => handleIncreaseQuantity(item.id)}
+                  onClick={() => handleQuantityChange(item.id, 1)}
                   className="text-md"
                 >
                   +
@@ -165,6 +155,7 @@ const Cart = () => {
           totalPrice={Number(totalPrice)}
           onConfirm={handleConfirmOrder}
           onCancel={handleCancelOrder}
+          isLoading={mutation.isPending}
         />
       )}
 
@@ -172,7 +163,7 @@ const Cart = () => {
         label={cartTranslations('confirmOrder')}
         onClick={handleSubmitOrder}
         className="mt-4"
-        disabled={loading}
+        disabled={mutation.isPending || cartItems.length === 0}
       />
 
       <Pagination

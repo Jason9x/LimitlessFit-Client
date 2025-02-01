@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
 
 import AuthTokenPayload from '@/types/auth-token-payload'
-import User from '@/types/user'
+import User from '@/types/models/user'
 
 const useUser = () => {
   const [user, setUser] = useState<User>()

@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 
-import { OrderStatusEnum } from '@/types/orderType'
+import { OrderStatusEnum } from '@/types/models/order'
 
 type StatusFilterProps = {
   status?: OrderStatusEnum

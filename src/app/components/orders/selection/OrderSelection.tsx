@@ -19,7 +19,11 @@ const OrderSelection = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [snackbarOpen, setSnackbarOpen] = useState(false)
 
-  const { data, isLoading, error } = useQuery({
+  const {
+    data: paginatedItems,
+    isLoading,
+    error
+  } = useQuery({
     queryKey: ['items', currentPage, PAGE_SIZE],
     queryFn: () => fetchItems({ pageNumber: currentPage, pageSize: PAGE_SIZE })
   })
@@ -44,8 +48,8 @@ const OrderSelection = () => {
       />
     )
 
-  const items = data?.items || []
-  const totalPages = data?.totalPages || 1
+  const items = paginatedItems?.items || []
+  const totalPages = paginatedItems?.totalPages || 1
 
   return (
     <div className="p-10">
