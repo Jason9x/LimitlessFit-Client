@@ -36,9 +36,7 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
       await connection.start()
 
       dispatch(connect(hubUrl))
-    } catch (error) {
-      console.error('Error starting SignalR connection:', error)
-
+    } catch {
       setTimeout(connectToHub, 5000)
     }
 
@@ -46,7 +44,7 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
   }, [dispatch, events, hubUrl, isConnected])
 
   useEffect(() => {
-    connectToHub().catch(console.error)
+    connectToHub().finally()
   }, [connectToHub])
 }
 

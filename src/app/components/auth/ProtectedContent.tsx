@@ -26,7 +26,7 @@ const ProtectedContent = ({ children }: { children: ReactNode }) => {
     queryKey: ['serverHealth'],
     queryFn: getServerHealth,
     retry: 3,
-    staleTime: 60000
+    staleTime: 2000
   })
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 const createApiClient = (): AxiosInstance => {
   const instance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api`,
-    timeout: 10000,
+    timeout: 5000,
     headers: { 'Content-Type': 'application/json' }
   })
 
