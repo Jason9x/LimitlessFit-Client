@@ -10,7 +10,7 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
   const connectionRef = useRef<HubConnection | null>(null)
 
   const connectToHub = useCallback(async () => {
-    if (connectionRef.current) return // Only check local connection
+    if (connectionRef.current) return
 
     const connection = new HubConnectionBuilder()
       .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}${hubUrl}`, {
