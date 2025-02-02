@@ -1,12 +1,10 @@
 import { formatDistanceToNow } from 'date-fns'
 import { it, enUS } from 'date-fns/locale'
-import { toZonedTime } from 'date-fns-tz'
 
-export const formatRelativeDate = (date: Date, locale: string) => {
-  const localeTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const localDate = toZonedTime(date, localeTimeZone)
+export const formatRelativeDate = (date: string, locale: string) => {
+  const utcDate = new Date(date.endsWith('Z') ? date : `${date}Z`)
 
-  return formatDistanceToNow(localDate, {
+  return formatDistanceToNow(utcDate, {
     addSuffix: true,
     locale: locale === 'it' ? it : enUS
   })

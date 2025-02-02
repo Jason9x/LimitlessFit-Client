@@ -20,7 +20,6 @@ const NotificationItem = ({
 
   const locale = useLocale()
 
-  console.log('Created At:', createdAt.toLocaleString())
   const formattedRelativeDate = formatRelativeDate(createdAt, locale)
 
   useEffect(() => {

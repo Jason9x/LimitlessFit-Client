@@ -2,7 +2,7 @@ type NotificationType = {
   id: number
   messageKey: string
   isRead: boolean
-  createdAt: Date
+  createdAt: string
 }
 
 export default NotificationType
