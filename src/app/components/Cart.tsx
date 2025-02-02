@@ -16,7 +16,7 @@ import SubmitButton from '@/components/buttons/SubmitBotton'
 import ConfirmOrderAlert from '@/components/orders/ConfirmOrderAlert'
 import Pagination from '@/components/ui/Pagination'
 
-import { createOrder } from '@/api/orders'
+import { createOrder } from '@/api/services/orders'
 
 import { OrderRequest } from '@/types/models/order'
 
@@ -100,6 +100,7 @@ const Cart = () => {
                 width={30}
                 height={30}
                 className="mr-4"
+                priority
               />
 
               <div>
@@ -143,6 +144,7 @@ const Cart = () => {
                   src={'/icons/cart/trash.svg'}
                   alt={'Trash'}
                   className="transition-all duration-300"
+                  priority
                 />
               </button>
             </div>

@@ -31,6 +31,7 @@ const StatusFilter = ({
           height={20}
           alt="Status"
           className="dark:invert mr-1.5"
+          priority
         />
 
         {translations('orderByStatus')}
@@ -41,6 +42,7 @@ const StatusFilter = ({
           height={10}
           alt="Arrow expand"
           className={`transition-transform duration-300 ease-out dark:invert ml-2`}
+          priority
         />
       </button>
 

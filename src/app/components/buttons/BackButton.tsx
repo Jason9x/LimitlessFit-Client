@@ -21,7 +21,9 @@ const BackButton = () => {
         width={10}
         height={10}
         className="dark:invert"
+        priority
       />
+
       <span>{translations('back')}</span>
     </button>
   )

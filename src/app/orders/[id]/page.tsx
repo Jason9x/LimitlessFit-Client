@@ -5,12 +5,12 @@ import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useLocale } from 'use-intl'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
 import useSignalR from '@/hooks/useSignalR'
 
-import { fetchOrderById } from '@/api/orders'
+import { fetchOrderById } from '@/api/services/orders'
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Snackbar from '@/components/ui/Snackbar'
@@ -23,44 +23,41 @@ import { OrderStatusEnum, OrderType } from '@/types/models/order'
 const ITEMS_PER_PAGE = 4
 
 const Order = () => {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
   const locale = useLocale()
+  const queryClient = useQueryClient()
 
   const translations = useTranslations('Order')
   const itemTranslations = useTranslations('Items')
 
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const [order, setOrder] = useState<OrderType>()
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const {
-    data: initialOrder,
-    isLoading,
-    error
-  } = useQuery({
+  const orderQuery = useQuery({
     queryKey: ['order', id],
     queryFn: () => fetchOrderById(Number(id))
   })
+
+  const { data: order, isLoading, error } = orderQuery
 
   useEffect(() => {
     if (error) setSnackbarOpen(true)
   }, [error])
 
-  useEffect(() => {
-    if (initialOrder) setOrder(initialOrder)
-  }, [initialOrder])
-
   useSignalR('/orderUpdateHub', [
     {
       eventName: 'ReceiveOrderStatusUpdate',
-      callback: (orderId: number, status: OrderStatusEnum) => {
+      callback: async (orderId: number, status: OrderStatusEnum) => {
         if (orderId !== Number(id)) return
 
-        setOrder(previousOrder => {
-          if (!previousOrder) return
+        queryClient.setQueryData<OrderType | undefined>(
+          ['order', id],
+          oldOrder => {
+            if (oldOrder) return { ...oldOrder, status }
+          }
+        )
 
-          return { ...previousOrder, status }
-        })
+        await queryClient.invalidateQueries({ queryKey: ['order', id] })
       }
     }
   ])
@@ -77,32 +74,28 @@ const Order = () => {
       />
     )
 
-  const totalPrice = order?.totalPrice
-  const date = order?.date
-
-  const formattedDate = date
+  const formattedDate = order?.date
     ? new Intl.DateTimeFormat(locale, {
         day: '2-digit',
         month: 'short',
         year: 'numeric'
-      }).format(new Date(date))
+      }).format(new Date(order.date))
     : ''
 
-  const status = order?.status ?? OrderStatusEnum.Pending
-
   const orderDetails = [
-    { label: 'total', value: `€ ${totalPrice}` },
+    { label: 'total', value: `€ ${order?.totalPrice}` },
     { label: 'date', value: formattedDate },
-    { label: 'status', value: <OrderStatus status={status} /> }
+    { label: 'status', value: order && <OrderStatus status={order.status} /> }
   ]
 
-  const items = initialOrder?.items || []
-
+  const items = order?.items || []
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE)
   const paginatedItems = items.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   )
+
+  const handlePageChange = (page: number) => setCurrentPage(page)
 
   return (
     <div className="m-10">
@@ -137,6 +130,7 @@ const Order = () => {
             <th className="pb-4 p-6 font-semibold">
               {translations('preview')}
             </th>
+
             <th className="pb-4 p-6 font-semibold">{translations('items')}</th>
             <th className="pb-4 p-6 font-semibold">{translations('total')}</th>
           </tr>
@@ -160,6 +154,7 @@ const Order = () => {
                     width={40}
                     height={40}
                     alt={`Item #${index}`}
+                    priority
                   />
                 </td>
 
@@ -183,7 +178,7 @@ const Order = () => {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={handlePageChange}
       />
     </div>
   )

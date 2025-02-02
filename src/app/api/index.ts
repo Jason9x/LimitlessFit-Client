@@ -35,5 +35,5 @@ const createApiClient = (): AxiosInstance => {
   return instance
 }
 
-const api = createApiClient()
-export default api
+const index = createApiClient()
+export default index

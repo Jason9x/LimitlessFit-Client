@@ -1,5 +1,10 @@
+import { useTranslations } from 'next-intl'
+
 import { useEffect, useRef } from 'react'
+
 import NotificationType from '@/types/models/notification'
+import { formatRelativeDate } from '@/utils/dateUtils'
+import { useLocale } from 'use-intl'
 
 const NotificationItem = ({
   notification,
@@ -9,7 +14,16 @@ const NotificationItem = ({
   markAsRead: (id: number) => void
 }) => {
   const { id, isRead, messageKey, createdAt } = notification
+
+  const translations = useTranslations('NotificationItem')
   const itemRef = useRef<HTMLLIElement>(null)
+
+  const locale = useLocale()
+
+  const formattedRelativeDate = formatRelativeDate(
+    createdAt.toLocaleString(),
+    locale
+  )
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -34,11 +48,14 @@ const NotificationItem = ({
         isRead ? 'bg-gray-50' : ''
       }`}
     >
-      <span className="block text-sm">{messageKey}</span>
-
-      <span className="text-xs text-gray-500">
-        {createdAt.toLocaleString()}
+      <span className="block text-sm">
+        {translations(messageKey, {
+          orderId: 3,
+          status: 1
+        })}
       </span>
+
+      <span className="text-xs text-gray-500">{formattedRelativeDate}</span>
     </li>
   )
 }

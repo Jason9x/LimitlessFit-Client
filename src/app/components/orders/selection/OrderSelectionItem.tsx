@@ -30,6 +30,7 @@ const OrderSelectionItem = ({ item }: OrderItemProps) => {
             width={100}
             height={100}
             className="absolute -top-10"
+            priority
           />
 
           <p className="text-foreground dark:text-foreground-dark font-semibold mt-6">

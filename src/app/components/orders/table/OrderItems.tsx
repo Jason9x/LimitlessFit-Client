@@ -73,6 +73,7 @@ const OrderItems = ({ items }: OrderItemsProps) => {
                   alt={value.item.nameKey}
                   width={30}
                   height={30}
+                  priority
                 />
               </td>
 

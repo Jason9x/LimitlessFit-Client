@@ -1,18 +1,20 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
 import { useTheme } from 'next-themes'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { useState, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
+
 import LanguageDropdown from '@/components/dropdowns/LanguageDropdown'
 import UserDropdown from '@/components/dropdowns/UserDropdown'
+import NotificationsDropdown from '@/components/dropdowns/notifications/NotificationsDropdown'
+
 import { RootState } from '@/store'
 import useClickOutside from '@/hooks/useClickOutside'
 import useUser from '@/hooks/useUser'
-import NotificationsDropdown from '@/components/dropdowns/notifications/NotificationsDropdown'
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme()
@@ -24,6 +26,7 @@ const Navbar = () => {
   const translations = useTranslations('Navbar')
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
   const menuIconRef = useRef<HTMLButtonElement | null>(null)
 
@@ -34,8 +37,14 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) setIsMenuOpen(false)
+      const isLargeScreen = window.innerWidth >= 1024
+
+      setIsDesktop(isLargeScreen)
+
+      if (isLargeScreen) setIsMenuOpen(false)
     }
+
+    handleResize()
 
     window.addEventListener('resize', handleResize)
 
@@ -51,6 +60,7 @@ const Navbar = () => {
           height={20}
           alt="My orders"
           className="dark:invert"
+          priority
         />
 
         <p className="hidden lg:block">{translations('myOrders')}</p>
@@ -64,8 +74,8 @@ const Navbar = () => {
             height={20}
             alt="Orders management"
             className="dark:invert"
+            priority
           />
-
           <p className="hidden lg:block">{translations('ordersManagement')}</p>
         </Link>
       )}
@@ -95,6 +105,7 @@ const Navbar = () => {
           height={20}
           alt="Theme toggle"
           className="dark:invert"
+          priority
         />
       </button>
 
@@ -119,6 +130,7 @@ const Navbar = () => {
             className="dark:invert"
             priority
           />
+
           <span
             className="ml-3 font-bold uppercase text-2xl text-shadow text-shadow-blur-10
                          text-shadow-foreground dark:text-shadow-foreground-dark tracking-wider"
@@ -128,23 +140,28 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <button
-        ref={menuIconRef}
-        className="lg:hidden text-foreground dark:text-foreground-dark"
-        onClick={toggleMenu}
-      >
-        <Image
-          src="/icons/navbar/menu.svg"
-          width={22}
-          height={22}
-          alt="Menu"
-          className="dark:invert"
-        />
-      </button>
+      {!isDesktop && (
+        <button
+          ref={menuIconRef}
+          className="lg:hidden text-foreground dark:text-foreground-dark"
+          onClick={toggleMenu}
+        >
+          <Image
+            src="/icons/navbar/menu.svg"
+            width={22}
+            height={22}
+            alt="Menu"
+            className="dark:invert"
+            priority
+          />
+        </button>
+      )}
 
-      <div className="hidden lg:flex items-center justify-center space-x-6">
-        <NavigationItems />
-      </div>
+      {isDesktop && (
+        <div className="flex items-center justify-center space-x-6">
+          <NavigationItems />
+        </div>
+      )}
 
       {isMenuOpen && renderMenu()}
     </nav>

@@ -18,7 +18,7 @@ import Snackbar from '@/components/ui/Snackbar'
 
 import useForm from '@/hooks/useForm'
 
-import { registerUser, loginUser } from '@/api/auth'
+import { registerUser, loginUser } from '@/api/services/auth'
 import { setAuthState } from '@/store/slices/authSlice'
 import { AxiosError } from 'axios'
 
@@ -147,7 +147,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
               ? loginTranslations('login').toLowerCase()
               : translations('registerNow')
           }
-          href={isRegister ? '/login' : '/register'}
+          href={isRegister ? '/' : '/register'}
           className="mt-4"
         />
 

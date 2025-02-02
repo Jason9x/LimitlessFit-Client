@@ -65,6 +65,7 @@ const Pagination = ({
         height={15}
         alt={direction === 'previous' ? 'Previous' : 'Next'}
         className={`dark:invert ${direction === 'next' ? 'rotate-180' : ''}`}
+        priority
       />
     </button>
   )

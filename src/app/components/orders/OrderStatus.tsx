@@ -1,10 +1,7 @@
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-
 import { useRef, useState } from 'react'
-
 import useClickOutside from '@/hooks/useClickOutside'
-
 import { OrderStatusEnum } from '@/types/models/order'
 
 type OrderStatusProps = {
@@ -20,7 +17,10 @@ const OrderStatus = ({
 }: OrderStatusProps) => {
   const translations = useTranslations('OrderStatus')
   const [isOpen, setIsOpen] = useState(false)
-
+  const [dropdownPosition, setDropdownPosition] = useState<'top' | 'bottom'>(
+    'bottom'
+  )
+  const triggerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLDivElement>(null)
 
   useClickOutside([ref], () => setIsOpen(false))
@@ -55,15 +55,35 @@ const OrderStatus = ({
     [OrderStatusEnum.Delivered]: translations('delivered')
   }
 
+  const calculateDropdownPosition = (
+    triggerElement: HTMLElement
+  ): 'top' | 'bottom' => {
+    const DROPDOWN_ESTIMATED_HEIGHT = 144 // 4 items × 36px each.
+    const triggerRect = triggerElement.getBoundingClientRect()
+    const spaceBelowWindow = window.innerHeight - triggerRect.bottom
+
+    return spaceBelowWindow < DROPDOWN_ESTIMATED_HEIGHT ? 'top' : 'bottom'
+  }
+
+  const handleTriggerClick = () => {
+    const willOpen = !isOpen
+
+    if (willOpen && triggerRef.current)
+      setDropdownPosition(calculateDropdownPosition(triggerRef.current))
+
+    setIsOpen(willOpen)
+  }
+
   const { light, dark } = statusColors[status]
   const statusText = statusLabels[status]
 
   const Dropdown = () => (
     <div ref={ref} className="relative">
       <div
-        onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-0.5 font-semibold text-sm text-center shadow-md rounded-xl 
-                    w-[130px] cursor-pointer ${light} ${dark}`}
+        ref={triggerRef}
+        onClick={handleTriggerClick}
+        className={`px-4 py-0.5 font-semibold text-sm text-center shadow-md
+                    rounded-xl w-[130px] cursor-pointer ${light} ${dark}`}
       >
         {statusLabels[status]}
 
@@ -80,8 +100,12 @@ const OrderStatus = ({
 
       {isOpen && (
         <ul
-          className="absolute z-10 bg-background dark:bg-background-dark text-foreground text-sm
-                    dark:text-foreground-dark rounded-xl shadow-md mt-2 w-[130px]"
+          className={`absolute z-50 bg-background dark:bg-background-dark text-foreground text-sm
+                      rounded-xl dark:text-foreground-dark shadow-md ${
+                        dropdownPosition === 'bottom'
+                          ? 'mt-2'
+                          : 'mb-2 bottom-full'
+                      } w-[130px]`}
         >
           {Object.entries(OrderStatusEnum)
             .filter(([, value]) => isNaN(Number(value)))
@@ -92,7 +116,7 @@ const OrderStatus = ({
                   onChange?.(key as unknown as OrderStatusEnum)
                   setIsOpen(false)
                 }}
-                className="px-4 py-1 hover:bg-gray-200 cursor-pointer"
+                className="px-4 py-1 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-700"
               >
                 {statusLabels[key as unknown as OrderStatusEnum]}
               </li>

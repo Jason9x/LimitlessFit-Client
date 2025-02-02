@@ -40,6 +40,7 @@ const LanguageDropdown = () => {
             src={currentLanguage.flag}
             alt={`Flag for ${locale}`}
             className="mr-2"
+            priority
           />
         )}
 
@@ -51,6 +52,7 @@ const LanguageDropdown = () => {
           className={`transition-transform duration-300 ${
             isOpen ? 'rotate-180' : 'rotate-0'
           } ease-out dark:invert`}
+          priority
         />
       </button>
 
@@ -74,6 +76,7 @@ const LanguageDropdown = () => {
                   height={28}
                   src={flag}
                   alt={`Flag for ${code}`}
+                  priority
                 />
               </div>
             </li>

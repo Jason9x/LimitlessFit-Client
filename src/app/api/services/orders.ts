@@ -1,6 +1,4 @@
-import api from '@/api/api'
-
-import { AxiosError } from 'axios'
+import api from '@/api'
 
 import AxiosErrorWithMessageKey from '@/types/axios-error'
 import { PaginationParams } from '@/types/pagination'
@@ -24,8 +22,7 @@ export const fetchOrderById = async (id: number) => {
 
     return order
   } catch (error) {
-    const { messageKey } = (error as AxiosError).response
-      ?.data as AxiosErrorWithMessageKey
+    const { messageKey } = error as AxiosErrorWithMessageKey
 
     throw new Error(messageKey)
   }

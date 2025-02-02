@@ -31,6 +31,7 @@ const DateFilter = ({
           height={20}
           alt="Calendar"
           className="dark:invert mr-1.5"
+          priority
         />
 
         {translations('orderByDate')}
@@ -41,6 +42,7 @@ const DateFilter = ({
           height={10}
           alt="Arrow expand"
           className={`transition-transform duration-300 ease-out dark:invert ml-2`}
+          priority
         />
       </button>
 

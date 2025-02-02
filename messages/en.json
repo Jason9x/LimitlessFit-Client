@@ -115,5 +115,8 @@
     "price": "Price",
     "description": "Description",
     "quantity": "Quantity"
+  },
+  "NotificationItem": {
+    "orderStatusUpdate": "Your order with id {orderId} has been updated to {status}."
   }
 }

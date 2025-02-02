@@ -2,14 +2,12 @@ import Link from 'next/link'
 import { useLocale } from 'use-intl'
 import Image from 'next/image'
 
-import { formatDistanceToNow } from 'date-fns'
-import { it, enUS } from 'date-fns/locale'
-import { toZonedTime } from 'date-fns-tz'
-
 import OrderStatus from '../OrderStatus'
 import OrderItems from './OrderItems'
 
-import { updateOrderStatus } from '@/api/orders'
+import { updateOrderStatus } from '@/api/services/orders'
+
+import { formatRelativeDate } from '@/utils/dateUtils'
 
 import { OrderType, OrderStatusEnum } from '@/types/models/order'
 
@@ -31,9 +29,7 @@ const OrderRow = ({
   isLast = false
 }: OrderRowProps) => {
   const { id, date, user, totalPrice, status, items } = order
-
   const locale = useLocale()
-  const selectedLocale = locale === 'it' ? it : enUS
 
   const formattedTraditionalDate = new Intl.DateTimeFormat(locale, {
     day: '2-digit',
@@ -41,20 +37,12 @@ const OrderRow = ({
     year: 'numeric'
   }).format(new Date(date))
 
-  const localeTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const utcDate = new Date(date + 'Z')
-  const localDate = toZonedTime(utcDate, localeTimeZone)
-
-  const formattedRelativeDate = formatDistanceToNow(localDate, {
-    addSuffix: true,
-    locale: selectedLocale
-  })
-
+  const formattedRelativeDate = formatRelativeDate(date, locale)
   const username = user?.name
   const paddingClasses = `${isFirst && 'pt-8'} ${isLast && 'pb-12'}`
 
-  const handleStatusChange = async (status: OrderStatusEnum) => {
-    if (status !== Number(status)) await updateOrderStatus(id, status)
+  const handleStatusChange = async (newStatus: OrderStatusEnum) => {
+    if (status !== Number(newStatus)) await updateOrderStatus(id, newStatus)
   }
 
   return (
@@ -115,6 +103,7 @@ const OrderRow = ({
                 className={`transition-transform duration-300 ${
                   expandedOrderId === id ? 'rotate-180' : 'rotate-0'
                 } ease-out dark:invert`}
+                priority
               />
             </button>
           </td>

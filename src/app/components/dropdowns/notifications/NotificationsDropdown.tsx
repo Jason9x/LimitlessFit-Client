@@ -6,11 +6,14 @@ import {
   deleteAllNotifications,
   getNotifications,
   markAsRead
-} from '@/api/notifications'
+} from '@/api/services/notifications'
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import NotificationItem from '@/components/dropdowns/notifications/NotificationItem'
+
 import useClickOutside from '@/hooks/useClickOutside'
+import useSignalR from '@/hooks/useSignalR'
+
 import NotificationType from '@/types/models/notification'
 
 const NotificationsDropdown = () => {
@@ -25,17 +28,40 @@ const NotificationsDropdown = () => {
 
   useClickOutside([ref], () => setIsOpen(false))
 
+  useSignalR('/notificationHub', [
+    {
+      eventName: 'NewNotification',
+      callback: (receivedNotification: NotificationType) =>
+        queryClient.setQueryData<NotificationType[]>(
+          ['notifications'],
+          (previousNotifications = []) => {
+            const isExisting = previousNotifications.some(
+              notification => notification.id === receivedNotification.id
+            )
+
+            return isExisting
+              ? previousNotifications
+              : [receivedNotification, ...previousNotifications]
+          }
+        )
+    }
+  ])
+
   const markAsReadMutation = useMutation({
     mutationFn: (id: number) => markAsRead(id),
-    onMutate: async id => {
+    onMutate: async (
+      id
+    ): Promise<{ previousNotifications?: NotificationType[] }> => {
       await queryClient.cancelQueries({ queryKey: ['notifications'] })
 
-      const previousNotifications = queryClient.getQueryData(['notifications'])
+      const previousNotifications = queryClient.getQueryData<
+        NotificationType[]
+      >(['notifications'])
 
-      queryClient.setQueryData(
+      queryClient.setQueryData<NotificationType[]>(
         ['notifications'],
-        (currentNotifications: NotificationType[]) =>
-          currentNotifications.map(notification =>
+        currentNotifications =>
+          currentNotifications?.map(notification =>
             notification.id === id
               ? { ...notification, isRead: true }
               : notification
@@ -44,28 +70,36 @@ const NotificationsDropdown = () => {
 
       return { previousNotifications }
     },
-    onError: (_error, _id, context) =>
+    onError: (_, __, context) =>
       queryClient.setQueryData(
         ['notifications'],
         context?.previousNotifications
       )
   })
 
-  const deleteAllNotificationsMutation = useMutation({
-    mutationFn: deleteAllNotifications,
+  const deleteAllNotificationsMutation = useMutation<
+    void,
+    Error,
+    void,
+    { previousNotifications: NotificationType[] | undefined }
+  >({
+    mutationFn: () => deleteAllNotifications().then(() => {}),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['notifications'] })
+      const previousNotifications = queryClient.getQueryData<
+        NotificationType[]
+      >(['notifications'])
 
-      const previousNotifications = queryClient.getQueryData(['notifications'])
       queryClient.setQueryData(['notifications'], [])
 
       return { previousNotifications }
     },
-    onError: (_error, _variables, context) =>
+    onError: (_, __, context) => {
       queryClient.setQueryData(
         ['notifications'],
         context?.previousNotifications
       )
+    }
   })
 
   const unreadCount =
@@ -83,6 +117,7 @@ const NotificationsDropdown = () => {
           height={20}
           alt="Notifications"
           className="dark:invert"
+          priority
         />
 
         {unreadCount > 0 && (
@@ -100,6 +135,15 @@ const NotificationsDropdown = () => {
             <div className="p-4 text-center">No notifications found</div>
           )}
 
+          <div className="p-2 bg-gray-100 text-center">
+            <button
+              onClick={() => deleteAllNotificationsMutation.mutate()}
+              className="text-red-500 text-sm hover:text-red-700 transition-colors"
+            >
+              Delete All
+            </button>
+          </div>
+
           <ul className="divide-y divide-gray-200">
             {notifications?.map(notification => (
               <NotificationItem
@@ -109,15 +153,6 @@ const NotificationsDropdown = () => {
               />
             ))}
           </ul>
-
-          <div className="p-2 bg-gray-100 text-center">
-            <button
-              onClick={() => deleteAllNotificationsMutation.mutate()}
-              className="text-red-500 text-sm hover:text-red-700 transition-colors"
-            >
-              Delete All
-            </button>
-          </div>
         </div>
       )}
     </div>
