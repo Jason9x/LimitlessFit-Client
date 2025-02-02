@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr'
-import { useDispatch } from 'react-redux'
-
-import { connect, disconnect } from '@/store/slices/signalRSlice'
 
 type SignalRConfig = {
   eventName: string
@@ -10,7 +7,6 @@ type SignalRConfig = {
 }
 
 const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
-  const dispatch = useDispatch()
   const connectionRef = useRef<HubConnection | null>(null)
 
   const connectToHub = useCallback(async () => {
@@ -31,15 +27,14 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
 
     try {
       await connection.start()
-      dispatch(connect(hubUrl))
     } catch {
       setTimeout(connectToHub, 5000)
     }
 
     return () => {
-      connection.stop().then(() => dispatch(disconnect(hubUrl)))
+      connection.stop().then()
     }
-  }, [dispatch, events, hubUrl])
+  }, [events, hubUrl])
 
   useEffect(() => {
     connectToHub().then()

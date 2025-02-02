@@ -20,10 +20,8 @@ const NotificationItem = ({
 
   const locale = useLocale()
 
-  const formattedRelativeDate = formatRelativeDate(
-    createdAt.toLocaleString(),
-    locale
-  )
+  console.log('Created At:', createdAt.toLocaleString())
+  const formattedRelativeDate = formatRelativeDate(createdAt, locale)
 
   useEffect(() => {
     const observer = new IntersectionObserver(

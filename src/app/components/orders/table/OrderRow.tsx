@@ -37,7 +37,7 @@ const OrderRow = ({
     year: 'numeric'
   }).format(new Date(date))
 
-  const formattedRelativeDate = formatRelativeDate(date, locale)
+  const formattedRelativeDate = formatRelativeDate(new Date(date + 'Z'), locale)
   const username = user?.name
   const paddingClasses = `${isFirst && 'pt-8'} ${isLast && 'pb-12'}`
 
