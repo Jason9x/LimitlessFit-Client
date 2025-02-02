@@ -13,9 +13,7 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
     if (connectionRef.current) return
 
     const connection = new HubConnectionBuilder()
-      .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}${hubUrl}`, {
-        withCredentials: true
-      })
+      .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}${hubUrl}`)
       .withAutomaticReconnect()
       .build()
 
