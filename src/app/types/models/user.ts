@@ -1,7 +1,12 @@
-type User = {
+import { PaginationType } from '@/types/pagination'
+
+export type User = {
+  id: number
   email?: string
   name?: string
   role?: string
 }
 
-export default User
+export type UserResponse = PaginationType & {
+  users: User[]
+}

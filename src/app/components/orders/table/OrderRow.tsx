@@ -28,7 +28,7 @@ const OrderRow = ({
   isFirst = false,
   isLast = false
 }: OrderRowProps) => {
-  const { id, date, user, totalPrice, status, items } = order
+  const { id, date, username, totalPrice, status, items } = order
   const locale = useLocale()
 
   const formattedTraditionalDate = new Intl.DateTimeFormat(locale, {
@@ -38,7 +38,6 @@ const OrderRow = ({
   }).format(new Date(date))
 
   const formattedRelativeDate = formatRelativeDate(date, locale)
-  const username = user?.name
   const paddingClasses = `${isFirst && 'pt-8'} ${isLast && 'pb-12'}`
 
   const handleStatusChange = async (newStatus: OrderStatusEnum) => {

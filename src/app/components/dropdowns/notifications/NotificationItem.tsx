@@ -2,24 +2,36 @@ import { useTranslations } from 'next-intl'
 
 import { useEffect, useRef } from 'react'
 
-import NotificationType from '@/types/models/notification'
+import { NotificationType } from '@/types/models/notification'
 import { formatRelativeDate } from '@/utils/dateUtils'
 import { useLocale } from 'use-intl'
+import { getNotificationMessage } from '@/utils/notificationUtils'
+import { getOrderStatusLabels } from '@/utils/orderUtils'
+import { OrderStatusEnum } from '@/types/models/order'
+import Link from 'next/link'
+
+type NotificationItemProps = {
+  notification: NotificationType
+  markAsRead: (id: number) => void
+}
 
 const NotificationItem = ({
   notification,
   markAsRead
-}: {
-  notification: NotificationType
-  markAsRead: (id: number) => void
-}) => {
-  const { id, isRead, messageKey, createdAt } = notification
+}: NotificationItemProps) => {
+  const { id, isRead, createdAt } = notification
 
   const translations = useTranslations('NotificationItem')
-  const itemRef = useRef<HTMLLIElement>(null)
+  const statusTranslations = useTranslations('OrderStatus')
 
+  const itemRef = useRef<HTMLLIElement>(null)
   const locale = useLocale()
 
+  const { translationKey, translationValues } =
+    getNotificationMessage(notification)
+  const { orderId, status } = translationValues
+
+  const statusLabels = getOrderStatusLabels(statusTranslations)
   const formattedRelativeDate = formatRelativeDate(createdAt, locale)
 
   useEffect(() => {
@@ -31,6 +43,7 @@ const NotificationItem = ({
     )
 
     const currentItem = itemRef.current
+
     if (currentItem) observer.observe(currentItem)
 
     return () => {
@@ -41,18 +54,21 @@ const NotificationItem = ({
   return (
     <li
       ref={itemRef}
-      className={`p-2 cursor-pointer hover:bg-gray-100 ${
-        isRead ? 'bg-gray-50' : ''
-      }`}
+      className={`my-4 py-1.5 px-4 rounded-2xl border-none bg-secondary dark:bg-secondary-dark 
+                  cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800`}
     >
-      <span className="block text-sm">
-        {translations(messageKey, {
-          orderId: 3,
-          status: 1
-        })}
-      </span>
+      <Link href={`/orders/${orderId}`} passHref>
+        <p className="text-sm mb-1">
+          {translations(translationKey, {
+            status:
+              statusLabels[status as unknown as OrderStatusEnum].toLowerCase()
+          })}
+        </p>
 
-      <span className="text-xs text-gray-500">{formattedRelativeDate}</span>
+        <p className="text-xs text-foreground-secondary dark:text-foreground-secondary-dark">
+          {formattedRelativeDate}
+        </p>
+      </Link>
     </li>
   )
 }

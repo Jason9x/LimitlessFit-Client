@@ -7,7 +7,7 @@ export const fetchItems = async ({
   pageNumber,
   pageSize
 }: PaginationParams) => {
-  const { data: items } = await api.get<ItemsResponse>('/items', {
+  const { data: items } = await api.get<ItemsResponse>('/Items', {
     params: { pageNumber, pageSize }
   })
 

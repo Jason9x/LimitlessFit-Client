@@ -67,17 +67,34 @@ const Navbar = () => {
       </Link>
 
       {user?.role === 'Admin' && (
-        <Link href="/admin/orders" className="flex items-center space-x-2">
-          <Image
-            src="/icons/navbar/management.svg"
-            width={20}
-            height={20}
-            alt="Orders management"
-            className="dark:invert"
-            priority
-          />
-          <p className="hidden lg:block">{translations('ordersManagement')}</p>
-        </Link>
+        <>
+          <Link href="/admin/users" className="flex items-center space-x-2">
+            <Image
+              src="/icons/navbar/group-of-people.svg"
+              width={20}
+              height={20}
+              alt="Users management"
+              className="dark:invert"
+              priority
+            />
+
+            <p className="hidden lg:block">{translations('usersManagement')}</p>
+          </Link>
+
+          <Link href="/admin/orders" className="flex items-center space-x-2">
+            <Image
+              src="/icons/navbar/management.svg"
+              width={20}
+              height={20}
+              alt="Orders management"
+              className="dark:invert"
+              priority
+            />
+            <p className="hidden lg:block">
+              {translations('ordersManagement')}
+            </p>
+          </Link>
+        </>
       )}
     </>
   )
@@ -128,6 +145,7 @@ const Navbar = () => {
             height={40}
             alt="Fitness"
             className="dark:invert"
+            quality={100}
             priority
           />
 

@@ -69,6 +69,8 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
       )
   })
 
+  console.log({ paginatedOrders })
+
   const totalPages = paginatedOrders?.totalPages || 1
 
   useSignalR('/orderUpdateHub', [
@@ -133,7 +135,7 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
   return (
     <div className="m-10">
       <div className="flex justify-between items-center">
-        <h1 className="text-foreground dark:text-foreground-dark font-semibold text-xl">
+        <h1 className="font-semibold text-xl">
           {translations(isMyOrders ? 'orderHistory' : 'title')}
         </h1>
 

@@ -1,159 +1,49 @@
+import { useTranslations } from 'next-intl'
+
 import { useState, useCallback, useRef } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import Image from 'next/image'
 
-import {
-  deleteAllNotifications,
-  getNotifications,
-  markAsRead
-} from '@/api/services/notifications'
-
-import LoadingSpinner from '@/components/ui/LoadingSpinner'
-import NotificationItem from '@/components/dropdowns/notifications/NotificationItem'
-
+import useNotifications from '@/hooks/useNotifications'
 import useClickOutside from '@/hooks/useClickOutside'
-import useSignalR from '@/hooks/useSignalR'
 
-import NotificationType from '@/types/models/notification'
+import NotificationsPanel from '@/components/dropdowns/notifications/NotificationPanel'
+import NotificationsTrigger from '@/components/dropdowns/notifications/NotificationsTrigger'
 
 const NotificationsDropdown = () => {
-  const queryClient = useQueryClient()
-  const [isOpen, setIsOpen] = useState(false)
-  const { data: notifications, isLoading } = useQuery({
-    queryKey: ['notifications'],
-    queryFn: getNotifications
-  })
+  const [isPanelOpen, setIsPanelOpen] = useState(false)
+  const notificationsRef = useRef<HTMLDivElement>(null)
+  const translations = useTranslations('NotificationsDropdown')
+  const {
+    notifications,
+    isLoading,
+    unreadCount,
+    hasNotifications,
+    markAsRead,
+    deleteAll
+  } = useNotifications()
 
-  const ref = useRef<HTMLDivElement | null>(null)
+  useClickOutside([notificationsRef], () => setIsPanelOpen(false))
 
-  useClickOutside([ref], () => setIsOpen(false))
-
-  useSignalR('/notificationHub', [
-    {
-      eventName: 'NewNotification',
-      callback: (receivedNotification: NotificationType) =>
-        queryClient.setQueryData<NotificationType[]>(
-          ['notifications'],
-          (previousNotifications = []) => {
-            const isExisting = previousNotifications.some(
-              notification => notification.id === receivedNotification.id
-            )
-
-            return isExisting
-              ? previousNotifications
-              : [receivedNotification, ...previousNotifications]
-          }
-        )
-    }
-  ])
-
-  const markAsReadMutation = useMutation({
-    mutationFn: (id: number) => markAsRead(id),
-    onMutate: async (
-      id
-    ): Promise<{ previousNotifications?: NotificationType[] }> => {
-      await queryClient.cancelQueries({ queryKey: ['notifications'] })
-
-      const previousNotifications = queryClient.getQueryData<
-        NotificationType[]
-      >(['notifications'])
-
-      queryClient.setQueryData<NotificationType[]>(
-        ['notifications'],
-        currentNotifications =>
-          currentNotifications?.map(notification =>
-            notification.id === id
-              ? { ...notification, isRead: true }
-              : notification
-          )
-      )
-
-      return { previousNotifications }
-    },
-    onError: (_, __, context) =>
-      queryClient.setQueryData(
-        ['notifications'],
-        context?.previousNotifications
-      )
-  })
-
-  const deleteAllNotificationsMutation = useMutation<
-    void,
-    Error,
-    void,
-    { previousNotifications: NotificationType[] | undefined }
-  >({
-    mutationFn: () => deleteAllNotifications().then(() => {}),
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['notifications'] })
-      const previousNotifications = queryClient.getQueryData<
-        NotificationType[]
-      >(['notifications'])
-
-      queryClient.setQueryData(['notifications'], [])
-
-      return { previousNotifications }
-    },
-    onError: (_, __, context) => {
-      queryClient.setQueryData(
-        ['notifications'],
-        context?.previousNotifications
-      )
-    }
-  })
-
-  const unreadCount =
-    notifications?.filter(notification => !notification.isRead).length || 0
-  const hasNotifications = notifications && notifications.length > 0
-
-  const handleToggle = useCallback(() => setIsOpen(isOpen => !isOpen), [])
+  const toggleNotificationsPanel = useCallback(
+    () => setIsPanelOpen(isOpen => !isOpen),
+    []
+  )
 
   return (
-    <div className="relative" ref={ref}>
-      <button className="flex" onClick={handleToggle}>
-        <Image
-          src="/icons/navbar/notification.svg"
-          width={20}
-          height={20}
-          alt="Notifications"
-          className="dark:invert"
-          priority
+    <div className="relative" ref={notificationsRef}>
+      <NotificationsTrigger
+        unreadCount={unreadCount}
+        onToggle={toggleNotificationsPanel}
+      />
+
+      {isPanelOpen && (
+        <NotificationsPanel
+          isLoading={isLoading}
+          hasNotifications={hasNotifications}
+          translations={translations}
+          notifications={notifications}
+          onDeleteAll={deleteAll}
+          onMarkAsRead={markAsRead}
         />
-
-        {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 text-xs font-bold leading-none transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-            {unreadCount}
-          </span>
-        )}
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10 overflow-y-auto max-h-48">
-          {isLoading && <LoadingSpinner />}
-
-          {!hasNotifications && (
-            <div className="p-4 text-center">No notifications found</div>
-          )}
-
-          <div className="p-2 bg-gray-100 text-center">
-            <button
-              onClick={() => deleteAllNotificationsMutation.mutate()}
-              className="text-red-500 text-sm hover:text-red-700 transition-colors"
-            >
-              Delete All
-            </button>
-          </div>
-
-          <ul className="divide-y divide-gray-200">
-            {notifications?.map(notification => (
-              <NotificationItem
-                key={notification.id}
-                notification={notification}
-                markAsRead={markAsReadMutation.mutate}
-              />
-            ))}
-          </ul>
-        </div>
       )}
     </div>
   )

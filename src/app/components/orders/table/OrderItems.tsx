@@ -61,16 +61,16 @@ const OrderItems = ({ items }: OrderItemsProps) => {
         </thead>
 
         <tbody>
-          {paginatedItems.map((value, key) => (
+          {paginatedItems.map((item, key) => (
             <tr key={key}>
               <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
-                {value.id}
+                {item.id}
               </td>
 
               <td className="px-6 py-2 text-left">
                 <Image
-                  src={value.item.imageUrl}
-                  alt={value.item.nameKey}
+                  src={item.imageUrl}
+                  alt={item.nameKey}
                   width={30}
                   height={30}
                   priority
@@ -78,19 +78,19 @@ const OrderItems = ({ items }: OrderItemsProps) => {
               </td>
 
               <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
-                {itemsTranslations(value.item.nameKey)}
+                {itemsTranslations(item.nameKey)}
               </td>
 
               <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
-                € {value.item.price}
+                € {item.price}
               </td>
 
               <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left break-words">
-                {itemsTranslations(value.item.descriptionKey)}
+                {itemsTranslations(item.descriptionKey)}
               </td>
 
               <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
-                {value.quantity}
+                {item.quantity}
               </td>
             </tr>
           ))}

@@ -1,7 +1,11 @@
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
+
 import useClickOutside from '@/hooks/useClickOutside'
+
+import { getOrderStatusLabels } from '@/utils/orderUtils'
+
 import { OrderStatusEnum } from '@/types/models/order'
 
 type OrderStatusProps = {
@@ -48,12 +52,7 @@ const OrderStatus = ({
     }
   }
 
-  const statusLabels: Record<OrderStatusEnum, string> = {
-    [OrderStatusEnum.Pending]: translations('pending'),
-    [OrderStatusEnum.Processing]: translations('processing'),
-    [OrderStatusEnum.Shipping]: translations('shipping'),
-    [OrderStatusEnum.Delivered]: translations('delivered')
-  }
+  const statusLabels = getOrderStatusLabels(translations)
 
   const calculateDropdownPosition = (
     triggerElement: HTMLElement

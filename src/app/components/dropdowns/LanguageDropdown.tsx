@@ -25,7 +25,7 @@ const LanguageDropdown = () => {
   ]
 
   const currentLanguage = languages.find(({ code }) => code === locale)
-  const toggleMenu = () => setIsOpen(!isOpen)
+  const toggleMenu = () => setIsOpen(isOpen => !isOpen)
 
   return (
     <div className="relative" ref={ref}>

@@ -141,7 +141,7 @@ const Cart = () => {
                 <Image
                   width={20}
                   height={20}
-                  src={'/icons/cart/trash.svg'}
+                  src={'/icons/trash.svg'}
                   alt={'Trash'}
                   className="transition-all duration-300"
                   priority

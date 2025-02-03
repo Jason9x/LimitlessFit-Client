@@ -4,7 +4,8 @@
   },
   "Navbar": {
     "myOrders": "My orders",
-    "ordersManagement": "Orders management"
+    "ordersManagement": "Orders management",
+    "usersManagement": "Users management"
   },
   "NotFound": {
     "title": "404",
@@ -116,7 +117,17 @@
     "description": "Description",
     "quantity": "Quantity"
   },
+  "NotificationsDropdown": {
+    "notifications": "Notifications",
+    "deleteAll": "Delete all",
+    "noNotificationsFound": "No notifications found"
+  },
   "NotificationItem": {
-    "orderStatusUpdate": "Your order with id {orderId} has been updated to {status}."
+    "orderStatusUpdate": "Your order has been updated to {status}."
+  },
+  "UsersPanel": {
+    "title": "Users panel",
+    "noUserFound": "No user found.",
+    "searchPlaceholder": "Search"
   }
 }

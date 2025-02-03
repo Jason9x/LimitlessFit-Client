@@ -1,6 +1,5 @@
 import { Item } from '@/types/models/item'
 import { PaginationType } from '@/types/pagination'
-import User from '@/types/models/user'
 
 export type OrderItemRequest = {
   itemId: number
@@ -18,18 +17,13 @@ export enum OrderStatusEnum {
   Delivered
 }
 
-export type OrderItem = {
-  id: number
-  orderId: number
-  order: OrderType
-  itemId: number
-  item: Item
+export type OrderItem = Item & {
   quantity: number
 }
 
 export type OrderType = {
   id: number
-  user?: User
+  username: string
   date: string
   totalPrice: number
   status: OrderStatusEnum

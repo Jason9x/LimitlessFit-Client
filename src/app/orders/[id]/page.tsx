@@ -137,7 +137,7 @@ const Order = () => {
         </thead>
 
         <tbody>
-          {paginatedItems.map((value, index) => {
+          {paginatedItems.map((item, index) => {
             const isFirst = index === 0
             const isLast = index === paginatedItems.length - 1
 
@@ -150,7 +150,7 @@ const Order = () => {
                   className={`p-2 px-6 ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
                 >
                   <Image
-                    src={value.item.imageUrl}
+                    src={item.imageUrl}
                     width={40}
                     height={40}
                     alt={`Item #${index}`}
@@ -161,13 +161,13 @@ const Order = () => {
                 <td
                   className={`p-2 px-6 font-normal ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
                 >
-                  {value.quantity} x {itemTranslations(value.item.nameKey)}
+                  {item.quantity} x {itemTranslations(item.nameKey)}
                 </td>
 
                 <td
                   className={`p-2 px-6 font-normal ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
                 >
-                  € {value.quantity * value.item.price}
+                  € {item.quantity * item.price}
                 </td>
               </tr>
             )

@@ -4,7 +4,8 @@
   },
   "Navbar": {
     "myOrders": "I miei ordini",
-    "ordersManagement": "Gestione degli ordini"
+    "ordersManagement": "Gestione degli ordini",
+    "usersManagement": "Gestione degli utenti"
   },
   "NotFound": {
     "title": "404",
@@ -116,7 +117,17 @@
     "description": "Descrizione",
     "quantity": "Quantità"
   },
+  "NotificationsDropdown": {
+    "notifications": "Notifiche",
+    "deleteAll": "Cancella tutto",
+    "noNotificationsFound": "Nessuna notifica trovata"
+  },
   "NotificationItem": {
-    "orderStatusUpdate": "L'ordine #{orderId} è ora {status}."
+    "orderStatusUpdate": "Il tuo ordine è ora {status}."
+  },
+  "UsersPanel": {
+    "title": "Pannello degli utenti",
+    "noUserFound": "Nessun utente trovato.",
+    "searchPlaceholder": "Cerca"
   }
 }
