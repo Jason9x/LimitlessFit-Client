@@ -102,9 +102,7 @@
   },
   "OrdersPanel": {
     "title": "Pannello degli ordini",
-    "noOrderFound": "Nessun ordine trovato."
-  },
-  "OrdersTable": {
+    "noOrderFound": "Nessun ordine trovato.",
     "statusUpdatedSuccessfully": "Stato dell'ordine aggiornato con successo."
   },
   "OrdersTableHeader": {
@@ -127,7 +125,11 @@
   },
   "UsersPanel": {
     "title": "Pannello degli utenti",
-    "noUserFound": "Nessun utente trovato.",
-    "searchPlaceholder": "Cerca"
+    "noUsersFound": "Nessun utente trovato.",
+    "searchPlaceholder": "Cerca",
+    "roles": {
+      "admin": "Amministratore",
+      "user": "Utente"
+    }
   }
 }

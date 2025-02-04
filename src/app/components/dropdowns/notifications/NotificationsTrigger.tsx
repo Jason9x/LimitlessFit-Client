@@ -1,7 +1,7 @@
 import Image from 'next/image'
 
 type NotificationsTriggerProps = {
-  unreadCount: number
+  unreadCount: number | undefined
   onToggle: () => void
 }
 
@@ -19,7 +19,7 @@ const NotificationsTrigger = ({
       priority
     />
 
-    {unreadCount > 0 && (
+    {(unreadCount ?? 0) > 0 && (
       <span
         className="absolute right-0.5 px-1 text-[10px] font-bold transform
                    translate-x-1/2 -translate-y-1/2 bg-primary dark:bg-primary-dark rounded-full"

@@ -21,7 +21,6 @@ const Navbar = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   )
-  const user = useUser()
 
   const translations = useTranslations('Navbar')
 
@@ -66,36 +65,32 @@ const Navbar = () => {
         <p className="hidden lg:block">{translations('myOrders')}</p>
       </Link>
 
-      {user?.role === 'Admin' && (
-        <>
-          <Link href="/admin/users" className="flex items-center space-x-2">
-            <Image
-              src="/icons/navbar/group-of-people.svg"
-              width={20}
-              height={20}
-              alt="Users management"
-              className="dark:invert"
-              priority
-            />
+      <>
+        <Link href="/admin/users" className="flex items-center space-x-2">
+          <Image
+            src="/icons/navbar/group-of-people.svg"
+            width={20}
+            height={20}
+            alt="Users management"
+            className="dark:invert"
+            priority
+          />
 
-            <p className="hidden lg:block">{translations('usersManagement')}</p>
-          </Link>
+          <p className="hidden lg:block">{translations('usersManagement')}</p>
+        </Link>
 
-          <Link href="/admin/orders" className="flex items-center space-x-2">
-            <Image
-              src="/icons/navbar/management.svg"
-              width={20}
-              height={20}
-              alt="Orders management"
-              className="dark:invert"
-              priority
-            />
-            <p className="hidden lg:block">
-              {translations('ordersManagement')}
-            </p>
-          </Link>
-        </>
-      )}
+        <Link href="/admin/orders" className="flex items-center space-x-2">
+          <Image
+            src="/icons/navbar/management.svg"
+            width={20}
+            height={20}
+            alt="Orders management"
+            className="dark:invert"
+            priority
+          />
+          <p className="hidden lg:block">{translations('ordersManagement')}</p>
+        </Link>
+      </>
     </>
   )
 

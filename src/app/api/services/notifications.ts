@@ -1,6 +1,6 @@
 import api from '@/api'
 
-import NotificationType from '@/types/models/notification'
+import { NotificationType } from '@/types/models/notification'
 
 export const getNotifications = async () => {
   const { data: notifications } =

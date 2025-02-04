@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 type PaginationProps = {
   currentPage: number
-  totalPages: number
+  totalPages: number | undefined
   onPageChange: (pageNumber: number) => void
   bgClasses?: string
 }
@@ -15,7 +15,7 @@ const Pagination = ({
   onPageChange,
   bgClasses = 'bg-secondary dark:bg-secondary-dark'
 }: PaginationProps) => {
-  if (totalPages <= 1) return null
+  if (!totalPages || totalPages <= 1) return
 
   const calculateVisiblePages = () => {
     const startPage = Math.max(

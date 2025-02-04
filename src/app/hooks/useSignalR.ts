@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react'
+
 import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr'
+
+import Cookies from 'js-cookie'
 
 type SignalRConfig = {
   eventName: string
@@ -12,8 +15,14 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
   const connectToHub = useCallback(async () => {
     if (connectionRef.current) return
 
+    const token = Cookies.get('jwtToken')
+
+    if (!token) return
+
     const connection = new HubConnectionBuilder()
-      .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}${hubUrl}`)
+      .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}${hubUrl}`, {
+        accessTokenFactory: () => token
+      })
       .withAutomaticReconnect()
       .build()
 

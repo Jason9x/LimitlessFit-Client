@@ -85,8 +85,9 @@ const useNotifications = () => {
       )
   })
 
-  const unreadCount =
-    notifications?.filter(notification => !notification.isRead).length || 0
+  const unreadCount = notifications?.filter(
+    notification => !notification.isRead
+  ).length
   const hasNotifications = Boolean(notifications && notifications.length > 0)
 
   return {

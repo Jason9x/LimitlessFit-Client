@@ -39,14 +39,14 @@ const cartSlice = createSlice({
       state.lastAddedItemIndex = hasItem ? existingIndex : state.items.length
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter(item => item.id !== action.payload)
+      state.items = state.items.filter(({ id }) => id !== action.payload)
     },
     updateQuantity: (
       state,
       action: PayloadAction<{ itemId: number; quantity: number }>
     ) => {
       const { itemId, quantity } = action.payload
-      const item = state.items.find(cartItem => cartItem.id === itemId)
+      const item = state.items.find(({ id }) => id === itemId)
 
       if (item) item.quantity = Math.max(item.quantity + quantity, 1)
     },

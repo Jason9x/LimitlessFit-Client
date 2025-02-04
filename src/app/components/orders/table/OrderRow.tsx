@@ -16,6 +16,7 @@ type OrderRowProps = {
   isMyOrders: boolean
   expandedOrderId: number | null
   onToggleExpand: (orderId: number) => void
+  onStatusChangeSuccess?: () => void
   isFirst?: boolean
   isLast?: boolean
 }
@@ -25,6 +26,7 @@ const OrderRow = ({
   isMyOrders,
   expandedOrderId,
   onToggleExpand,
+  onStatusChangeSuccess,
   isFirst = false,
   isLast = false
 }: OrderRowProps) => {
@@ -41,7 +43,11 @@ const OrderRow = ({
   const paddingClasses = `${isFirst && 'pt-8'} ${isLast && 'pb-12'}`
 
   const handleStatusChange = async (newStatus: OrderStatusEnum) => {
-    if (status !== Number(newStatus)) await updateOrderStatus(id, newStatus)
+    if (status === Number(newStatus)) return
+
+    await updateOrderStatus(id, newStatus)
+
+    onStatusChangeSuccess?.()
   }
 
   return (
@@ -62,7 +68,7 @@ const OrderRow = ({
                 className="flex items-center justify-center w-8 h-8 mr-3 rounded-full
                           bg-primary dark:bg-primary-dark text-white"
               >
-                {username?.[0].toUpperCase()}
+                {username?.[0]?.toUpperCase()}
               </div>
 
               {username}

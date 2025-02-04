@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 
 import useSignalR from '@/hooks/useSignalR'
@@ -33,104 +33,159 @@ type OrdersTableProps = {
 
 const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
   const translations = useTranslations(isMyOrders ? 'MyOrders' : 'OrdersPanel')
-  const tableTranslations = useTranslations('OrdersTable')
-
+  const queryClient = useQueryClient()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false)
-  const [statusUpdateSnackbarOpen, setStatusUpdateSnackbarOpen] =
-    useState<boolean>(false)
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean
+    message: string
+    variant: 'error' | 'success' | 'info'
+  }>({ open: false, message: '', variant: 'info' })
 
-  const [currentPage, setCurrentPage] = useState<number>(1)
-
+  const [currentPage, setCurrentPage] = useState(1)
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null)
-  const [orders, setOrders] = useState<OrderType[]>([])
 
-  const filterFromUrl: OrderFilterType | null = searchParams.get('filter')
-    ? JSON.parse(searchParams.get('filter') as string)
+  const filterFromUrl = searchParams.get('filter')
+    ? (JSON.parse(searchParams.get('filter') as string) as OrderFilterType)
     : null
   const [filter, setFilter] = useState<OrderFilterType | null>(filterFromUrl)
+
+  const queryKey = [isMyOrders ? 'my-orders' : 'all', currentPage, filter]
 
   const {
     data: paginatedOrders,
     isLoading,
+    isError,
     error
-  } = useQuery({
-    queryKey: [isMyOrders ? 'my-orders' : 'all', currentPage, filter],
+  } = useQuery<OrdersResponse, Error>({
+    queryKey,
     queryFn: () =>
       fetchOrders(
-        {
-          pageNumber: currentPage,
-          pageSize: PAGE_SIZE
-        },
+        { pageNumber: currentPage, pageSize: PAGE_SIZE },
         filter || {}
       )
   })
 
-  console.log({ paginatedOrders })
+  const showEmptyState = paginatedOrders?.orders.length === 0 && !isLoading
 
-  const totalPages = paginatedOrders?.totalPages || 1
+  useEffect(() => {
+    if (isError)
+      setSnackbar({
+        open: true,
+        message: translations(error?.message || ''),
+        variant: 'error'
+      })
+  }, [isError, error?.message, translations])
+
+  useEffect(() => {
+    if (showEmptyState)
+      setSnackbar({
+        open: true,
+        message: translations(isMyOrders ? 'noOrders' : 'noOrderFound'),
+        variant: 'info'
+      })
+  }, [showEmptyState, isMyOrders, translations])
 
   useSignalR('/orderUpdateHub', [
     {
       eventName: 'ReceiveOrderUpdate',
       callback: (updatedOrder: OrderType) =>
-        setOrders(previousOrders =>
-          previousOrders.map(order =>
-            order.id === updatedOrder.id ? { ...updatedOrder } : order
-          )
+        queryClient.setQueryData<OrdersResponse>(
+          queryKey,
+          currentCachedData => {
+            if (!currentCachedData) return currentCachedData
+
+            const { orders } = currentCachedData
+            const existingIndex = orders.findIndex(
+              ({ id }) => id === updatedOrder.id
+            )
+
+            const shouldInclude = checkOrderAgainstFilters(updatedOrder)
+            const isNewOrder = existingIndex === -1
+
+            if (isNewOrder)
+              return shouldInclude
+                ? {
+                    ...currentCachedData,
+                    orders: [updatedOrder, ...orders].slice(0, PAGE_SIZE)
+                  }
+                : currentCachedData
+
+            return shouldInclude
+              ? {
+                  ...currentCachedData,
+                  orders: orders.map(order =>
+                    order.id === updatedOrder.id ? updatedOrder : order
+                  )
+                }
+              : {
+                  ...currentCachedData,
+                  orders: orders.filter(order => order.id !== updatedOrder.id)
+                }
+          }
         )
     },
     {
       eventName: 'ReceiveOrderStatusUpdate',
-      callback: (orderId: number, status: OrderStatusEnum) => {
-        setOrders(previousOrders =>
-          previousOrders.map(order =>
-            order.id === orderId ? { ...order, status } : order
-          )
-        )
+      callback: (id: number, status: OrderStatusEnum) =>
+        queryClient.setQueryData<OrdersResponse>(
+          queryKey,
+          currentCachedData => {
+            if (!currentCachedData) return currentCachedData
 
-        setStatusUpdateSnackbarOpen(true)
-      }
+            return {
+              ...currentCachedData,
+              orders: currentCachedData.orders.flatMap(order => {
+                if (order.id !== id) return [order]
+
+                const updatedOrder = { ...order, status }
+
+                if (!checkOrderAgainstFilters(updatedOrder)) return []
+
+                return [updatedOrder]
+              })
+            }
+          }
+        )
     }
   ])
 
-  useEffect(() => {
-    if (error || orders.length === 0) setErrorSnackbarOpen(true)
-  }, [error, orders])
+  const checkOrderAgainstFilters = (
+    order: OrderType,
+    filter?: OrderFilterType
+  ): boolean => {
+    if (!filter) return true
 
-  useEffect(() => {
-    if (paginatedOrders) setOrders(paginatedOrders.orders)
-  }, [paginatedOrders])
+    const { status, startDate, endDate } = filter
+    const orderDate = +new Date(order.date)
 
-  const handleFilterChange = (filter: OrderFilterType) => {
-    setFilter(filter)
-    setCurrentPage(1)
-
-    const newSearchParams = new URLSearchParams(window.location.search)
-    newSearchParams.set('filter', JSON.stringify(filter))
-
-    router.push(`${pathname}?${newSearchParams.toString()}`)
+    return [
+      !status || order.status === status,
+      !startDate || orderDate >= +new Date(startDate),
+      !endDate || orderDate <= +new Date(endDate)
+    ].every(Boolean)
   }
 
-  const handlePageChange = (page: number) => setCurrentPage(page)
+  const handleFilterChange = (newFilter: OrderFilterType) => {
+    setFilter(newFilter)
+    setCurrentPage(1)
 
-  const handleToggleExpand = (orderId: number) =>
-    setExpandedOrderId(expandedOrderId === orderId ? null : orderId)
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('filter', JSON.stringify(newFilter))
+
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
+  const handleStatusUpdateSuccess = () =>
+    setSnackbar({
+      open: true,
+      message: translations('statusUpdatedSuccessfully'),
+      variant: 'success'
+    })
 
   if (isLoading) return <LoadingSpinner />
-
-  if (error)
-    return (
-      <Snackbar
-        message={translations(error.message)}
-        open={errorSnackbarOpen}
-        onClose={() => setErrorSnackbarOpen(false)}
-        variant="error"
-      />
-    )
 
   return (
     <div className="m-10">
@@ -144,51 +199,53 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
 
       <hr className="my-10 border-gray-300 dark:border-gray-600" />
 
-      {orders.length === 0 && (
-        <Snackbar
-          message={translations(isMyOrders ? 'noOrders' : 'noOrderFound')}
-          open={errorSnackbarOpen}
-          onClose={() => setErrorSnackbarOpen(false)}
-          variant="info"
-        />
-      )}
+      {!isError && paginatedOrders && (
+        <>
+          {paginatedOrders.orders.length > 0 ? (
+            <div className="space-y-6">
+              <table
+                className="min-w-full shadow-md rounded-xl shadow-secondary dark:shadow-secondary-dark
+                         bg-secondary dark:bg-secondary-dark table-auto border-collapse"
+              >
+                <OrdersTableHeader isMyOrders={isMyOrders} />
 
-      {orders.length > 0 && (
-        <div className="space-y-6">
-          <table
-            className="min-w-full shadow-md rounded-xl shadow-secondary dark:shadow-secondary-dark
-                 bg-secondary dark:bg-secondary-dark table-auto border-collapse"
-          >
-            <OrdersTableHeader isMyOrders={isMyOrders} />
+                <tbody>
+                  {paginatedOrders.orders.map((order, index) => (
+                    <OrderRow
+                      key={order.id}
+                      order={order}
+                      isMyOrders={isMyOrders}
+                      expandedOrderId={expandedOrderId}
+                      onToggleExpand={setExpandedOrderId}
+                      onStatusChangeSuccess={handleStatusUpdateSuccess}
+                      isFirst={index === 0}
+                      isLast={index === paginatedOrders.orders.length - 1}
+                    />
+                  ))}
+                </tbody>
+              </table>
 
-            <tbody>
-              {orders.map((order, index) => (
-                <OrderRow
-                  key={order.id}
-                  order={order}
-                  isMyOrders={isMyOrders}
-                  expandedOrderId={expandedOrderId}
-                  onToggleExpand={handleToggleExpand}
-                  isFirst={index === 0}
-                  isLast={index === orders.length - 1}
-                />
-              ))}
-            </tbody>
-          </table>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={paginatedOrders.totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              {translations(isMyOrders ? 'noOrders' : 'noOrderFound')}
+            </div>
+          )}
+        </>
       )}
 
       <Snackbar
-        message={tableTranslations('statusUpdatedSuccessfully')}
-        open={statusUpdateSnackbarOpen}
-        onClose={() => setStatusUpdateSnackbarOpen(false)}
-        variant="success"
+        message={snackbar.message}
+        open={snackbar.open}
+        onClose={() =>
+          setSnackbar(previousState => ({ ...previousState, open: false }))
+        }
+        variant={snackbar.variant}
       />
     </div>
   )

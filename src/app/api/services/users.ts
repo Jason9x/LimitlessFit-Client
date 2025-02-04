@@ -1,7 +1,7 @@
 import api from '@/api'
 
 import { UserSearchRequest } from '@/types/user-search'
-import { UserResponse } from '@/types/models/user'
+import { Role, UserResponse } from '@/types/models/user'
 
 export const fetchUsers = async ({
   pageNumber,
@@ -14,3 +14,6 @@ export const fetchUsers = async ({
 
   return users
 }
+
+export const updateUserRole = async (id: number, role: Role) =>
+  await api.patch(`/Users/${id}/role`, { role })

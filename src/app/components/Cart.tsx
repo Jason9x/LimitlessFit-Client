@@ -71,7 +71,7 @@ const Cart = () => {
   const currentItems = cartItems.slice(startIndex, startIndex + ITEMS_PER_PAGE)
 
   const totalPrice = cartItems
-    .reduce((total, item) => total + item.price * item.quantity, 0)
+    .reduce((total, { price, quantity }) => total + price * quantity, 0)
     .toFixed(2)
 
   useEffect(() => {
@@ -88,15 +88,15 @@ const Cart = () => {
       <hr className="border-gray-300 dark:border-gray-700 my-4" />
 
       <ul>
-        {currentItems.map(item => (
+        {currentItems.map(({ id, imageUrl, nameKey, price, quantity }) => (
           <li
-            key={item.id}
+            key={id}
             className="flex flex-col lg:flex-row justify-between items-center p-2 rounded-md transition-all duration-300"
           >
             <div className="flex items-center mb-2 lg:mr-10">
               <Image
-                src={item.imageUrl}
-                alt={item.nameKey}
+                src={imageUrl}
+                alt={nameKey}
                 width={30}
                 height={30}
                 className="mr-4"
@@ -105,11 +105,11 @@ const Cart = () => {
 
               <div>
                 <p className="text-foreground dark:text-foreground-dark font-semibold text-sm sm:text-base">
-                  {itemsTranslations(item.nameKey)}
+                  {itemsTranslations(nameKey)}
                 </p>
 
                 <p className="text-foreground-secondary dark:text-foreground-secondary-dark text-xs sm:text-sm">
-                  € {item.price}
+                  € {price}
                 </p>
               </div>
             </div>
@@ -117,16 +117,16 @@ const Cart = () => {
             <div className="flex items-center space-x-4 sm:space-x-2">
               <div className="flex items-center space-x-3 mr-1 text-foreground dark:text-foreground-dark">
                 <button
-                  onClick={() => handleQuantityChange(item.id, -1)}
+                  onClick={() => handleQuantityChange(id, -1)}
                   className="text-md"
                 >
                   -
                 </button>
 
-                <span className="text-sm">{item.quantity}</span>
+                <span className="text-sm">{quantity}</span>
 
                 <button
-                  onClick={() => handleQuantityChange(item.id, 1)}
+                  onClick={() => handleQuantityChange(id, 1)}
                   className="text-md"
                 >
                   +
@@ -134,7 +134,7 @@ const Cart = () => {
               </div>
 
               <button
-                onClick={() => handleRemoveFromCart(item.id)}
+                onClick={() => handleRemoveFromCart(id)}
                 className="transition-all duration-300 hover:shadow-md shadow-red-500 border border-red-500
                            rounded-xl p-2 flex items-center justify-center w-8 h-8"
               >

@@ -61,39 +61,44 @@ const OrderItems = ({ items }: OrderItemsProps) => {
         </thead>
 
         <tbody>
-          {paginatedItems.map((item, key) => (
-            <tr key={key}>
-              <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
-                {item.id}
-              </td>
+          {paginatedItems.map(
+            (
+              { id, imageUrl, nameKey, price, descriptionKey, quantity },
+              key
+            ) => (
+              <tr key={key}>
+                <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
+                  {id}
+                </td>
 
-              <td className="px-6 py-2 text-left">
-                <Image
-                  src={item.imageUrl}
-                  alt={item.nameKey}
-                  width={30}
-                  height={30}
-                  priority
-                />
-              </td>
+                <td className="px-6 py-2 text-left">
+                  <Image
+                    src={imageUrl}
+                    alt={nameKey}
+                    width={30}
+                    height={30}
+                    priority
+                  />
+                </td>
 
-              <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
-                {itemsTranslations(item.nameKey)}
-              </td>
+                <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
+                  {itemsTranslations(nameKey)}
+                </td>
 
-              <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
-                € {item.price}
-              </td>
+                <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
+                  € {price}
+                </td>
 
-              <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left break-words">
-                {itemsTranslations(item.descriptionKey)}
-              </td>
+                <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left break-words">
+                  {itemsTranslations(descriptionKey)}
+                </td>
 
-              <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
-                {item.quantity}
-              </td>
-            </tr>
-          ))}
+                <td className="px-6 py-2 text-foreground-secondary dark:text-foreground-secondary-dark text-left">
+                  {quantity}
+                </td>
+              </tr>
+            )
+          )}
         </tbody>
       </table>
 

@@ -50,14 +50,9 @@ const Order = () => {
       callback: async (orderId: number, status: OrderStatusEnum) => {
         if (orderId !== Number(id)) return
 
-        queryClient.setQueryData<OrderType | undefined>(
-          ['order', id],
-          oldOrder => {
-            if (oldOrder) return { ...oldOrder, status }
-          }
-        )
-
-        await queryClient.invalidateQueries({ queryKey: ['order', id] })
+        queryClient.setQueryData<OrderType>(['order', id], oldOrder => {
+          if (oldOrder) return { ...oldOrder, status }
+        })
       }
     }
   ])
@@ -74,7 +69,7 @@ const Order = () => {
       />
     )
 
-  const formattedDate = order?.date
+  const formattedDate = order
     ? new Intl.DateTimeFormat(locale, {
         day: '2-digit',
         month: 'short',
@@ -137,41 +132,43 @@ const Order = () => {
         </thead>
 
         <tbody>
-          {paginatedItems.map((item, index) => {
-            const isFirst = index === 0
-            const isLast = index === paginatedItems.length - 1
+          {paginatedItems.map(
+            ({ imageUrl, quantity, nameKey, price }, index) => {
+              const isFirst = index === 0
+              const isLast = index === paginatedItems.length - 1
 
-            return (
-              <tr
-                key={index}
-                className="text-foreground-secondary dark:text-foreground-secondary-dark"
-              >
-                <td
-                  className={`p-2 px-6 ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
+              return (
+                <tr
+                  key={index}
+                  className="text-foreground-secondary dark:text-foreground-secondary-dark"
                 >
-                  <Image
-                    src={item.imageUrl}
-                    width={40}
-                    height={40}
-                    alt={`Item #${index}`}
-                    priority
-                  />
-                </td>
+                  <td
+                    className={`p-2 px-6 ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
+                  >
+                    <Image
+                      src={imageUrl}
+                      width={40}
+                      height={40}
+                      alt={`Item #${index}`}
+                      priority
+                    />
+                  </td>
 
-                <td
-                  className={`p-2 px-6 font-normal ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
-                >
-                  {item.quantity} x {itemTranslations(item.nameKey)}
-                </td>
+                  <td
+                    className={`p-2 px-6 font-normal ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
+                  >
+                    {quantity} x {itemTranslations(nameKey)}
+                  </td>
 
-                <td
-                  className={`p-2 px-6 font-normal ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
-                >
-                  € {item.quantity * item.price}
-                </td>
-              </tr>
-            )
-          })}
+                  <td
+                    className={`p-2 px-6 font-normal ${isFirst ? 'pt-6' : ''} ${isLast ? 'pb-6' : ''}`}
+                  >
+                    € {quantity * price}
+                  </td>
+                </tr>
+              )
+            }
+          )}
         </tbody>
       </table>
 
