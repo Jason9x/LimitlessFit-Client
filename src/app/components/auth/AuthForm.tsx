@@ -2,14 +2,11 @@ import { FormEvent, useState } from 'react'
 
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 import { z, ZodSchema } from 'zod'
 
 import { useDispatch } from 'react-redux'
 import { useMutation } from '@tanstack/react-query'
-
-import Cookies from 'js-cookie'
 
 import Input from '@/components/ui/Input'
 import SubmitButton from '@/components/buttons/SubmitBotton'
@@ -19,8 +16,11 @@ import Snackbar from '@/components/ui/Snackbar'
 import useForm from '@/hooks/useForm'
 
 import { registerUser, loginUser } from '@/api/services/auth'
-import { setAuthState } from '@/store/slices/authSlice'
+import { setAuthState, setRole } from '@/store/slices/authSlice'
 import { AxiosError } from 'axios'
+import { setTokens } from '@/utils/cookieUtils'
+import { jwtDecode } from 'jwt-decode'
+import AuthTokenPayload from '@/types/auth-token-payload'
 
 type AuthFormProps = {
   mode: 'register' | 'login'
@@ -32,7 +32,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   const registerTranslations = useTranslations('Register')
   const loginTranslations = useTranslations('Login')
   const dispatch = useDispatch()
-  const router = useRouter()
 
   const baseSchema = z.object({
     email: z.string().email(),
@@ -70,16 +69,19 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   const mutation = useMutation({
     mutationFn: (data: typeof formData) =>
       isRegister ? registerUser(data) : loginUser(data),
-    onSuccess: ({ token }) => {
+    onSuccess: ({ accessToken, refreshToken }) => {
+      if (!accessToken || !refreshToken) return
+
+      const {
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': roleId
+      } = jwtDecode<AuthTokenPayload>(String(accessToken))
+
+      if (!roleId) return
+
       dispatch(setAuthState(true))
+      dispatch(setRole(Number(roleId)))
 
-      Cookies.set('jwtToken', String(token), {
-        expires: 7,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Strict'
-      })
-
-      router.push('/')
+      setTokens(String(accessToken), String(refreshToken))
     },
     onError: error => {
       const { message: messageKey } = error as AxiosError

@@ -68,8 +68,6 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
       )
   })
 
-  const showEmptyState = paginatedOrders?.orders.length === 0 && !isLoading
-
   useEffect(() => {
     if (isError)
       setSnackbar({
@@ -79,76 +77,61 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
       })
   }, [isError, error?.message, translations])
 
-  useEffect(() => {
-    if (showEmptyState)
-      setSnackbar({
-        open: true,
-        message: translations(isMyOrders ? 'noOrders' : 'noOrderFound'),
-        variant: 'info'
-      })
-  }, [showEmptyState, isMyOrders, translations])
-
   useSignalR('/orderUpdateHub', [
     {
       eventName: 'ReceiveOrderUpdate',
       callback: (updatedOrder: OrderType) =>
-        queryClient.setQueryData<OrdersResponse>(
-          queryKey,
-          currentCachedData => {
-            if (!currentCachedData) return currentCachedData
+        queryClient.setQueryData<OrdersResponse>(queryKey, cachedOrders => {
+          if (!cachedOrders) return cachedOrders
 
-            const { orders } = currentCachedData
-            const existingIndex = orders.findIndex(
-              ({ id }) => id === updatedOrder.id
-            )
+          const { orders } = cachedOrders
+          const existingIndex = orders.findIndex(
+            ({ id }) => id === updatedOrder.id
+          )
 
-            const shouldInclude = checkOrderAgainstFilters(updatedOrder)
-            const isNewOrder = existingIndex === -1
+          const shouldInclude = checkOrderAgainstFilters(updatedOrder)
+          const isNewOrder = existingIndex === -1
 
-            if (isNewOrder)
-              return shouldInclude
-                ? {
-                    ...currentCachedData,
-                    orders: [updatedOrder, ...orders].slice(0, PAGE_SIZE)
-                  }
-                : currentCachedData
-
+          if (isNewOrder)
             return shouldInclude
               ? {
-                  ...currentCachedData,
-                  orders: orders.map(order =>
-                    order.id === updatedOrder.id ? updatedOrder : order
-                  )
+                  ...cachedOrders,
+                  orders: [updatedOrder, ...orders].slice(0, PAGE_SIZE)
                 }
-              : {
-                  ...currentCachedData,
-                  orders: orders.filter(order => order.id !== updatedOrder.id)
-                }
-          }
-        )
+              : cachedOrders
+
+          return shouldInclude
+            ? {
+                ...cachedOrders,
+                orders: orders.map(order =>
+                  order.id === updatedOrder.id ? updatedOrder : order
+                )
+              }
+            : {
+                ...cachedOrders,
+                orders: orders.filter(order => order.id !== updatedOrder.id)
+              }
+        })
     },
     {
-      eventName: 'ReceiveOrderStatusUpdate',
+      eventName: 'ReceivedOrderStatusUpdate',
       callback: (id: number, status: OrderStatusEnum) =>
-        queryClient.setQueryData<OrdersResponse>(
-          queryKey,
-          currentCachedData => {
-            if (!currentCachedData) return currentCachedData
+        queryClient.setQueryData<OrdersResponse>(queryKey, cachedOrders => {
+          if (!cachedOrders) return cachedOrders
 
-            return {
-              ...currentCachedData,
-              orders: currentCachedData.orders.flatMap(order => {
-                if (order.id !== id) return [order]
+          return {
+            ...cachedOrders,
+            orders: cachedOrders.orders.flatMap(order => {
+              if (order.id !== id) return [order]
 
-                const updatedOrder = { ...order, status }
+              const updatedOrder = { ...order, status }
 
-                if (!checkOrderAgainstFilters(updatedOrder)) return []
+              if (!checkOrderAgainstFilters(updatedOrder)) return []
 
-                return [updatedOrder]
-              })
-            }
+              return [updatedOrder]
+            })
           }
-        )
+        })
     }
   ])
 
@@ -189,8 +172,8 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
 
   return (
     <div className="m-10">
-      <div className="flex justify-between items-center">
-        <h1 className="font-semibold text-xl">
+      <div className="flex flex-col sm:flex-row justify-between items-center">
+        <h1 className="font-semibold text-xl mb-3 sm:mb-0">
           {translations(isMyOrders ? 'orderHistory' : 'title')}
         </h1>
 

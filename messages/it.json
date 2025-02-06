@@ -130,6 +130,7 @@
     "roles": {
       "admin": "Amministratore",
       "user": "Utente"
-    }
+    },
+    "roleUpdatedSuccessfully": "Ruolo aggiornato con successo!"
   }
 }

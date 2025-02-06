@@ -1,7 +1,5 @@
 import { AxiosResponse } from 'axios'
-
 import api from '@/api'
-
 import AuthTokenPayload from '@/types/auth-token-payload'
 import AxiosErrorWithMessageKey from '@/types/axios-error'
 
@@ -22,12 +20,11 @@ const handleAuthRequest = async (url: string, formData: Credentials) => {
       url,
       formData
     )
-    const { token } = payload
+    const { accessToken, refreshToken } = payload
 
-    return { token }
+    return { accessToken, refreshToken }
   } catch (error) {
     const { messageKey } = error as AxiosErrorWithMessageKey
-
     throw new Error(messageKey)
   }
 }
@@ -37,3 +34,12 @@ export const registerUser = async (formData: RegisterFormData) =>
 
 export const loginUser = async (formData: LoginFormData) =>
   handleAuthRequest('/Auth/login', formData)
+
+export const fetchNewTokens = async () => {
+  const { data: payload }: AxiosResponse<AuthTokenPayload> = await api.post(
+    '/Auth/refresh-token'
+  )
+  const { accessToken, refreshToken } = payload
+
+  return { accessToken, refreshToken }
+}

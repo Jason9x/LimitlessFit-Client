@@ -1,5 +1,19 @@
-import axios, { AxiosInstance, AxiosError } from 'axios'
-import Cookies from 'js-cookie'
+import axios, { AxiosInstance } from 'axios'
+
+import { fetchNewTokens } from '@/api/services/auth'
+
+import {
+  getAccessToken,
+  getRefreshToken,
+  removeTokens,
+  setTokens
+} from '@/utils/cookieUtils'
+
+const logoutUser = () => {
+  removeTokens()
+
+  if (typeof window !== 'undefined') window.location.pathname = '/'
+}
 
 const createApiClient = (): AxiosInstance => {
   const instance = axios.create({
@@ -9,7 +23,7 @@ const createApiClient = (): AxiosInstance => {
   })
 
   instance.interceptors.request.use(config => {
-    const token = Cookies.get('jwtToken')
+    const token = getAccessToken()
 
     if (!token || !config.headers) return config
 
@@ -20,15 +34,35 @@ const createApiClient = (): AxiosInstance => {
 
   instance.interceptors.response.use(
     response => response,
-    ({ response, message }: AxiosError) => {
-      if (response?.status !== 401)
-        return Promise.reject(response?.data || message)
+    async error => {
+      const { response: { status } = {}, config: originalRequest } = error
 
-      Cookies.remove('jwtToken')
+      if (status !== 401 || originalRequest._retry) return Promise.reject(error)
 
-      if (typeof window !== 'undefined') window.location.pathname = '/'
+      originalRequest._retry = true
 
-      return Promise.reject('Session expired, please login again.')
+      try {
+        const refreshTokenFromCookie = getRefreshToken()
+
+        if (!refreshTokenFromCookie) {
+          logoutUser()
+
+          return Promise.reject(error)
+        }
+
+        const { accessToken, refreshToken } = await fetchNewTokens()
+
+        setTokens(String(accessToken), String(refreshToken))
+
+        if (originalRequest.headers)
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`
+
+        return instance(originalRequest)
+      } catch (refreshError) {
+        logoutUser()
+
+        return Promise.reject(refreshError)
+      }
     }
   )
 
@@ -36,4 +70,5 @@ const createApiClient = (): AxiosInstance => {
 }
 
 const index = createApiClient()
+
 export default index

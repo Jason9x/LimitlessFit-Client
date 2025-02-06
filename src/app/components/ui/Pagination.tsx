@@ -84,7 +84,7 @@ const Pagination = ({
             <button
               key={key}
               onClick={() => typeof page === 'number' && onPageChange(page)}
-              className={`font-semibold text-xs sm:text-sm w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-full
+              className={`font-semibold text-sm w-9 h-9 flex items-center justify-center rounded-full
               ${
                 page === currentPage
                   ? 'bg-foreground dark:bg-foreground-dark text-secondary dark:text-secondary-dark'

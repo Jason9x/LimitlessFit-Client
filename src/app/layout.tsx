@@ -6,7 +6,7 @@ import { getMessages, getLocale } from 'next-intl/server'
 
 import Navbar from '@/components/Navbar'
 import Providers from '@/providers'
-import AuthCheck from '@/components/auth/ProtectedContent'
+import ProtectedContent from '@/components/auth/ProtectedContent'
 
 export const metadata: Metadata = {
   title: 'LimitlessFit',
@@ -30,7 +30,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
       >
         <Providers messages={messages} locale={locale}>
           <Navbar />
-          <AuthCheck>{children}</AuthCheck>
+          <ProtectedContent>{children}</ProtectedContent>
         </Providers>
       </body>
     </html>

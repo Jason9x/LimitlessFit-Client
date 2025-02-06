@@ -23,7 +23,7 @@ const UserDropdown = () => {
   useClickOutside([ref], () => setIsOpen(false))
 
   const handleLogout = () => {
-    Cookies.remove('jwtToken')
+    Cookies.remove('accessToken')
 
     router.refresh()
 

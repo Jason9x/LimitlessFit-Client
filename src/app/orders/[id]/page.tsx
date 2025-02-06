@@ -46,7 +46,7 @@ const Order = () => {
 
   useSignalR('/orderUpdateHub', [
     {
-      eventName: 'ReceiveOrderStatusUpdate',
+      eventName: 'ReceivedOrderStatusUpdate',
       callback: async (orderId: number, status: OrderStatusEnum) => {
         if (orderId !== Number(id)) return
 

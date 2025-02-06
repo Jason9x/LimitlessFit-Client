@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 type SnackbarProps = {
   message: string
@@ -13,10 +13,17 @@ const Snackbar = ({
   onClose,
   variant = 'error'
 }: SnackbarProps) => {
+  const [isVisible, setIsVisible] = useState(open)
+
   useEffect(() => {
     if (!open) return
 
-    const timer = setTimeout(() => onClose(), 3000)
+    setIsVisible(true)
+
+    const timer = setTimeout(() => {
+      setIsVisible(false)
+      setTimeout(onClose, 300)
+    }, 2000)
 
     return () => clearTimeout(timer)
   }, [open, onClose])
@@ -27,18 +34,17 @@ const Snackbar = ({
     info: 'bg-blue-500'
   }
 
-  if (!open) return
-
   return (
     <div
-      className={`fixed bottom-4 right-4 ${variantStyles[variant]} text-white px-6 py-3 rounded-lg shadow-lg
-        flex items-center justify-between transition-all duration-300 ease-out transform
-        ${open ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+      className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white 
+                  flex items-center justify-between transition-all duration-300 transform
+        ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+        ${variantStyles[variant]}`}
     >
       <span className="mr-2">{message}</span>
 
       <button
-        onClick={onClose}
+        onClick={() => setIsVisible(false)}
         className="text-white font-bold text-2xl rounded-full p-1"
         aria-label="Close"
       >

@@ -36,7 +36,9 @@ const cartSlice = createSlice({
           )
         : [...state.items, updatedItem]
 
-      state.lastAddedItemIndex = hasItem ? existingIndex : state.items.length
+      state.lastAddedItemIndex = hasItem
+        ? existingIndex
+        : state.items.length - 1
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter(({ id }) => id !== action.payload)

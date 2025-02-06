@@ -13,13 +13,15 @@ import UserDropdown from '@/components/dropdowns/UserDropdown'
 import NotificationsDropdown from '@/components/dropdowns/notifications/NotificationsDropdown'
 
 import { RootState } from '@/store'
+
 import useClickOutside from '@/hooks/useClickOutside'
-import useUser from '@/hooks/useUser'
+
+import { Role } from '@/types/models/user'
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme()
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
+  const { isAuthenticated, role } = useSelector(
+    (state: RootState) => state.auth
   )
 
   const translations = useTranslations('Navbar')
@@ -65,32 +67,36 @@ const Navbar = () => {
         <p className="hidden lg:block">{translations('myOrders')}</p>
       </Link>
 
-      <>
-        <Link href="/admin/users" className="flex items-center space-x-2">
-          <Image
-            src="/icons/navbar/group-of-people.svg"
-            width={20}
-            height={20}
-            alt="Users management"
-            className="dark:invert"
-            priority
-          />
+      {role === Role.Admin && (
+        <>
+          <Link href="/admin/users" className="flex items-center space-x-2">
+            <Image
+              src="/icons/navbar/group-of-people.svg"
+              width={20}
+              height={20}
+              alt="Users management"
+              className="dark:invert"
+              priority
+            />
 
-          <p className="hidden lg:block">{translations('usersManagement')}</p>
-        </Link>
+            <p className="hidden lg:block">{translations('usersManagement')}</p>
+          </Link>
 
-        <Link href="/admin/orders" className="flex items-center space-x-2">
-          <Image
-            src="/icons/navbar/management.svg"
-            width={20}
-            height={20}
-            alt="Orders management"
-            className="dark:invert"
-            priority
-          />
-          <p className="hidden lg:block">{translations('ordersManagement')}</p>
-        </Link>
-      </>
+          <Link href="/admin/orders" className="flex items-center space-x-2">
+            <Image
+              src="/icons/navbar/management.svg"
+              width={20}
+              height={20}
+              alt="Orders management"
+              className="dark:invert"
+              priority
+            />
+            <p className="hidden lg:block">
+              {translations('ordersManagement')}
+            </p>
+          </Link>
+        </>
+      )}
     </>
   )
 

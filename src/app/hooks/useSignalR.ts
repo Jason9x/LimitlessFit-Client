@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react'
 
 import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr'
 
-import Cookies from 'js-cookie'
+import { getAccessToken } from '@/utils/cookieUtils'
 
 type SignalRConfig = {
   eventName: string
@@ -15,7 +15,7 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
   const connectToHub = useCallback(async () => {
     if (connectionRef.current) return
 
-    const token = Cookies.get('jwtToken')
+    const token = getAccessToken()
 
     if (!token) return
 
