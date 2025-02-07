@@ -1,3 +1,5 @@
+import { Role } from '@/types/models/user'
+
 type NotificationBase = {
   id: number
   messageKey: string
@@ -11,13 +13,16 @@ export type NotificationDataTypes = {
     orderId?: number
     status?: string
   }
+  roleUpdated: {
+    role: Role
+  }
 }
 
 export type NotificationKey = keyof NotificationDataTypes
 
 type Notification<T extends NotificationKey> = NotificationBase & {
   messageKey: T
-  additionalData: string
+  additionalData: NotificationDataTypes[T]
 }
 
 export type NotificationType = {

@@ -121,16 +121,17 @@
     "noNotificationsFound": "No notifications found"
   },
   "NotificationItem": {
-    "orderStatusUpdate": "Your order has been updated to {status}."
+    "orderStatusUpdate": "Your order has been updated to {status}.",
+    "roleUpdated": "Your role has been updated to {role}."
   },
   "UsersPanel": {
     "title": "Users panel",
     "noUsersFound": "No users found.",
     "searchPlaceholder": "Search",
-    "roles": {
-      "admin": "Admin",
-      "user": "User"
-    },
     "roleUpdatedSuccessfully": "Role updated successfully!"
+  },
+  "Roles": {
+    "admin": "Admin",
+    "user": "User"
   }
 }

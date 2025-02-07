@@ -1,14 +1,17 @@
 import { useTranslations } from 'next-intl'
-
 import { useEffect, useRef } from 'react'
+import Link from 'next/link'
 
-import { NotificationType } from '@/types/models/notification'
+import {
+  NotificationType,
+  NotificationDataTypes
+} from '@/types/models/notification'
 import { formatRelativeDate } from '@/utils/dateUtils'
 import { useLocale } from 'use-intl'
 import { getNotificationMessage } from '@/utils/notificationUtils'
 import { getOrderStatusLabels } from '@/utils/orderUtils'
 import { OrderStatusEnum } from '@/types/models/order'
-import Link from 'next/link'
+import { Role } from '@/types/models/user'
 
 type NotificationItemProps = {
   notification: NotificationType
@@ -23,16 +26,48 @@ const NotificationItem = ({
 
   const translations = useTranslations('NotificationItem')
   const statusTranslations = useTranslations('OrderStatus')
+  const roleTranslations = useTranslations('Roles')
 
-  const itemRef = useRef<HTMLLIElement>(null)
   const locale = useLocale()
+  const itemRef = useRef<HTMLLIElement>(null)
 
   const { translationKey, translationValues } =
     getNotificationMessage(notification)
-  const { orderId, status } = translationValues
-
-  const statusLabels = getOrderStatusLabels(statusTranslations)
   const formattedRelativeDate = formatRelativeDate(createdAt, locale)
+  const statusLabels = getOrderStatusLabels(statusTranslations)
+
+  const getDynamicValues = () => {
+    switch (translationKey) {
+      case 'orderStatusUpdate': {
+        const { orderId, status } =
+          translationValues as NotificationDataTypes['orderStatusUpdate']
+
+        return {
+          href: `/orders/${orderId}`,
+          translationParams: {
+            status: status
+              ? statusLabels[status as unknown as OrderStatusEnum].toLowerCase()
+              : ''
+          }
+        }
+      }
+
+      case 'roleUpdated': {
+        const { role } =
+          translationValues as NotificationDataTypes['roleUpdated']
+
+        const translatedRole = roleTranslations(Role[role].toLowerCase())
+
+        return { translationParams: { role: translatedRole.toLowerCase() } }
+      }
+
+      default:
+        return { translationParams: {} }
+    }
+  }
+
+  const { href, translationParams } = getDynamicValues()
+  const notificationContent = translations(translationKey, translationParams)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -41,7 +76,6 @@ const NotificationItem = ({
       },
       { threshold: 0.5 }
     )
-
     const currentItem = itemRef.current
 
     if (currentItem) observer.observe(currentItem)
@@ -51,24 +85,29 @@ const NotificationItem = ({
     }
   }, [id, isRead, markAsRead])
 
+  const innerContent = (
+    <>
+      <p className="text-sm mb-1">{notificationContent}</p>
+
+      <p className="text-xs text-foreground-secondary dark:text-foreground-secondary-dark">
+        {formattedRelativeDate}
+      </p>
+    </>
+  )
+
   return (
     <li
       ref={itemRef}
-      className={`my-4 py-1.5 px-4 rounded-2xl border-none bg-secondary dark:bg-secondary-dark 
-                  cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800`}
+      className="my-4 py-1.5 px-4 rounded-2xl border-none bg-secondary dark:bg-secondary-dark
+                 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
     >
-      <Link href={`/orders/${orderId}`} passHref>
-        <p className="text-sm mb-1">
-          {translations(translationKey, {
-            status:
-              statusLabels[status as unknown as OrderStatusEnum].toLowerCase()
-          })}
-        </p>
-
-        <p className="text-xs text-foreground-secondary dark:text-foreground-secondary-dark">
-          {formattedRelativeDate}
-        </p>
-      </Link>
+      {href ? (
+        <Link href={href} passHref>
+          {innerContent}
+        </Link>
+      ) : (
+        innerContent
+      )}
     </li>
   )
 }

@@ -4,7 +4,6 @@ import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { ChangeEvent, useState, useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useDispatch } from 'react-redux'
 
 import { fetchUsers, updateUserRole } from '@/api/services/users'
 
@@ -15,9 +14,7 @@ import Pagination from '@/components/ui/Pagination'
 import Snackbar from '@/components/ui/Snackbar'
 import RoleDropdown from '@/components/dropdowns/RoleDropdown'
 
-import { setRole } from '@/store/slices/authSlice'
-
-import { User, UsersResponse } from '@/types/models/user'
+import { Role, User, UsersResponse } from '@/types/models/user'
 
 const ITEMS_PER_PAGE = 4
 
@@ -30,7 +27,6 @@ const UsersPanel = () => {
   )
   const searchInputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
-  const dispatch = useDispatch()
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean
@@ -58,19 +54,8 @@ const UsersPanel = () => {
     onSuccess: async (_, { userId, roleId }) => {
       queryClient.setQueryData<UsersResponse>(
         ['users', searchTerm, currentPage, ITEMS_PER_PAGE],
-        cachedUsers => {
-          if (!cachedUsers) return cachedUsers
-
-          return {
-            ...cachedUsers,
-            users: cachedUsers.users.map(user =>
-              user.id === userId ? { ...user, roleId } : user
-            )
-          }
-        }
+        cachedUsers => updateAndSortUsers(cachedUsers, userId, roleId)
       )
-
-      dispatch(setRole(roleId))
 
       setSnackbar({
         open: true,
@@ -99,28 +84,44 @@ const UsersPanel = () => {
     }
   })
 
+  const updateAndSortUsers = (
+    cachedUsers: UsersResponse | undefined,
+    userId: number,
+    roleId: Role
+  ) => {
+    if (!cachedUsers) return cachedUsers
+
+    const updatedUsers = cachedUsers.users.map(user =>
+      user.id === userId ? { ...user, roleId } : user
+    )
+
+    const sortedUsers = updatedUsers.sort((userA, userB) => {
+      const compareRole =
+        userA.roleId === Role.Admin ? -1 : userB.roleId === Role.Admin ? 1 : 0
+
+      if (compareRole !== 0) return compareRole
+
+      return (userA.name ?? '').localeCompare(userB.name ?? '')
+    })
+
+    return {
+      ...cachedUsers,
+      users: sortedUsers
+    }
+  }
+
   useSignalR('/userHub', [
     {
       eventName: 'RoleUpdated',
-      callback: (userId: number, roleId: number) =>
+      callback: (userId: number, roleId: Role) =>
         queryClient.setQueryData<UsersResponse>(
           ['users', searchTerm, currentPage, ITEMS_PER_PAGE],
-          cachedUsers => {
-            if (!cachedUsers) return cachedUsers
-
-            return {
-              ...cachedUsers,
-              users: cachedUsers.users.map(user =>
-                user.id === userId ? { ...user, roleId } : user
-              )
-            }
-          }
+          cachedUsers => updateAndSortUsers(cachedUsers, userId, roleId)
         )
     },
     {
       eventName: 'UserAdded',
-      callback: (user: User) => {
-        console.log('aaa')
+      callback: (user: User) =>
         queryClient.setQueryData<UsersResponse>(
           ['users', searchTerm, currentPage, ITEMS_PER_PAGE],
           cachedUsers => {
@@ -132,7 +133,6 @@ const UsersPanel = () => {
             }
           }
         )
-      }
     }
   ])
 

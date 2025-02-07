@@ -121,16 +121,17 @@
     "noNotificationsFound": "Nessuna notifica trovata"
   },
   "NotificationItem": {
-    "orderStatusUpdate": "Il tuo ordine è ora {status}."
+    "orderStatusUpdate": "Il tuo ordine è ora {status}.",
+    "roleUpdated": "Il tuo ruolo è stato aggiornato a {role}."
   },
   "UsersPanel": {
     "title": "Pannello degli utenti",
     "noUsersFound": "Nessun utente trovato.",
     "searchPlaceholder": "Cerca",
-    "roles": {
-      "admin": "Amministratore",
-      "user": "Utente"
-    },
     "roleUpdatedSuccessfully": "Ruolo aggiornato con successo!"
+  },
+  "Roles": {
+    "admin": "Amministratore",
+    "user": "Utente"
   }
 }

@@ -16,7 +16,7 @@ const UserDropdown = () => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const user = useUser()
+  const { user } = useUser()
 
   const ref = useRef<HTMLDivElement | null>(null)
 

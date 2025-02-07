@@ -79,65 +79,53 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
 
   useSignalR('/orderUpdateHub', [
     {
-      eventName: 'ReceiveOrderUpdate',
-      callback: (updatedOrder: OrderType) =>
+      eventName: 'AddNewOrder',
+      callback: (newOrder: OrderType) =>
         queryClient.setQueryData<OrdersResponse>(queryKey, cachedOrders => {
           if (!cachedOrders) return cachedOrders
 
           const { orders } = cachedOrders
-          const existingIndex = orders.findIndex(
-            ({ id }) => id === updatedOrder.id
-          )
+          const shouldInclude = checkOrderAgainstFilters(newOrder, filter)
 
-          const shouldInclude = checkOrderAgainstFilters(updatedOrder)
-          const isNewOrder = existingIndex === -1
+          if (shouldInclude)
+            return {
+              ...cachedOrders,
+              orders: [newOrder, ...orders].slice(0, PAGE_SIZE)
+            }
 
-          if (isNewOrder)
-            return shouldInclude
-              ? {
-                  ...cachedOrders,
-                  orders: [updatedOrder, ...orders].slice(0, PAGE_SIZE)
-                }
-              : cachedOrders
-
-          return shouldInclude
-            ? {
-                ...cachedOrders,
-                orders: orders.map(order =>
-                  order.id === updatedOrder.id ? updatedOrder : order
-                )
-              }
-            : {
-                ...cachedOrders,
-                orders: orders.filter(order => order.id !== updatedOrder.id)
-              }
+          return cachedOrders
         })
     },
     {
       eventName: 'ReceivedOrderStatusUpdate',
-      callback: (id: number, status: OrderStatusEnum) =>
+      callback: async (id: number, status: OrderStatusEnum) => {
         queryClient.setQueryData<OrdersResponse>(queryKey, cachedOrders => {
           if (!cachedOrders) return cachedOrders
 
           return {
             ...cachedOrders,
-            orders: cachedOrders.orders.flatMap(order => {
-              if (order.id !== id) return [order]
+            orders: cachedOrders.orders
+              .map(order => {
+                if (order.id !== id) return order
 
-              const updatedOrder = { ...order, status }
+                const updatedOrder = { ...order, status }
 
-              if (!checkOrderAgainstFilters(updatedOrder)) return []
+                if (!checkOrderAgainstFilters(updatedOrder, filter)) return null
 
-              return [updatedOrder]
-            })
+                return updatedOrder
+              })
+              .filter(order => order !== null)
           }
         })
+
+        await queryClient.invalidateQueries({ queryKey })
+      }
     }
   ])
 
   const checkOrderAgainstFilters = (
     order: OrderType,
-    filter?: OrderFilterType
+    filter: OrderFilterType | null
   ): boolean => {
     if (!filter) return true
 

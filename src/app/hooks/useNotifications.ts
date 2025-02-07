@@ -4,7 +4,7 @@ import useSignalR from '@/hooks/useSignalR'
 
 import {
   deleteAllNotifications,
-  getNotifications,
+  fetchNotifications,
   markAsRead
 } from '@/api/services/notifications'
 
@@ -15,7 +15,7 @@ const useNotifications = () => {
 
   const { data: notifications, isLoading } = useQuery({
     queryKey: ['notifications'],
-    queryFn: getNotifications
+    queryFn: fetchNotifications
   })
 
   useSignalR('/notificationHub', [

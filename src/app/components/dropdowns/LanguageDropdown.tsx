@@ -39,7 +39,6 @@ const LanguageDropdown = () => {
             height={20}
             src={currentLanguage.flag}
             alt={`Flag for ${locale}`}
-            className="mr-2"
             priority
           />
         )}
@@ -51,15 +50,15 @@ const LanguageDropdown = () => {
           alt="Arrow expand"
           className={`transition-transform duration-300 ${
             isOpen ? 'rotate-180' : 'rotate-0'
-          } ease-out dark:invert`}
+          } ease-out ml-2 dark:invert hidden lg:block`}
           priority
         />
       </button>
 
       {isOpen && (
         <ul
-          className="absolute z-10 mt-2 w-fit rounded-xl bg-background dark:bg-background-dark overflow-hidden
-                      lg:shadow-md shadow-none"
+          className="absolute z-10 mt-2 w-fit min-w-[40px] rounded-xl bg-background -right-2.5 lg:right-0
+                  dark:bg-background-dark overflow-hidden shadow-md"
         >
           {languages.map(({ code, flag }) => (
             <li
@@ -67,13 +66,14 @@ const LanguageDropdown = () => {
               className="block p-2 hover:bg-secondary hover:dark:bg-secondary-dark cursor-pointer"
               onClick={async () => {
                 await setLocaleInCookie(code)
+
                 setIsOpen(false)
               }}
             >
               <div className="flex items-center justify-center">
                 <Image
-                  width={28}
-                  height={28}
+                  width={20}
+                  height={20}
                   src={flag}
                   alt={`Flag for ${code}`}
                   priority

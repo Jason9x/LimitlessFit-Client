@@ -22,6 +22,8 @@ const RoleDropdown = ({
   toggleDropdown
 }: RoleDropdownProps) => {
   const translations = useTranslations('UsersPanel')
+  const roleTranslations = useTranslations('Roles')
+
   const [selectedRole, setSelectedRole] = useState(role)
   const ref = useRef<HTMLDivElement | null>(null)
   const dropdownPosition = useDropdownPosition(ref)
@@ -41,7 +43,7 @@ const RoleDropdown = ({
   }
 
   const translateRole = (role: Role) =>
-    translations(`roles.${Role[role].toLowerCase()}`)
+    roleTranslations(Role[role].toLowerCase())
 
   return (
     <div className="relative text-sm" ref={ref}>

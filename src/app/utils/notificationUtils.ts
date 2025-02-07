@@ -17,34 +17,49 @@ const MESSAGE_HANDLERS: {
   orderStatusUpdate: ({ orderId, status }) => ({
     translationKey: 'orderStatusUpdate',
     translationValues: { orderId, status }
+  }),
+  roleUpdated: ({ role }) => ({
+    translationKey: 'roleUpdated',
+    translationValues: { role }
   })
 }
 
-export const getNotificationMessage = (
-  notification: NotificationType
-): MessageHandlerReturn<NotificationType['messageKey']> => {
-  const handler = MESSAGE_HANDLERS[notification.messageKey]
-  const parsedData = parseNotificationData(notification.additionalData)
+export const getNotificationMessage = <K extends NotificationKey>(
+  notification: Extract<NotificationType, { messageKey: K }>
+): MessageHandlerReturn<K> => {
+  const handler = MESSAGE_HANDLERS[notification.messageKey] as (
+    data: NotificationDataTypes[K]
+  ) => MessageHandlerReturn<K>
 
-  return handler(parsedData)
+  return handler(
+    parseNotificationData(notification.additionalData, notification.messageKey)
+  )
 }
 
-const parseNotificationData = <T extends NotificationKey>(
-  additionalData?: string
-): NotificationDataTypes[T] => {
-  const defaultData = {} as NotificationDataTypes[T]
-
-  if (!additionalData) return defaultData
+const parseNotificationData = <K extends NotificationKey>(
+  additionalData: string,
+  key: K
+): NotificationDataTypes[K] => {
+  if (!additionalData) return {} as NotificationDataTypes[K]
 
   try {
     const parsed = JSON.parse(additionalData)
 
-    return isValidNotificationData(parsed) ? parsed : defaultData
+    return isValidNotificationData(parsed, key)
+      ? parsed
+      : ({} as NotificationDataTypes[K])
   } catch {
-    return defaultData
+    return {} as NotificationDataTypes[K]
   }
 }
 
-const isValidNotificationData = <T extends NotificationKey>(
-  data: unknown
-): data is NotificationDataTypes[T] => !!data && typeof data === 'object'
+const isValidNotificationData = <K extends NotificationKey>(
+  data: unknown,
+  key: K
+): data is NotificationDataTypes[K] =>
+  !!data &&
+  typeof data === 'object' &&
+  {
+    orderStatusUpdate: ['orderId', 'status'],
+    roleUpdated: ['role']
+  }[key].every(field => field in data)

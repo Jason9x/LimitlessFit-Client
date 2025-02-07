@@ -34,6 +34,8 @@ const Snackbar = ({
     info: 'bg-blue-500'
   }
 
+  if (!open) return
+
   return (
     <div
       className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white 

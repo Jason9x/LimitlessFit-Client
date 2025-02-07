@@ -16,7 +16,7 @@ import Snackbar from '@/components/ui/Snackbar'
 import useForm from '@/hooks/useForm'
 
 import { registerUser, loginUser } from '@/api/services/auth'
-import { setAuthState, setRole } from '@/store/slices/authSlice'
+import { setAuthState } from '@/store/slices/authSlice'
 import { AxiosError } from 'axios'
 import { setTokens } from '@/utils/cookieUtils'
 import { jwtDecode } from 'jwt-decode'
@@ -79,7 +79,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
       if (!roleId) return
 
       dispatch(setAuthState(true))
-      dispatch(setRole(Number(roleId)))
 
       setTokens(String(accessToken), String(refreshToken))
     },
@@ -117,7 +116,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             error={errors.name}
           />
         )}
-
         <Input
           label="Email"
           type="email"
@@ -129,7 +127,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
           error={errors.email}
           className="mt-4"
         />
-
         <Input
           label="Password"
           type="password"
@@ -141,7 +138,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
           error={errors.password}
           className="mt-4"
         />
-
         <ActionLink
           introText={translations(isRegister ? 'existingUser' : 'newUser')}
           linkText={
@@ -152,12 +148,12 @@ const AuthForm = ({ mode }: AuthFormProps) => {
           href={isRegister ? '/' : '/register'}
           className="mt-4"
         />
-
         <SubmitButton
           label={translations(isRegister ? 'register' : 'login')}
           className="mt-6"
         />
 
+        {/* TODO: last thing: forgotten password. :) */}
         {!isRegister && (
           <Link
             href="/"

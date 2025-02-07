@@ -1,35 +1,38 @@
-import { useState, useEffect } from 'react'
-import { jwtDecode } from 'jwt-decode'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
-import AuthTokenPayload from '@/types/auth-token-payload'
-import { User } from '@/types/models/user'
+import { fetchUserRole } from '@/api/services/users'
 
 import { getAccessToken } from '@/utils/cookieUtils'
+import { decodeUserFromToken } from '@/utils/authUtils'
+
+import { Role, User } from '@/types/models/user'
 
 const useUser = () => {
-  const [user, setUser] = useState<User>()
+  const queryClient = useQueryClient()
+  const token = getAccessToken()
 
-  useEffect(() => {
-    const token = getAccessToken()
+  const { data: user } = useQuery({
+    queryKey: ['user', token],
+    queryFn: async () => {
+      if (!token) return
 
-    if (!token) return
+      const user = decodeUserFromToken(token)
 
-    try {
-      const {
-        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': name,
-        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress':
-          email,
-        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role':
-          roleId = '0'
-      } = jwtDecode<AuthTokenPayload>(token)
+      if (!user) return
 
-      setUser({ name, email, roleId: +roleId })
-    } catch (error) {
-      console.error('Failed to decode JWT:', error)
-    }
-  }, [])
+      const role = await fetchUserRole(user.id)
 
-  return user
+      return { ...user, role }
+    },
+    enabled: !!token
+  })
+
+  const updateRole = (role: Role) =>
+    queryClient.setQueryData<User | null>(['user', token], cachedUser =>
+      cachedUser ? { ...cachedUser, role } : cachedUser
+    )
+
+  return { user, updateRole }
 }
 
 export default useUser

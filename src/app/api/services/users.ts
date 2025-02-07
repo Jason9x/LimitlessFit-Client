@@ -15,5 +15,11 @@ export const fetchUsers = async ({
   return users
 }
 
+export const fetchUserRole = async (id: number) => {
+  const { data: roleId } = await api.get<number>(`/Users/${id}/role`)
+
+  return roleId
+}
+
 export const updateUserRole = async (id: number, roleId: number) =>
   await api.patch(`/Users/${id}/role`, roleId)

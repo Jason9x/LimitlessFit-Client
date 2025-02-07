@@ -9,7 +9,7 @@ export type User = {
   id?: number
   email?: string
   name?: string
-  roleId: number
+  roleId: Role
 }
 
 export type UsersResponse = PaginationType & {

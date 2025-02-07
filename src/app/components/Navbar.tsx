@@ -14,15 +14,19 @@ import NotificationsDropdown from '@/components/dropdowns/notifications/Notifica
 
 import { RootState } from '@/store'
 
+import useUser from '@/hooks/useUser'
 import useClickOutside from '@/hooks/useClickOutside'
+import useSignalR from '@/hooks/useSignalR'
 
 import { Role } from '@/types/models/user'
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme()
-  const { isAuthenticated, role } = useSelector(
-    (state: RootState) => state.auth
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
   )
+  const { user, updateRole } = useUser()
+  const userRef = useRef(user)
 
   const translations = useTranslations('Navbar')
 
@@ -52,9 +56,30 @@ const Navbar = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  useEffect(() => {
+    userRef.current = user
+  }, [user])
+
+  useSignalR('/userHub', [
+    {
+      eventName: 'RoleUpdated',
+      callback: (userId: number, role: Role) => {
+        if (userRef.current?.id === userId) updateRole(role)
+      }
+    }
+  ])
+
+  const handleLinkClick = () => {
+    if (!isDesktop) setIsMenuOpen(false)
+  }
+
   const renderAuthenticatedLinks = () => (
     <>
-      <Link href="/my-orders" className="flex items-center space-x-2">
+      <Link
+        href="/my-orders"
+        className="flex items-center space-x-2"
+        onClick={handleLinkClick}
+      >
         <Image
           src="/icons/navbar/cart.svg"
           width={20}
@@ -67,9 +92,13 @@ const Navbar = () => {
         <p className="hidden lg:block">{translations('myOrders')}</p>
       </Link>
 
-      {role === Role.Admin && (
+      {user?.role === Role.Admin && (
         <>
-          <Link href="/admin/users" className="flex items-center space-x-2">
+          <Link
+            href="/admin/users"
+            className="flex items-center space-x-2"
+            onClick={handleLinkClick}
+          >
             <Image
               src="/icons/navbar/group-of-people.svg"
               width={20}
@@ -82,7 +111,11 @@ const Navbar = () => {
             <p className="hidden lg:block">{translations('usersManagement')}</p>
           </Link>
 
-          <Link href="/admin/orders" className="flex items-center space-x-2">
+          <Link
+            href="/admin/orders"
+            className="flex items-center space-x-2"
+            onClick={handleLinkClick}
+          >
             <Image
               src="/icons/navbar/management.svg"
               width={20}
@@ -91,6 +124,7 @@ const Navbar = () => {
               className="dark:invert"
               priority
             />
+
             <p className="hidden lg:block">
               {translations('ordersManagement')}
             </p>

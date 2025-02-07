@@ -2,7 +2,7 @@ import api from '@/api'
 
 import { NotificationType } from '@/types/models/notification'
 
-export const getNotifications = async () => {
+export const fetchNotifications = async () => {
   const { data: notifications } =
     await api.get<NotificationType[]>('/Notifications')
 

@@ -3,10 +3,10 @@ import { useTranslations } from 'next-intl'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 
 import NotificationsHeader from '@/components/dropdowns/notifications/NotificationsHeader'
-import NotificationsList from '@/components/dropdowns/notifications/NotificationsList'
 import NotificationsEmptyState from '@/components/dropdowns/notifications/NotificationsEmptyState'
 
 import { NotificationType } from '@/types/models/notification'
+import NotificationItem from '@/components/dropdowns/notifications/NotificationItem'
 
 type NotificationsPanelProps = {
   isLoading: boolean
@@ -42,10 +42,15 @@ const NotificationsPanel = ({
         />
 
         {hasNotifications ? (
-          <NotificationsList
-            notifications={notifications}
-            onMarkAsRead={onMarkAsRead}
-          />
+          <ul>
+            {notifications?.map(notification => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+                markAsRead={onMarkAsRead}
+              />
+            ))}
+          </ul>
         ) : (
           <NotificationsEmptyState translations={translations} />
         )}

@@ -38,9 +38,7 @@ const useSignalR = (hubUrl: string, events: SignalRConfig[]) => {
       setTimeout(connectToHub, 5000)
     }
 
-    return () => {
-      connection.stop().then()
-    }
+    return () => connection.stop().then()
   }, [events, hubUrl])
 
   useEffect(() => {
