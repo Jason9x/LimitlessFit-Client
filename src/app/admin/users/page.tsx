@@ -2,12 +2,15 @@
 
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
+
 import { ChangeEvent, useState, useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { fetchUsers, updateUserRole } from '@/api/services/users'
 
 import useSignalR from '@/hooks/useSignalR'
+
+import withAdminRedirect from '@/hoc/withAdminRedirect'
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Pagination from '@/components/ui/Pagination'
@@ -273,4 +276,4 @@ const UsersPanel = () => {
   )
 }
 
-export default UsersPanel
+export default withAdminRedirect(UsersPanel)

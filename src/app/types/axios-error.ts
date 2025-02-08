@@ -1,7 +1,10 @@
-import { AxiosError } from 'axios'
-
-type AxiosErrorWithMessageKey = AxiosError & {
-  messageKey?: string
+type AxiosErrorWithMessageKey = {
+  response?: {
+    data: {
+      messageKey: string
+    }
+  }
+  message?: string
 }
 
 export default AxiosErrorWithMessageKey

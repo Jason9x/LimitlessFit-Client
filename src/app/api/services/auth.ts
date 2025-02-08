@@ -1,5 +1,7 @@
 import { AxiosResponse } from 'axios'
+
 import api from '@/api'
+
 import AuthTokenPayload from '@/types/auth-token-payload'
 import AxiosErrorWithMessageKey from '@/types/axios-error'
 
@@ -24,7 +26,9 @@ const handleAuthRequest = async (url: string, formData: Credentials) => {
 
     return { accessToken, refreshToken }
   } catch (error) {
-    const { messageKey } = error as AxiosErrorWithMessageKey
+    const { messageKey } =
+      (error as AxiosErrorWithMessageKey).response?.data || {}
+
     throw new Error(messageKey)
   }
 }

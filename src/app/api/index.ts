@@ -12,7 +12,7 @@ import {
 const logoutUser = () => {
   removeTokens()
 
-  if (typeof window !== 'undefined') window.location.pathname = '/'
+  if (typeof window !== 'undefined') window.location.reload()
 }
 
 const createApiClient = (): AxiosInstance => {
@@ -25,9 +25,8 @@ const createApiClient = (): AxiosInstance => {
   instance.interceptors.request.use(config => {
     const token = getAccessToken()
 
-    if (!token || !config.headers) return config
-
-    config.headers.Authorization = `Bearer ${token}`
+    if (token && config.headers)
+      config.headers.Authorization = `Bearer ${token}`
 
     return config
   })
@@ -46,21 +45,23 @@ const createApiClient = (): AxiosInstance => {
 
         if (!refreshTokenFromCookie) {
           logoutUser()
-
           return Promise.reject(error)
         }
 
         const { accessToken, refreshToken } = await fetchNewTokens()
 
+        if (!accessToken || !refreshToken) {
+          logoutUser()
+          return Promise.reject(error)
+        }
+
         setTokens(String(accessToken), String(refreshToken))
 
-        if (originalRequest.headers)
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`
 
         return instance(originalRequest)
       } catch (refreshError) {
         logoutUser()
-
         return Promise.reject(refreshError)
       }
     }
