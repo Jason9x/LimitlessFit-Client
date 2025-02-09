@@ -22,7 +22,8 @@ export const fetchOrderById = async (id: number) => {
 
     return order
   } catch (error) {
-    const { messageKey } = error as AxiosErrorWithMessageKey
+    const { messageKey } =
+      (error as AxiosErrorWithMessageKey).response?.data || {}
 
     throw new Error(messageKey)
   }

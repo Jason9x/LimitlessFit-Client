@@ -23,7 +23,10 @@
     "userNotFound": "Non siamo riusciti a trovare un account con i dati forniti. Verifica il tuo indirizzo email o nome utente e riprova.",
     "invalidPassword": "La password inserita non è corretta. Riprova.",
     "accountLocked": "Account bloccato per troppi tentativi di accesso. Reimposta la password o contatta il supporto.",
-    "loginFailed": "Si è verificato un errore durante il login. Riprova più tardi."
+    "loginFailed": "Si è verificato un errore durante il login. Riprova più tardi.",
+    "submit": "Invia",
+    "passwordResetEmailSent": "Abbiamo inviato un'email per il reset della password al tuo indirizzo email registrato. Controlla la tua casella di posta.",
+    "passwordResetFailed": "Si è verificato un errore durante il reset della password. Per favore riprova più tardi."
   },
   "Register": {
     "name": "Nome",
@@ -38,6 +41,13 @@
     "invalidEmail": "L'indirizzo email inserito non è valido. Assicurati che sia nel formato corretto (es. esempio@dominio.com).",
     "invalidName": "Il nome può contenere solo lettere, spazi, trattini o apostrofi.",
     "registrationFailed": "There was an error logging in. Please try again later."
+  },
+  "ResetPassword": {
+    "passwordResetSuccessful": "La tua password è stata reimpostata con successo.",
+    "invalidResetToken": "Il token di reimpostazione è non valido. Si prega di richiederne uno nuovo.",
+    "resetTokenExpired": "Il token di reimpostazione è scaduto. Si prega di richiederne uno nuovo.",
+    "passwordRequirementsNotMet": "La password non soddisfa i requisiti richiesti.",
+    "passwordResetFailed": "Si è verificato un errore durante il tentativo di reimpostare la password. Riprova più tardi."
   },
   "OrderSelection": {
     "selectItem": "Seleziona l'articolo da ordinare"

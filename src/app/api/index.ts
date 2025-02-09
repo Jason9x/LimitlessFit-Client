@@ -24,7 +24,6 @@ const createApiClient = (): AxiosInstance => {
 
   instance.interceptors.request.use(config => {
     const token = getAccessToken()
-
     if (token && config.headers)
       config.headers.Authorization = `Bearer ${token}`
 
@@ -35,22 +34,21 @@ const createApiClient = (): AxiosInstance => {
     response => response,
     async error => {
       const { response: { status } = {}, config: originalRequest } = error
-
       if (status !== 401 || originalRequest._retry) return Promise.reject(error)
 
       originalRequest._retry = true
 
       try {
-        const refreshTokenFromCookie = getRefreshToken()
+        const refreshToken = getRefreshToken()
 
-        if (!refreshTokenFromCookie) {
+        if (!refreshToken) {
           logoutUser()
           return Promise.reject(error)
         }
 
-        const { accessToken, refreshToken } = await fetchNewTokens()
+        const { accessToken } = await fetchNewTokens()
 
-        if (!accessToken || !refreshToken) {
+        if (!accessToken) {
           logoutUser()
           return Promise.reject(error)
         }
@@ -70,6 +68,5 @@ const createApiClient = (): AxiosInstance => {
   return instance
 }
 
-const index = createApiClient()
-
-export default index
+const apiClient = createApiClient()
+export default apiClient

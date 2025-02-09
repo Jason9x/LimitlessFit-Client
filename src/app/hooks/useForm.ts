@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, SetStateAction, useState } from 'react'
 import { ZodSchema } from 'zod'
 
 type UseFormReturn<T> = {
@@ -8,6 +8,7 @@ type UseFormReturn<T> = {
     field: keyof T
   ) => (event: ChangeEvent<HTMLInputElement>) => void
   validate: () => boolean
+  setErrors: (value: SetStateAction<Record<keyof T, string>>) => void
 }
 
 const useForm = <T extends Record<string, any>>(
@@ -50,7 +51,7 @@ const useForm = <T extends Record<string, any>>(
       }))
     }
 
-  return { formData, errors, handleChange, validate }
+  return { formData, errors, handleChange, validate, setErrors }
 }
 
 export default useForm

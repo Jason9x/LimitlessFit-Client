@@ -33,22 +33,25 @@ const ProtectedContent = ({ children }: { children: ReactNode }) => {
     if (isError) setSnackbarOpen(true)
   }, [isError])
 
-  if (isError)
-    return (
-      <Snackbar
-        message={translations('serverUnreachable')}
-        open={snackbarOpen}
-        onClose={() => setSnackbarOpen(false)}
-        variant="error"
-      />
-    )
+  const excludedPaths = ['/register', '/reset-password']
 
-  if (!isAuthenticated && pathname !== '/register') return <LoginForm />
+  if (!isAuthenticated && !excludedPaths.includes(pathname))
+    return <LoginForm />
 
   return (
     <>
       {isAuthenticated && pathname !== '/' && <BackButton />}
+
       {children}
+
+      {isError && (
+        <Snackbar
+          message={translations('serverUnreachable')}
+          open={snackbarOpen}
+          onClose={() => setSnackbarOpen(false)}
+          variant="error"
+        />
+      )}
     </>
   )
 }

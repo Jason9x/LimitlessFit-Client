@@ -23,7 +23,10 @@
     "userNotFound": "We couldn't find an account with the provided details. Please check your email or username and try again.",
     "passwordIncorrect": "The password you entered is incorrect. Please try again.",
     "accountLocked": "Account locked due to too many failed login attempts. Reset your password or contact support.",
-    "loginFailed": "There was an error logging in. Please try again later."
+    "loginFailed": "There was an error logging in. Please try again later.",
+    "submit": "Submit",
+    "passwordResetEmailSent": "We have sent a password reset email to your registered email address. Please check your inbox.",
+    "passwordResetFailed": "There was an error while resetting your password. Please try again later."
   },
   "Register": {
     "name": "Name",
@@ -38,6 +41,13 @@
     "invalidEmail": "The email address you entered is not valid. Please ensure it is correctly formatted (e.g., example@domain.com).",
     "invalidName": "Name can only contain letters, spaces, hyphens, or apostrophes.",
     "registrationFailed": "There was an error logging in. Please try again later."
+  },
+  "ResetPassword": {
+    "passwordResetSuccessful": "Your password has been successfully reset.",
+    "invalidResetToken": "The reset token is invalid. Please request a new one.",
+    "resetTokenExpired": "The reset token has expired. Please request a new one.",
+    "passwordRequirementsNotMet": "The password does not meet the required criteria.",
+    "passwordResetFailed": "An error occurred while resetting your password. Please try again later."
   },
   "OrderSelection": {
     "selectItem": "Select the item to order"
