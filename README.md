@@ -32,15 +32,6 @@ cd LimitlessFit
 npm install
 ```
 
-### Environment Variables
-
-Create a `.env` file and add your environment-specific configurations:
-
-```bash
-DB_PASSWORD=your-password-uri
-JWT_SECRET=your-jwt-secret
-```
-
 ### Running the Application
 
 To start the application in development mode:
