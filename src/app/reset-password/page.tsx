@@ -15,16 +15,10 @@ import Input from '@/components/ui/Input'
 import Snackbar from '@/components/ui/Snackbar'
 import SubmitButton from '@/components/buttons/SubmitBotton'
 
-const resetPasswordSchema = z.object({
-  password: z
-    .string()
-    .min(6, { message: 'Password must be at least 6 characters long' })
-    .max(20, { message: 'Password must be at most 20 characters long' }),
-  confirmPassword: z.string()
-})
-
 const ResetPassword = () => {
   const translations = useTranslations('ResetPassword')
+  const registerTranslations = useTranslations('Register')
+
   const router = useRouter()
 
   const searchParams = new URLSearchParams(window.location.search)
@@ -32,8 +26,18 @@ const ResetPassword = () => {
   const token = searchParams.get('token')
   const email = searchParams.get('email')
 
+  const schema = z.object({
+    password: z
+      .string()
+      .min(8, registerTranslations('passwordLength'))
+      .regex(/[A-Z]/, registerTranslations('passwordUppercase'))
+      .regex(/\d/, registerTranslations('passwordNumber'))
+      .regex(/[^a-zA-Z0-9]/, registerTranslations('passwordSpecial')),
+    confirmPassword: z.string()
+  })
+
   const { formData, errors, handleChange, validate, setErrors } = useForm(
-    resetPasswordSchema,
+    schema,
     { password: '', confirmPassword: '' }
   )
   const { password, confirmPassword } = formData
@@ -62,15 +66,18 @@ const ResetPassword = () => {
       email: string
       password: string
     }) => resetPassword({ email, resetCode: token, newPassword: password }),
-    onSuccess: messageKey =>
+    onSuccess: messageKey => {
       setSnackbar({
         message: translations(messageKey),
         open: true,
         variant: 'success'
-      }),
-    onError: ({ message: messageKey }: Error) =>
+      })
+
+      setTimeout(() => router.push('/'), 3000)
+    },
+    onError: (error: Error) =>
       setSnackbar({
-        message: translations(messageKey),
+        message: translations(error.message),
         open: true,
         variant: 'error'
       })
@@ -84,7 +91,7 @@ const ResetPassword = () => {
     if (password !== confirmPassword) {
       setErrors({
         ...errors,
-        confirmPassword: "Passwords don't match"
+        confirmPassword: translations('passwordMismatch')
       })
 
       return
@@ -101,11 +108,10 @@ const ResetPassword = () => {
     setSnackbar(previousState => ({ ...previousState, open: false }))
 
   return (
-    <div>
-      <h1>Reset Password</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <Input
-          label="New Password"
+          label={translations('newPassword')}
           type="password"
           value={formData.password}
           onChange={handleChange('password')}
@@ -113,10 +119,11 @@ const ResetPassword = () => {
           minLength={6}
           maxLength={20}
           error={errors.password}
+          className="mb-4"
         />
 
         <Input
-          label="Confirm Password"
+          label={translations('confirmPassword')}
           type="password"
           value={formData.confirmPassword}
           onChange={handleChange('confirmPassword')}
@@ -126,15 +133,10 @@ const ResetPassword = () => {
           error={errors.confirmPassword}
         />
 
-        <SubmitButton label="Reset password" className="mt-6" />
+        <SubmitButton label={translations('resetPassword')} className="mt-8" />
       </form>
 
-      <Snackbar
-        message={snackbar.message}
-        open={snackbar.open}
-        onClose={handleSnackbarClose}
-        variant={snackbar.variant}
-      />
+      <Snackbar {...snackbar} onClose={handleSnackbarClose} />
     </div>
   )
 }

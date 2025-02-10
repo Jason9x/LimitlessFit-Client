@@ -5,8 +5,8 @@ import { useState, useCallback, useRef } from 'react'
 import useNotifications from '@/hooks/useNotifications'
 import useClickOutside from '@/hooks/useClickOutside'
 
-import NotificationsPanel from '@/components/dropdowns/notifications/NotificationPanel'
-import NotificationsTrigger from '@/components/dropdowns/notifications/NotificationsTrigger'
+import NotificationsPanel from './NotificationPanel'
+import NotificationsTrigger from './NotificationsTrigger'
 
 const NotificationsDropdown = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false)

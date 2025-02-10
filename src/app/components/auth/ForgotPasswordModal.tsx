@@ -25,16 +25,13 @@ type ForgotPasswordModalProps = {
 const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
   const translations = useTranslations('Login')
 
-  const forgottenPasswordSchema = z.object({
+  const schema = z.object({
     email: z.string().email()
   })
 
-  const { formData, errors, handleChange, validate } = useForm(
-    forgottenPasswordSchema,
-    {
-      email: ''
-    }
-  )
+  const { formData, errors, handleChange, validate } = useForm(schema, {
+    email: ''
+  })
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean
@@ -45,8 +42,6 @@ const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
   const forgotPasswordMutation = useMutation({
     mutationFn: async (email: string) => forgotPassword(email),
     onSuccess: messageKey => {
-      console.log({ messageKey })
-
       setSnackbar({
         open: true,
         message: translations(messageKey),
@@ -55,12 +50,10 @@ const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
 
       setTimeout(() => onClose(), 3000)
     },
-    onError: error => {
-      const { message: messageKey } = error as AxiosError
-
+    onError: (error: AxiosError) => {
       setSnackbar({
         open: true,
-        message: translations(messageKey),
+        message: translations(error.message),
         variant: 'error'
       })
 
@@ -76,7 +69,7 @@ const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
       return
     }
 
-    if (formData.email) forgotPasswordMutation.mutate(formData.email)
+    forgotPasswordMutation.mutate(formData.email)
   }
 
   return (
@@ -120,10 +113,8 @@ const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
         </form>
 
         <Snackbar
-          message={snackbar.message}
-          open={snackbar.open}
+          {...snackbar}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
-          variant={snackbar.variant}
         />
       </div>
     </div>

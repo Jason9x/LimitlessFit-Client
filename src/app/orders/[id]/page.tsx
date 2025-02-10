@@ -33,12 +33,13 @@ const Order = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
 
-  const orderQuery = useQuery({
+  const query = useQuery({
     queryKey: ['order', id],
-    queryFn: () => fetchOrderById(Number(id))
+    queryFn: () => fetchOrderById(Number(id)),
+    staleTime: 60000
   })
 
-  const { data: order, isLoading, error } = orderQuery
+  const { data: order, isLoading, error } = query
 
   useEffect(() => {
     if (error) setSnackbarOpen(true)
@@ -47,7 +48,13 @@ const Order = () => {
   useSignalR('/orderUpdateHub', [
     {
       eventName: 'ReceivedOrderStatusUpdate',
-      callback: async (orderId: number, status: OrderStatusEnum) => {
+      callback: async ({
+        id: orderId,
+        status
+      }: {
+        id: number
+        status: OrderStatusEnum
+      }) => {
         if (orderId !== Number(id)) return
 
         queryClient.setQueryData<OrderType>(['order', id], oldOrder => {
@@ -80,7 +87,10 @@ const Order = () => {
   const orderDetails = [
     { label: 'total', value: `€ ${order?.totalPrice}` },
     { label: 'date', value: formattedDate },
-    { label: 'status', value: order && <OrderStatus status={order.status} /> }
+    {
+      label: 'status',
+      value: order !== undefined && <OrderStatus status={order.status} />
+    }
   ]
 
   const items = order?.items || []

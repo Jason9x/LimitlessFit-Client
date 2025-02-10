@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 
-import { fetchNewTokens } from '@/api/services/auth'
+import { fetchNewToken } from '@/api/services/auth'
 
 import {
   getAccessToken,
@@ -8,12 +8,6 @@ import {
   removeTokens,
   setTokens
 } from '@/utils/cookieUtils'
-
-const logoutUser = () => {
-  removeTokens()
-
-  if (typeof window !== 'undefined') window.location.reload()
-}
 
 const createApiClient = (): AxiosInstance => {
   const instance = axios.create({
@@ -23,9 +17,10 @@ const createApiClient = (): AxiosInstance => {
   })
 
   instance.interceptors.request.use(config => {
+    const { headers } = config
     const token = getAccessToken()
-    if (token && config.headers)
-      config.headers.Authorization = `Bearer ${token}`
+
+    if (token && headers) headers.Authorization = `Bearer ${token}`
 
     return config
   })
@@ -42,14 +37,14 @@ const createApiClient = (): AxiosInstance => {
         const refreshToken = getRefreshToken()
 
         if (!refreshToken) {
-          logoutUser()
+          removeTokens()
           return Promise.reject(error)
         }
 
-        const { accessToken } = await fetchNewTokens()
+        const accessToken = await fetchNewToken()
 
         if (!accessToken) {
-          logoutUser()
+          removeTokens()
           return Promise.reject(error)
         }
 
@@ -59,7 +54,7 @@ const createApiClient = (): AxiosInstance => {
 
         return instance(originalRequest)
       } catch (refreshError) {
-        logoutUser()
+        removeTokens()
         return Promise.reject(refreshError)
       }
     }

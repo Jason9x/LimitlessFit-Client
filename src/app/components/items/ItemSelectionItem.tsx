@@ -11,7 +11,7 @@ type OrderItemProps = {
   item: Item
 }
 
-const OrderSelectionItem = ({ item }: OrderItemProps) => {
+const ItemSelectionItem = ({ item }: OrderItemProps) => {
   const { imageUrl, nameKey, descriptionKey, price } = item
 
   const translations = useTranslations('Items')
@@ -50,4 +50,4 @@ const OrderSelectionItem = ({ item }: OrderItemProps) => {
   )
 }
 
-export default OrderSelectionItem
+export default ItemSelectionItem

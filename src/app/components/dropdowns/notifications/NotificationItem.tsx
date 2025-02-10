@@ -1,15 +1,18 @@
 import { useTranslations } from 'next-intl'
-import { useEffect, useRef } from 'react'
+import { useLocale } from 'use-intl'
 import Link from 'next/link'
+
+import { useEffect, useRef } from 'react'
+
+import { formatRelativeDate } from '@/utils/dateUtils'
+import { getNotificationMessage } from '@/utils/notificationUtils'
+import { getOrderStatusLabels } from '@/utils/orderUtils'
 
 import {
   NotificationType,
   NotificationDataTypes
 } from '@/types/models/notification'
-import { formatRelativeDate } from '@/utils/dateUtils'
-import { useLocale } from 'use-intl'
-import { getNotificationMessage } from '@/utils/notificationUtils'
-import { getOrderStatusLabels } from '@/utils/orderUtils'
+
 import { OrderStatusEnum } from '@/types/models/order'
 import { Role } from '@/types/models/user'
 
@@ -45,9 +48,12 @@ const NotificationItem = ({
         return {
           href: `/orders/${orderId}`,
           translationParams: {
-            status: status
-              ? statusLabels[status as unknown as OrderStatusEnum].toLowerCase()
-              : ''
+            status:
+              status !== undefined
+                ? statusLabels[
+                    status as unknown as OrderStatusEnum
+                  ].toLowerCase()
+                : ''
           }
         }
       }

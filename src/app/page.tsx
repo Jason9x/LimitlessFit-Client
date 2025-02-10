@@ -2,7 +2,7 @@
 
 import { useSelector } from 'react-redux'
 
-import OrderSelection from '@/components/orders/selection/OrderSelection'
+import ItemSelection from '@/components/items/ItemSelection'
 import Cart from '@/components/Cart'
 
 import { RootState } from '@/store'
@@ -13,7 +13,7 @@ const Index = () => {
   return (
     <div className="flex">
       <div className="flex-1">
-        <OrderSelection />
+        <ItemSelection />
       </div>
 
       {cartItems.length > 0 && (

@@ -15,7 +15,8 @@ const useNotifications = () => {
 
   const { data: notifications, isLoading } = useQuery({
     queryKey: ['notifications'],
-    queryFn: fetchNotifications
+    queryFn: fetchNotifications,
+    staleTime: 60000
   })
 
   useSignalR('/notificationHub', [

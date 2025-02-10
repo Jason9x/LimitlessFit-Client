@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
 import { useTranslations } from 'next-intl'
-
 import Image from 'next/image'
+
+import { useState, useEffect, useRef } from 'react'
 
 import useClickOutside from '@/hooks/useClickOutside'
 import useDropdownPosition from '@/hooks/useDropdownPosition'
@@ -21,7 +21,6 @@ const RoleDropdown = ({
   isOpen,
   toggleDropdown
 }: RoleDropdownProps) => {
-  const translations = useTranslations('UsersPanel')
   const roleTranslations = useTranslations('Roles')
 
   const [selectedRole, setSelectedRole] = useState(role)

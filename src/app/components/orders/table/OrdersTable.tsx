@@ -1,27 +1,31 @@
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+
+import { useQuery } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 
-import useSignalR from '@/hooks/useSignalR'
+import useOrderUpdates from '@/hooks/useOrderUpdates'
+
+import { fetchOrderStats } from '@/api/services/orders'
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Snackbar from '@/components/ui/Snackbar'
 import Pagination from '@/components/ui/Pagination'
 
+import OrderStatCard from '@/components/orders/OrderStatCard'
+
 import OrdersFilter from '../OrdersFilter'
 import OrderRow from './OrderRow'
 import OrdersTableHeader from './OrdersTableHeader'
 
+import { ORDERS_PAGE_SIZE } from '@/constants/pagination'
+
 import {
-  OrderType,
   OrderFilterType,
   OrdersResponse,
-  OrderStatusEnum
+  OrderStats
 } from '@/types/models/order'
 import { PaginationParams } from '@/types/pagination'
-
-const PAGE_SIZE = 4
 
 type OrdersTableProps = {
   fetchOrders: (
@@ -33,7 +37,6 @@ type OrdersTableProps = {
 
 const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
   const translations = useTranslations(isMyOrders ? 'MyOrders' : 'OrdersPanel')
-  const queryClient = useQueryClient()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -59,14 +62,23 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
     isLoading,
     isError,
     error
-  } = useQuery<OrdersResponse, Error>({
+  } = useQuery<OrdersResponse>({
     queryKey,
     queryFn: () =>
       fetchOrders(
-        { pageNumber: currentPage, pageSize: PAGE_SIZE },
+        { pageNumber: currentPage, pageSize: ORDERS_PAGE_SIZE },
         filter || {}
-      )
+      ),
+    staleTime: 60000
   })
+
+  const { data: stats } = useQuery<OrderStats, Error>({
+    queryKey: ['stats'],
+    queryFn: fetchOrderStats,
+    staleTime: 60000
+  })
+
+  useOrderUpdates(queryKey, filter)
 
   useEffect(() => {
     if (isError)
@@ -76,68 +88,6 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
         variant: 'error'
       })
   }, [isError, error?.message, translations])
-
-  useSignalR('/orderUpdateHub', [
-    {
-      eventName: 'AddNewOrder',
-      callback: (newOrder: OrderType) =>
-        queryClient.setQueryData<OrdersResponse>(queryKey, cachedOrders => {
-          if (!cachedOrders) return cachedOrders
-
-          const { orders } = cachedOrders
-          const shouldInclude = checkOrderAgainstFilters(newOrder, filter)
-
-          if (shouldInclude)
-            return {
-              ...cachedOrders,
-              orders: [newOrder, ...orders].slice(0, PAGE_SIZE)
-            }
-
-          return cachedOrders
-        })
-    },
-    {
-      eventName: 'ReceivedOrderStatusUpdate',
-      callback: async (id: number, status: OrderStatusEnum) => {
-        queryClient.setQueryData<OrdersResponse>(queryKey, cachedOrders => {
-          if (!cachedOrders) return cachedOrders
-
-          return {
-            ...cachedOrders,
-            orders: cachedOrders.orders
-              .map(order => {
-                if (order.id !== id) return order
-
-                const updatedOrder = { ...order, status }
-
-                if (!checkOrderAgainstFilters(updatedOrder, filter)) return null
-
-                return updatedOrder
-              })
-              .filter(order => order !== null)
-          }
-        })
-
-        await queryClient.invalidateQueries({ queryKey })
-      }
-    }
-  ])
-
-  const checkOrderAgainstFilters = (
-    order: OrderType,
-    filter: OrderFilterType | null
-  ): boolean => {
-    if (!filter) return true
-
-    const { status, startDate, endDate } = filter
-    const orderDate = +new Date(order.date)
-
-    return [
-      !status || order.status === status,
-      !startDate || orderDate >= +new Date(startDate),
-      !endDate || orderDate <= +new Date(endDate)
-    ].every(Boolean)
-  }
 
   const handleFilterChange = (newFilter: OrderFilterType) => {
     setFilter(newFilter)
@@ -172,6 +122,25 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
 
       {!isError && paginatedOrders && (
         <>
+          {!isMyOrders && (
+            <div className="flex justify-center lg:justify-start space-x-6 mb-8">
+              <OrderStatCard
+                value={stats?.deliveredToday || 0}
+                label={translations('stats.ordersDeliveredToday')}
+              />
+
+              <OrderStatCard
+                value={stats?.pendingOrders || 0}
+                label={translations('stats.pendingOrders')}
+              />
+
+              <OrderStatCard
+                value={stats?.shippingOrders || 0}
+                label={translations('stats.shippingOrders')}
+              />
+            </div>
+          )}
+
           {paginatedOrders.orders.length > 0 ? (
             <div className="space-y-6">
               <table
@@ -211,12 +180,10 @@ const OrdersTable = ({ fetchOrders, isMyOrders = false }: OrdersTableProps) => {
       )}
 
       <Snackbar
-        message={snackbar.message}
-        open={snackbar.open}
+        {...snackbar}
         onClose={() =>
           setSnackbar(previousState => ({ ...previousState, open: false }))
         }
-        variant={snackbar.variant}
       />
     </div>
   )

@@ -43,13 +43,17 @@
     "registrationFailed": "There was an error logging in. Please try again later."
   },
   "ResetPassword": {
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "resetPassword": "Reset password",
+    "passwordMismatch": "Passwords don't match",
     "passwordResetSuccessful": "Your password has been successfully reset.",
     "invalidResetToken": "The reset token is invalid. Please request a new one.",
     "resetTokenExpired": "The reset token has expired. Please request a new one.",
     "passwordRequirementsNotMet": "The password does not meet the required criteria.",
     "passwordResetFailed": "An error occurred while resetting your password. Please try again later."
   },
-  "OrderSelection": {
+  "ItemSelection": {
     "selectItem": "Select the item to order"
   },
   "Items": {
@@ -108,12 +112,17 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "orderByStatus": "Order by status",
-    "selectStatus": "Select Status"
+    "selectStatus": "Select status"
   },
   "OrdersPanel": {
     "title": "Orders panel",
     "noOrderFound": "No order found",
-    "statusUpdatedSuccessfully": "Order status updated successfully."
+    "statusUpdatedSuccessfully": "Order status updated successfully.",
+    "stats": {
+      "ordersDeliveredToday": "Orders delivered today",
+      "pendingOrders": "Pending orders",
+      "shippingOrders": "Shipping orders"
+    }
   },
   "OrdersTableHeader": {
     "client": "Client",

@@ -7,7 +7,8 @@ import {
   OrderFilterType,
   OrderRequest,
   OrdersResponse,
-  OrderStatusEnum
+  OrderStatusEnum,
+  OrderStats
 } from '@/types/models/order'
 
 export const createOrder = async (request: OrderRequest) => {
@@ -49,6 +50,12 @@ export const fetchAllOrders = async (
   })
 
   return orders
+}
+
+export const fetchOrderStats = async () => {
+  const { data: stats } = await api.get<OrderStats>('/Orders/stats')
+
+  return stats
 }
 
 export const updateOrderStatus = async (id: number, status: OrderStatusEnum) =>

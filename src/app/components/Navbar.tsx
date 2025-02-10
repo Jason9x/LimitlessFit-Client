@@ -180,7 +180,6 @@ const Navbar = () => {
             height={40}
             alt="Fitness"
             className="dark:invert"
-            quality={100}
             priority
           />
 

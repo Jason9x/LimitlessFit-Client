@@ -43,13 +43,17 @@
     "registrationFailed": "There was an error logging in. Please try again later."
   },
   "ResetPassword": {
+    "newPassword": "Nuova password",
+    "confirmPassword": "Conferma password",
+    "resetPassword": "Reimposta password",
+    "passwordMismatch": "Le password non corrispondono",
     "passwordResetSuccessful": "La tua password è stata reimpostata con successo.",
     "invalidResetToken": "Il token di reimpostazione è non valido. Si prega di richiederne uno nuovo.",
     "resetTokenExpired": "Il token di reimpostazione è scaduto. Si prega di richiederne uno nuovo.",
     "passwordRequirementsNotMet": "La password non soddisfa i requisiti richiesti.",
     "passwordResetFailed": "Si è verificato un errore durante il tentativo di reimpostare la password. Riprova più tardi."
   },
-  "OrderSelection": {
+  "ItemSelection": {
     "selectItem": "Seleziona l'articolo da ordinare"
   },
   "Items": {
@@ -113,7 +117,12 @@
   "OrdersPanel": {
     "title": "Pannello degli ordini",
     "noOrderFound": "Nessun ordine trovato.",
-    "statusUpdatedSuccessfully": "Stato dell'ordine aggiornato con successo."
+    "statusUpdatedSuccessfully": "Stato dell'ordine aggiornato con successo.",
+    "stats": {
+      "ordersDeliveredToday": "Ordini consegnati oggi",
+      "pendingOrders": "Ordini in attesa",
+      "shippingOrders": "Ordini in arrivo"
+    }
   },
   "OrdersTableHeader": {
     "client": "Cliente",

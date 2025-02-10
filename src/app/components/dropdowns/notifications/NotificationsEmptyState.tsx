@@ -10,7 +10,6 @@ const NotificationsEmptyState = ({
     <Image
       width={130}
       height={130}
-      quality={100}
       src="/icons/navbar/notification/notification-bubbles.png"
       alt="No notifications"
     />

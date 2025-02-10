@@ -45,13 +45,13 @@ export const registerUser = async (formData: RegisterFormData) =>
 export const loginUser = async (formData: LoginFormData) =>
   handleAuthRequest('/Auth/login', formData)
 
-export const fetchNewTokens = async () => {
+export const fetchNewToken = async () => {
   const { data: payload }: AxiosResponse<AuthTokenPayload> = await api.post(
     '/Auth/refresh-token'
   )
   const { accessToken } = payload
 
-  return { accessToken }
+  return accessToken
 }
 
 export const forgotPassword = async (email: string) => {

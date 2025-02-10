@@ -24,7 +24,8 @@ const useUser = () => {
 
       return { ...user, role }
     },
-    enabled: !!token
+    enabled: !!token,
+    staleTime: 60000
   })
 
   const updateRole = (role: Role) =>
