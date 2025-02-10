@@ -16,8 +16,7 @@ LimitlessFit is a full-featured web application designed for fitness management,
 ### Prerequisites
 
 - Node.js
-- NPM or Yarn
-- MongoDB / PostgreSQL
+- NPM
 
 ### Clone the repository
 
