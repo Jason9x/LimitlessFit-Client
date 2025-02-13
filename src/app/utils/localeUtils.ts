@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 
 const COOKIE_NAME = 'NEXT_LOCALE'
-const DEFAULT_LOCALE = 'it'
+const DEFAULT_LOCALE = 'en'
 
 export const getLocaleFromCookie = async () => {
   const cookiesInstance = await cookies()
