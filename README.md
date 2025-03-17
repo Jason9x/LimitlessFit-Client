@@ -65,14 +65,6 @@ Users will receive real-time notifications, such as order updates and system ale
 
 Users can place orders for fitness-related services or products. Admins can manage and process orders in the admin panel.
 
-## Contributing
-
-If you'd like to contribute to the LimitlessFit project, feel free to fork the repository, create a new branch, and submit a pull request with your changes.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-This README covers your app’s core features and setup instructions. You can adjust it to match your app’s specifics or add more detailed sections as needed!
