@@ -1,15 +1,15 @@
 # LimitlessFit Web Application
 
-LimitlessFit is a full-featured web application designed for fitness management, offering functionalities like authentication, notifications, localization, real-time updates, and order management.
+LimitlessFit is a rich web application for fitness management, offering authentication, notifications, localization, real-time updates, and order management features.
 
 ## Features
 
-- **Authentication**: Secure login and registration system with token-based authentication.
-- **Real-time Notifications**: Users receive live notifications for important updates.
-- **Localization**: Multi-language support to provide users with a personalized experience in their preferred language.
-- **Websockets**: Real-time communication for instant updates and notifications.
-- **User Management**: Admin panel to manage user accounts and roles, ensuring proper access control.
-- **Order Management**: Comprehensive system for managing fitness-related orders and transactions.
+- **Authentication**: Token-based safe login and registration.
+- **Real-time Notifications**: Real-time notification for users for important updates.
+- **Localization**: Support for multiple languages in order to provide users with a personalized experience according to their chosen language.
+- **Websockets**: Real-time interaction for live updates and notifications.
+- **User Management**: Admin dashboard to handle users and roles, proper access control.
+- **Order Management**: Proper system for order and transaction management for fitness.
 
 ## Installation
 
@@ -33,7 +33,7 @@ npm install
 
 ### Running the Application
 
-To start the application in development mode:
+To run the application in development mode:
 
 ```bash
 npm run dev
@@ -49,22 +49,22 @@ npm run build
 
 ### Authentication
 
-1. Register an account using the registration page.
-2. Log in to your account.
-3. Upon successful login, a JWT token will be provided for authentication.
+1. Register an account through the registration page.
+2. Login to the account.
+3. On successful login, JWT token will be transmitted for authentication.
 
 ### User Management
 
-Admins can manage user roles and permissions via the admin panel, enabling access control.
+Admins will be able to manage user role and permissions via the admin panel for enabling access control.
 
 ### Notifications
 
-Users will receive real-time notifications, such as order updates and system alerts, via websockets.
+Users will receive real-time notifications, such as order updates and system notifications, via websockets.
 
 ### Orders Management
 
-Users can place orders for fitness-related services or products. Admins can manage and process orders in the admin panel.
+Users can order fitness-related services or products. Admins will be able to handle and process orders via the admin panel.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is published under the MIT License - see the [LICENSE](LICENSE) file for details.
